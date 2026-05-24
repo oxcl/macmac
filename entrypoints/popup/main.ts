@@ -461,7 +461,8 @@ function setupEventListeners(data: AppData): void {
     const containerItem = target.closest('.container-item') as HTMLElement | null;
     if (containerItem) {
       const profileId = containerItem.dataset.profileId;
-      if (profileId) handleOpenInNewTab(profileId, data);
+      const activeId = data.lastSelectedId ?? DEFAULT_CONTAINER_ID;
+      if (profileId && profileId !== activeId) handleOpenInNewTab(profileId, data);
     }
   });
 }
