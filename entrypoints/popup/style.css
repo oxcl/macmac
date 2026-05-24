@@ -11,6 +11,10 @@ body {
   width: 320px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 #app {
   padding: 12px;
 }
@@ -134,11 +138,6 @@ button:active {
   font-weight: 600;
 }
 
-.container-id {
-  font-size: 10px;
-  color: #999;
-}
-
 .container-actions {
   display: flex;
   gap: 4px;
@@ -183,4 +182,78 @@ button:active {
   border-radius: 10px;
   font-size: 10px;
   font-weight: 600;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  width: 280px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.modal input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.modal input:focus {
+  border-color: #0078d4;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-btn.cancel {
+  background: #6c757d;
+  color: white;
+}
+
+.modal-btn.cancel:hover {
+  background: #5a6268;
+}
+
+.modal-btn.confirm {
+  background: #0078d4;
+  color: white;
+}
+
+.modal-btn.confirm:hover {
+  background: #006cbd;
 }

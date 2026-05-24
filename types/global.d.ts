@@ -1,5 +1,5 @@
 import '@wxt-dev/browser';
-// firefox specific apis
+
 declare module '@wxt-dev/browser' {
   namespace Browser {
     namespace tabs {
@@ -11,6 +11,9 @@ declare module '@wxt-dev/browser' {
       }
       interface CreateProperties {
         cookieStoreId?: string;
+      }
+      interface OnUpdatedInfo {
+        status?: string;
       }
     }
     namespace contextualIdentities {
