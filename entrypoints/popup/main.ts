@@ -1,19 +1,23 @@
 /// <reference path="../../types/global.d.ts" />
 
 import './style.css';
-import { 
-  getHostnameFromContainerName, 
-  parseContainerName, 
-  formatContainerName, 
-  sanitizeContainerName,
-  lastSelectedKey 
-} from '@/utils/containerUtils';
+import {
+  profiles,
+  hostnameProfiles,
+  lastSelected,
+  DEFAULT_CONTAINER_ID,
+  getDefaultProfile,
+  getProfilesForHostname,
+  formatContainerName,
+  type Profile,
+} from '@/utils/storage';
 
 class ContainerManager {
   private appDiv: HTMLElement | null = null;
   private containers: any[] = [];
   private currentHostname: string | null = null;
-  private lastSelectedContainerId: string | null = null;
+  private currentProfiles: Profile[] = [];
+  private lastSelectedId: string | null = null;
 
   async init() {
     this.appDiv = document.querySelector<HTMLDivElement>('#app')!;
@@ -28,7 +32,6 @@ class ContainerManager {
   }
 
   async loadData() {
-    // Get current tab URL and hostname
     const currentTab = await this.getCurrentTab();
     if (currentTab.url) {
       try {
@@ -41,7 +44,6 @@ class ContainerManager {
       this.currentHostname = null;
     }
 
-    // Load all containers
     try {
       this.containers = await browser.contextualIdentities.query({});
     } catch (err) {
@@ -49,13 +51,13 @@ class ContainerManager {
       this.containers = [];
     }
 
-    // Load last selected container for current hostname
     if (this.currentHostname) {
-      const key = lastSelectedKey(this.currentHostname);
-      const result = await browser.storage.local.get(key);
-      this.lastSelectedContainerId = (result[key] as string) || null;
+      this.currentProfiles = await getProfilesForHostname(this.currentHostname);
+      const lastMap = await lastSelected.getValue();
+      this.lastSelectedId = lastMap[this.currentHostname] ?? null;
     } else {
-      this.lastSelectedContainerId = null;
+      this.currentProfiles = [];
+      this.lastSelectedId = null;
     }
   }
 
@@ -67,7 +69,6 @@ class ContainerManager {
     const container = document.createElement('div');
     container.className = 'container';
 
-    // Header
     const header = document.createElement('header');
     header.innerHTML = `
       <img src="${browser.runtime.getURL('/logo.png')}" class="logo" alt="Logo" />
@@ -81,13 +82,11 @@ class ContainerManager {
       return;
     }
 
-    // Current hostname display
     const hostnameDisplay = document.createElement('div');
     hostnameDisplay.className = 'hostname-display';
     hostnameDisplay.textContent = `Website: ${this.currentHostname}`;
     container.appendChild(hostnameDisplay);
 
-    // Create new account button
     const createSection = document.createElement('section');
     createSection.className = 'create-container-section';
     createSection.innerHTML = `
@@ -101,48 +100,36 @@ class ContainerManager {
     `;
     container.appendChild(createSection);
 
-    // Containers list
     const listSection = document.createElement('section');
     listSection.className = 'containers-list';
     listSection.innerHTML = `<h2>Available Accounts</h2>`;
 
-    // Filter containers for current hostname
-    const containersForHost = this.containers.filter(c => {
-      const hostname = getHostnameFromContainerName(c.name);
-      return hostname === this.currentHostname;
-    });
+    for (const profile of this.currentProfiles) {
+      const isActive = profile.id === (this.lastSelectedId ?? DEFAULT_CONTAINER_ID);
+      const containerData = this.containers.find((c: any) => c.cookieStoreId === profile.id);
+      const color = containerData?.color || 'gray';
 
-    if (containersForHost.length === 0) {
-      listSection.innerHTML += `<p>No accounts created yet.</p>`;
-    } else {
-      for (const containerData of containersForHost) {
-        const parsed = parseContainerName(containerData.name);
-        const isLastSelected = containerData.cookieStoreId === this.lastSelectedContainerId;
-
-        const containerDiv = document.createElement('div');
-        containerDiv.className = 'container-item';
-        containerDiv.innerHTML = `
-          <div class="container-header" style="border-left: 4px solid ${containerData.color || 'gray'};">
-            <h3>${sanitizeContainerName(parsed.accountName || 'Unnamed')}</h3>
-            <span class="container-id">ID: ${containerData.cookieStoreId}</span>
-          </div>
-          <div class="container-actions">
-            <button class="switch-btn" data-container-id="${containerData.cookieStoreId}">Switch to this account</button>
-            <button class="rename-btn" data-container-id="${containerData.cookieStoreId}">Rename</button>
-            <button class="delete-btn" data-container-id="${containerData.cookieStoreId}">Delete</button>
-          </div>
-          ${isLastSelected ? '<div class="status-badge">Current</div>' : ''}
-        `;
-        listSection.appendChild(containerDiv);
-      }
+      const profileDiv = document.createElement('div');
+      profileDiv.className = 'container-item';
+      profileDiv.innerHTML = `
+        <div class="container-header" style="border-left: 4px solid ${color};">
+          <h3>${escapeHtml(profile.name)}</h3>
+        </div>
+        <div class="container-actions">
+          <button class="switch-btn" data-profile-id="${profile.id}">Switch</button>
+          <button class="rename-btn" data-profile-id="${profile.id}">Rename</button>
+          <button class="delete-btn" data-profile-id="${profile.id}" ${profile.isDefault ? 'disabled' : ''}>Delete</button>
+        </div>
+        ${isActive ? '<div class="status-badge">Current</div>' : ''}
+      `;
+      listSection.appendChild(profileDiv);
     }
-    container.appendChild(listSection);
 
+    container.appendChild(listSection);
     this.appDiv.appendChild(container);
   }
 
-  async setupEventListeners() {
-    // Create container button
+  setupEventListeners() {
     const createBtn = document.querySelector('#createContainerBtn');
     const nameInput = document.querySelector('#accountName') as HTMLInputElement;
     const createMessage = document.querySelector('#createMessage') as HTMLDivElement;
@@ -157,36 +144,56 @@ class ContainerManager {
         }
 
         try {
-          // Sanitize and generate container name with hostname
-          const sanitizedAccountName = sanitizeContainerName(accountName);
-          const containerName = formatContainerName(this.currentHostname!, sanitizedAccountName);
-          
-          // Pick a color based on number of existing containers for this hostname
+          const hostname = this.currentHostname!;
+          const containerName = formatContainerName(accountName, hostname);
+
           const containerColors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple'];
-          const containersForHost = this.containers.filter(c => {
-            const hostname = getHostnameFromContainerName(c.name);
-            return hostname === this.currentHostname;
-          });
-          const nextColor = containerColors[containersForHost.length % containerColors.length];
-          
-          // Create container
+          const nextColor = containerColors[this.containers.length % containerColors.length];
+
           const newContainer = await browser.contextualIdentities.create({
             name: containerName,
             color: nextColor,
             icon: 'circle',
           });
 
-          // Select this container as the default for this hostname
-          const key = lastSelectedKey(this.currentHostname!);
-          await browser.storage.local.set({ [key]: newContainer.cookieStoreId });
+          const newProfile: Profile = {
+            id: newContainer.cookieStoreId,
+            name: accountName,
+            hostnames: [hostname],
+            isDefault: false,
+          };
 
-          // Open hostname root in new container tab and close old one
-          const rootUrl = `https://${this.currentHostname}`;
+          const [currentProfiles, currentHostnameMap] = await Promise.all([
+            profiles.getValue(),
+            hostnameProfiles.getValue(),
+          ]);
+
+          const profileIds = currentHostnameMap[hostname] ?? [];
+          const hasStoredDefault = profileIds.some(id => currentProfiles[id]?.isDefault);
+
+          const profileUpdates: Record<string, Profile> = {
+            ...currentProfiles,
+            [newProfile.id]: newProfile,
+          };
+
+          const newHostnameMap = { ...currentHostnameMap };
+          newHostnameMap[hostname] = [...profileIds, newProfile.id];
+
+          if (!hasStoredDefault) {
+            const defaultProfile = getDefaultProfile(hostname);
+            profileUpdates[defaultProfile.id] = defaultProfile;
+            newHostnameMap[hostname] = [defaultProfile.id, ...newHostnameMap[hostname]];
+          }
+
+          await Promise.all([
+            profiles.setValue(profileUpdates),
+            hostnameProfiles.setValue(newHostnameMap),
+            lastSelected.setValue({ [hostname]: newProfile.id }),
+          ]);
+
           const currentTab = await this.getCurrentTab();
-          await browser.tabs.create({ url: rootUrl, cookieStoreId: newContainer.cookieStoreId });
+          await browser.tabs.create({ url: `https://${hostname}`, cookieStoreId: newContainer.cookieStoreId });
           if (currentTab.id) await browser.tabs.remove(currentTab.id);
-
-          // Close popup - the new tab is now active
           window.close();
         } catch (err) {
           createMessage.textContent = `Error creating container: ${err}`;
@@ -195,76 +202,104 @@ class ContainerManager {
       });
     }
 
-    // Delegate for switch, rename, delete buttons
     if (this.appDiv) {
       this.appDiv.addEventListener('click', async (e) => {
-      const switchBtn = (e.target as HTMLElement).closest('.switch-btn') as HTMLElement | null;
-      if (switchBtn) {
-        const containerId = switchBtn.dataset.containerId;
-        const container = this.containers.find(c => c.cookieStoreId === containerId);
-        if (container && containerId) {
-          // Update last selected
-          const key = lastSelectedKey(this.currentHostname!);
-          await browser.storage.local.set({ [key]: containerId });
-          this.lastSelectedContainerId = containerId;
-          
-          // Open hostname root in new container tab and close old one
-          const rootUrl = `https://${this.currentHostname}`;
+        const switchBtn = (e.target as HTMLElement).closest('.switch-btn') as HTMLElement | null;
+        if (switchBtn) {
+          const profileId = switchBtn.dataset.profileId;
+          if (!profileId || !this.currentHostname) return;
+
+          const map = { [this.currentHostname]: profileId };
+          await lastSelected.setValue(map);
+
+          const cookieStoreId = profileId === DEFAULT_CONTAINER_ID ? undefined : profileId;
           const currentTab = await this.getCurrentTab();
-          await browser.tabs.create({ url: rootUrl, cookieStoreId: containerId });
+          await browser.tabs.create({ url: `https://${this.currentHostname}`, cookieStoreId });
           if (currentTab.id) await browser.tabs.remove(currentTab.id);
-          
-          // Close popup - the new tab is now active
           window.close();
         }
-      }
 
-      const renameBtn = (e.target as HTMLElement).closest('.rename-btn') as HTMLElement | null;
-      if (renameBtn) {
-        const containerId = renameBtn.dataset.containerId;
-        const container = this.containers.find(c => c.cookieStoreId === containerId);
-        if (container && containerId) {
-          const parsed = parseContainerName(container.name);
-          const newAccountName = prompt('Enter new account name:', parsed.accountName || '');
-          if (newAccountName !== null && newAccountName !== parsed.accountName) {
-            const sanitizedName = sanitizeContainerName(newAccountName);
-            const newName = formatContainerName(parsed.hostname!, sanitizedName);
-            await browser.contextualIdentities.update(containerId, {
-              name: newName,
-            });
-            await this.loadData();
-            await this.render();
-          }
-        }
-      }
+        const renameBtn = (e.target as HTMLElement).closest('.rename-btn') as HTMLElement | null;
+        if (renameBtn) {
+          const profileId = renameBtn.dataset.profileId;
+          if (!profileId || !this.currentHostname) return;
 
-      const deleteBtn = (e.target as HTMLElement).closest('.delete-btn') as HTMLElement | null;
-      if (deleteBtn) {
-        const containerId = deleteBtn.dataset.containerId;
-        const container = this.containers.find(c => c.cookieStoreId === containerId);
-        if (container && containerId) {
-          if (confirm('Delete this account? This will remove its container.')) {
-            await browser.contextualIdentities.remove(containerId);
-            // Clean up lastSelected if it pointed to this container
-            if (this.currentHostname) {
-              const key = lastSelectedKey(this.currentHostname);
-              const result = await browser.storage.local.get(key);
-              if (result[key] === containerId) {
-                await browser.storage.local.remove(key);
-                this.lastSelectedContainerId = null;
-              }
+          const profile = this.currentProfiles.find(p => p.id === profileId);
+          if (!profile) return;
+
+          const newName = prompt('Enter new profile name:', profile.name);
+          if (newName !== null && newName.trim() !== '' && newName !== profile.name) {
+            const trimmed = newName.trim();
+
+            const currentProfiles = await profiles.getValue();
+            currentProfiles[profileId] = { ...currentProfiles[profileId], name: trimmed };
+            await profiles.setValue(currentProfiles);
+
+            if (!profile.isDefault) {
+              const containerName = formatContainerName(trimmed, this.currentHostname);
+              await browser.contextualIdentities.update(profileId, { name: containerName });
             }
+
             await this.loadData();
             await this.render();
           }
         }
-      }
-    });
+
+        const deleteBtn = (e.target as HTMLElement).closest('.delete-btn') as HTMLElement | null;
+        if (deleteBtn) {
+          const profileId = deleteBtn.dataset.profileId;
+          if (!profileId || !this.currentHostname) return;
+
+          if (confirm('Delete this profile? This will remove its container.')) {
+            await browser.contextualIdentities.remove(profileId);
+
+            const [currentProfiles, currentHostnameMap, lastMap] = await Promise.all([
+              profiles.getValue(),
+              hostnameProfiles.getValue(),
+              lastSelected.getValue(),
+            ]);
+
+            const { [profileId]: _removed, ...remainingProfiles } = currentProfiles;
+
+            const hostname = this.currentHostname;
+            const oldIds = currentHostnameMap[hostname] ?? [];
+            const newIds = oldIds.filter(id => id !== profileId);
+
+            const newHostnameMap = { ...currentHostnameMap };
+            if (newIds.length === 0) {
+              delete newHostnameMap[hostname];
+            } else {
+              newHostnameMap[hostname] = newIds;
+            }
+
+            const hasDefault = newIds.some(id => remainingProfiles[id]?.isDefault);
+            if (!hasDefault) {
+              delete remainingProfiles[DEFAULT_CONTAINER_ID];
+            }
+
+            const { [hostname]: _last, ...remainingLast } = lastMap;
+
+            await Promise.all([
+              profiles.setValue(remainingProfiles),
+              hostnameProfiles.setValue(newHostnameMap),
+              lastSelected.setValue(remainingLast),
+            ]);
+
+            await this.loadData();
+            await this.render();
+          }
+        }
+      });
     }
   }
 }
 
-// Initialize when popup loads
+function escapeHtml(str: string): string {
+  return str.replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]!));
+}
+
 let app: ContainerManager;
 document.addEventListener('DOMContentLoaded', () => {
   app = new ContainerManager();
