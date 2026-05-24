@@ -79,9 +79,10 @@ function getContainerColor(color: string): string {
     red: '#f87171',
     pink: '#f472b6',
     purple: '#a78bfa',
+    toolbar: '#7c7c7d',
     gray: '#9ca3af',
   };
-  return colors[color] || colors.gray;
+  return colors[color] || colors.toolbar;
 }
 
 function renderContainerList(data: AppData): void {
@@ -250,21 +251,9 @@ async function handleCreate(data: AppData): Promise<void> {
     const accountName = `Account ${data.currentProfiles.length}`;
     const containerName = formatContainerName(accountName, hostname);
 
-    const containerColors = [
-      'blue',
-      'turquoise',
-      'green',
-      'yellow',
-      'orange',
-      'red',
-      'pink',
-      'purple',
-    ];
-    const nextColor = containerColors[data.containers.length % containerColors.length];
-
     const newContainer = await browser.contextualIdentities.create({
       name: containerName,
-      color: nextColor,
+      color: 'toolbar',
       icon: 'circle',
     });
 

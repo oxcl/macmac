@@ -24,7 +24,13 @@ export default defineBackground(() => {
           const map = await lastSelected.getValue();
           const containerId = map[hostname];
 
+          const isDefault = !tab.cookieStoreId || tab.cookieStoreId === 'firefox-default';
+
           if (!containerId) {
+            if (isDefault) return;
+            const newTab = await browser.tabs.create({ url: tab.url, index: tab.index });
+            if (newTab.id) manualTabIds.add(newTab.id);
+            await browser.tabs.remove(tabId);
             return;
           }
 
@@ -32,7 +38,11 @@ export default defineBackground(() => {
             return;
           }
 
-          const newTab = await browser.tabs.create({ url: tab.url, cookieStoreId: containerId });
+          const newTab = await browser.tabs.create({
+            url: tab.url,
+            cookieStoreId: containerId,
+            index: tab.index,
+          });
           if (newTab.id) {
             manualTabIds.add(newTab.id);
           }
