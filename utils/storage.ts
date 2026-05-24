@@ -9,9 +9,12 @@ export const profiles = storage.defineItem<Record<string, Profile>>('local:profi
   fallback: {},
 });
 
-export const hostnameProfiles = storage.defineItem<Record<string, string[]>>('local:hostnameProfiles', {
-  fallback: {},
-});
+export const hostnameProfiles = storage.defineItem<Record<string, string[]>>(
+  'local:hostnameProfiles',
+  {
+    fallback: {},
+  }
+);
 
 export const lastSelected = storage.defineItem<Record<string, string>>('local:lastSelected', {
   fallback: {},

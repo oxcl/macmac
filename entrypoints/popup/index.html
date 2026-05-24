@@ -5,24 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Account-Based Containers</title>
     <meta name="manifest.type" content="browser_action" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="app">
       <header>
-        <img src="/logo.png" class="logo" alt="Logo" />
+        <img src="/icon/128.png" class="logo" alt="Logo" />
         <h1>Account-Based Containers</h1>
       </header>
 
       <div id="hostname-display" class="hostname-display"></div>
-      <p id="no-hostname" class="hidden">No hostname detected.</p>
+      <p id="no-hostname" class="hidden">Navigate to a website to manage containers.</p>
 
       <section id="containers-section" class="containers-list">
-        <h2>Available Accounts</h2>
+        <h2>Accounts</h2>
         <div id="container-items"></div>
       </section>
 
       <div id="create-section" class="create-container-section">
-        <button id="createContainerBtn" type="button" class="create-btn">Create New Account</button>
+        <button id="createContainerBtn" type="button" class="create-btn">
+          <span class="create-btn-icon">+</span>
+          Create New Account
+        </button>
         <div id="createMessage" class="message"></div>
       </div>
     </div>

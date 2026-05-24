@@ -23,9 +23,16 @@ declare module '@wxt-dev/browser' {
         icon: string;
         cookieStoreId: string;
       }
-      function create(details: { name: string; color?: string; icon?: string }): Promise<ContextualIdentity>;
+      function create(details: {
+        name: string;
+        color?: string;
+        icon?: string;
+      }): Promise<ContextualIdentity>;
       function query(details: object): Promise<ContextualIdentity[]>;
-      function update(cookieStoreId: string, details: { name?: string; color?: string; icon?: string }): Promise<ContextualIdentity>;
+      function update(
+        cookieStoreId: string,
+        details: { name?: string; color?: string; icon?: string }
+      ): Promise<ContextualIdentity>;
       function remove(cookieStoreId: string): Promise<void>;
     }
   }

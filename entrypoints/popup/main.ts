@@ -56,9 +56,32 @@ async function loadData(): Promise<AppData> {
 // --- Rendering ---
 
 function escapeHtml(str: string): string {
-  return str.replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]!));
+  return str.replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[c]!
+  );
+}
+
+function getContainerColor(color: string): string {
+  const colors: Record<string, string> = {
+    blue: '#60a5fa',
+    turquoise: '#2dd4bf',
+    green: '#4ade80',
+    yellow: '#facc15',
+    orange: '#fb923c',
+    red: '#f87171',
+    pink: '#f472b6',
+    purple: '#a78bfa',
+    gray: '#9ca3af',
+  };
+  return colors[color] || colors.gray;
 }
 
 function renderContainerList(data: AppData): void {
@@ -67,21 +90,35 @@ function renderContainerList(data: AppData): void {
 
   for (const profile of data.currentProfiles) {
     const isActive = profile.id === (data.lastSelectedId ?? DEFAULT_CONTAINER_ID);
-    const containerData = data.containers.find(c => c.cookieStoreId === profile.id);
+    const containerData = data.containers.find((c) => c.cookieStoreId === profile.id);
     const color = containerData?.color || 'gray';
+    const colorHex = getContainerColor(color);
 
     const profileDiv = document.createElement('div');
-    profileDiv.className = 'container-item';
+    profileDiv.className = `container-item${isActive ? ' active' : ''}${profile.isDefault ? ' default-item' : ''}`;
+    profileDiv.dataset.profileId = profile.id;
+
+    const hostnameDisplay = data.hostname
+      ? `<div class="container-hostname">${escapeHtml(data.hostname)}</div>`
+      : '';
+
     profileDiv.innerHTML = `
-      <div class="container-header" style="border-left: 4px solid ${color};">
-        <h3>${escapeHtml(profile.name)}</h3>
+      <div class="container-content">
+        <div class="container-color" style="background: ${colorHex};"></div>
+        <div class="container-info">
+          <div class="container-name">${escapeHtml(profile.name)}</div>
+          ${hostnameDisplay}
+        </div>
+        <div class="container-actions">
+          <button class="action-btn rename-btn" data-profile-id="${profile.id}" title="Rename">
+            <img src="/icon/rename.svg" alt="Rename">
+          </button>
+          <button class="action-btn delete-btn" data-profile-id="${profile.id}" ${profile.isDefault ? 'disabled' : ''} title="Delete">
+            <img src="/icon/delete.svg" alt="Delete">
+          </button>
+        </div>
       </div>
-      <div class="container-actions">
-        <button class="switch-btn" data-profile-id="${profile.id}">Switch</button>
-        <button class="rename-btn" data-profile-id="${profile.id}">Rename</button>
-        <button class="delete-btn" data-profile-id="${profile.id}" ${profile.isDefault ? 'disabled' : ''}>Delete</button>
-      </div>
-      ${isActive ? '<div class="status-badge">Current</div>' : ''}
+      ${isActive ? '<div class="active-indicator"></div>' : ''}
     `;
     containerItems.appendChild(profileDiv);
   }
@@ -92,7 +129,7 @@ function renderContainerList(data: AppData): void {
 type ModalResult = { confirmed: false } | { confirmed: true; value?: string };
 
 function showConfirm(message: string): Promise<ModalResult> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const overlay = document.getElementById('modal-overlay')!;
     const title = document.getElementById('modal-title')!;
     const body = document.getElementById('modal-body')!;
@@ -111,13 +148,25 @@ function showConfirm(message: string): Promise<ModalResult> {
       document.removeEventListener('keydown', onKeydown);
     }
 
-    function onCancel() { cleanup(); resolve({ confirmed: false }); }
-    function onConfirm() { cleanup(); resolve({ confirmed: true }); }
+    function onCancel() {
+      cleanup();
+      resolve({ confirmed: false });
+    }
+    function onConfirm() {
+      cleanup();
+      resolve({ confirmed: true });
+    }
     function onOverlayClick(e: MouseEvent) {
-      if (e.target === overlay) { cleanup(); resolve({ confirmed: false }); }
+      if (e.target === overlay) {
+        cleanup();
+        resolve({ confirmed: false });
+      }
     }
     function onKeydown(e: KeyboardEvent) {
-      if (e.key === 'Escape') { cleanup(); resolve({ confirmed: false }); }
+      if (e.key === 'Escape') {
+        cleanup();
+        resolve({ confirmed: false });
+      }
     }
 
     cancelBtn.addEventListener('click', onCancel);
@@ -128,7 +177,7 @@ function showConfirm(message: string): Promise<ModalResult> {
 }
 
 function showPrompt(message: string, defaultValue: string): Promise<ModalResult> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const overlay = document.getElementById('modal-overlay')!;
     const title = document.getElementById('modal-title')!;
     const body = document.getElementById('modal-body')!;
@@ -154,16 +203,31 @@ function showPrompt(message: string, defaultValue: string): Promise<ModalResult>
       document.removeEventListener('keydown', onKeydown);
     }
 
-    function onCancel() { cleanup(); resolve({ confirmed: false }); }
-    function onConfirm() { cleanup(); resolve({ confirmed: true, value: input.value }); }
+    function onCancel() {
+      cleanup();
+      resolve({ confirmed: false });
+    }
+    function onConfirm() {
+      cleanup();
+      resolve({ confirmed: true, value: input.value });
+    }
     function onInputKeydown(e: KeyboardEvent) {
-      if (e.key === 'Enter') { cleanup(); resolve({ confirmed: true, value: input.value }); }
+      if (e.key === 'Enter') {
+        cleanup();
+        resolve({ confirmed: true, value: input.value });
+      }
     }
     function onOverlayClick(e: MouseEvent) {
-      if (e.target === overlay) { cleanup(); resolve({ confirmed: false }); }
+      if (e.target === overlay) {
+        cleanup();
+        resolve({ confirmed: false });
+      }
     }
     function onKeydown(e: KeyboardEvent) {
-      if (e.key === 'Escape') { cleanup(); resolve({ confirmed: false }); }
+      if (e.key === 'Escape') {
+        cleanup();
+        resolve({ confirmed: false });
+      }
     }
 
     cancelBtn.addEventListener('click', onCancel);
@@ -186,7 +250,16 @@ async function handleCreate(data: AppData): Promise<void> {
     const accountName = `Account ${data.currentProfiles.length}`;
     const containerName = formatContainerName(accountName, hostname);
 
-    const containerColors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple'];
+    const containerColors = [
+      'blue',
+      'turquoise',
+      'green',
+      'yellow',
+      'orange',
+      'red',
+      'pink',
+      'purple',
+    ];
     const nextColor = containerColors[data.containers.length % containerColors.length];
 
     const newContainer = await browser.contextualIdentities.create({
@@ -208,7 +281,7 @@ async function handleCreate(data: AppData): Promise<void> {
     ]);
 
     const profileIds = currentHostnameMap[hostname] ?? [];
-    const hasStoredDefault = profileIds.some(id => currentProfiles[id]?.isDefault);
+    const hasStoredDefault = profileIds.some((id) => currentProfiles[id]?.isDefault);
 
     const profileUpdates: Record<string, Profile> = {
       ...currentProfiles,
@@ -231,7 +304,10 @@ async function handleCreate(data: AppData): Promise<void> {
     ]);
 
     const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
-    await browser.tabs.create({ url: `https://${hostname}`, cookieStoreId: newContainer.cookieStoreId });
+    await browser.tabs.create({
+      url: `https://${hostname}`,
+      cookieStoreId: newContainer.cookieStoreId,
+    });
     if (currentTab.id) await browser.tabs.remove(currentTab.id);
     window.close();
   } catch (err) {
@@ -240,21 +316,25 @@ async function handleCreate(data: AppData): Promise<void> {
   }
 }
 
-async function handleSwitch(profileId: string, data: AppData): Promise<void> {
+async function handleOpenInNewTab(profileId: string, data: AppData): Promise<void> {
   if (!data.hostname) return;
 
-  const map = { [data.hostname]: profileId };
-  await lastSelected.setValue(map);
-
   const cookieStoreId = profileId === DEFAULT_CONTAINER_ID ? undefined : profileId;
-  const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
-  await browser.tabs.create({ url: `https://${data.hostname}`, cookieStoreId });
-  if (currentTab.id) await browser.tabs.remove(currentTab.id);
+  const newTab = await browser.tabs.create({
+    url: `https://${data.hostname}`,
+    cookieStoreId,
+  });
+  if (newTab.id) {
+    await browser.runtime.sendMessage({
+      type: 'skipAutoSwitch',
+      tabId: newTab.id,
+    });
+  }
   window.close();
 }
 
 async function handleRename(profileId: string, data: AppData): Promise<void> {
-  const profile = data.currentProfiles.find(p => p.id === profileId);
+  const profile = data.currentProfiles.find((p) => p.id === profileId);
   if (!profile || !data.hostname) return;
 
   const result = await showPrompt('Enter new profile name:', profile.name);
@@ -262,6 +342,31 @@ async function handleRename(profileId: string, data: AppData): Promise<void> {
 
   const trimmed = result.value.trim();
   if (trimmed === '' || trimmed === profile.name) return;
+
+  if (trimmed === 'Default') {
+    await showConfirm('"Default" is a reserved name. Please choose another.');
+    return;
+  }
+
+  if (trimmed.length > 50) {
+    await showConfirm('Name must be 50 characters or less.');
+    return;
+  }
+
+  if (/[()]/.test(trimmed)) {
+    await showConfirm('Name cannot contain parentheses ( ).');
+    return;
+  }
+
+  const duplicate = data.currentProfiles.find(
+    (p) => p.id !== profileId && p.name.toLowerCase() === trimmed.toLowerCase()
+  );
+  if (duplicate) {
+    await showConfirm(
+      `A container named "${escapeHtml(trimmed)}" already exists for this website.`
+    );
+    return;
+  }
 
   const currentProfiles = await profiles.getValue();
   const existing = currentProfiles[profileId];
@@ -275,7 +380,9 @@ async function handleRename(profileId: string, data: AppData): Promise<void> {
 
   if (!profile.isDefault) {
     const containerName = formatContainerName(trimmed, data.hostname);
-    await browser.contextualIdentities.update(profileId, { name: containerName });
+    await browser.contextualIdentities.update(profileId, {
+      name: containerName,
+    });
   }
 
   await init();
@@ -298,7 +405,7 @@ async function handleDelete(profileId: string, data: AppData): Promise<void> {
   if (data.hostname) {
     const hostname = data.hostname;
     const oldIds = currentHostnameMap[hostname] ?? [];
-    const newIds = oldIds.filter(id => id !== profileId);
+    const newIds = oldIds.filter((id) => id !== profileId);
 
     const newHostnameMap = { ...currentHostnameMap };
     if (newIds.length === 0) {
@@ -307,7 +414,7 @@ async function handleDelete(profileId: string, data: AppData): Promise<void> {
       newHostnameMap[hostname] = newIds;
     }
 
-    const hasDefault = newIds.some(id => remainingProfiles[id]?.isDefault);
+    const hasDefault = newIds.some((id) => remainingProfiles[id]?.isDefault);
     if (!hasDefault) {
       delete remainingProfiles[DEFAULT_CONTAINER_ID];
     }
@@ -335,15 +442,9 @@ function setupEventListeners(data: AppData): void {
   containerItems.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
 
-    const switchBtn = target.closest('.switch-btn') as HTMLElement | null;
-    if (switchBtn) {
-      const profileId = switchBtn.dataset.profileId;
-      if (profileId) handleSwitch(profileId, data);
-      return;
-    }
-
     const renameBtn = target.closest('.rename-btn') as HTMLElement | null;
     if (renameBtn) {
+      e.stopPropagation();
       const profileId = renameBtn.dataset.profileId;
       if (profileId) handleRename(profileId, data);
       return;
@@ -351,8 +452,16 @@ function setupEventListeners(data: AppData): void {
 
     const deleteBtn = target.closest('.delete-btn') as HTMLElement | null;
     if (deleteBtn) {
+      e.stopPropagation();
       const profileId = deleteBtn.dataset.profileId;
       if (profileId) handleDelete(profileId, data);
+      return;
+    }
+
+    const containerItem = target.closest('.container-item') as HTMLElement | null;
+    if (containerItem) {
+      const profileId = containerItem.dataset.profileId;
+      if (profileId) handleOpenInNewTab(profileId, data);
     }
   });
 }
@@ -383,5 +492,5 @@ async function init(): Promise<void> {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  init().catch(err => console.error('Failed to start app:', err));
+  init().catch((err) => console.error('Failed to start app:', err));
 });
