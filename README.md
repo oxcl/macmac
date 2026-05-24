@@ -1,8 +1,8 @@
-# Account-Based Containers for Firefox
+# MacMac for Firefox
 
 ## Overview
 
-Account-Based Containers is a Firefox extension that provides an intuitive, account-based interface for managing Firefox containers. It allows you to create separate containers for different accounts on the same website (e.g., Work Email, Personal Email) and automatically switch to the appropriate container when visiting a site.
+MacMac is a Firefox extension that provides an intuitive, account-based interface for managing Firefox containers. It allows you to create separate containers for different accounts on the same website (e.g., Work Email, Personal Email) and automatically switch to the appropriate container when visiting a site.
 
 ## Key Features
 

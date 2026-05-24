@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Compact instructions for agents working on the Account-Based Containers Firefox extension.
+Compact instructions for agents working on the MacMac Firefox extension.
 
 ## Project Overview
 

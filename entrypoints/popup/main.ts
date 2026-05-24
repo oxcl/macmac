@@ -322,7 +322,6 @@ async function handleOpenInNewTab(profileId: string, data: AppData): Promise<voi
   const lastMap = await lastSelected.getValue();
   lastMap[data.hostname] = profileId;
   await lastSelected.setValue(lastMap);
-  console.log('[popup] Saved lastSelected:', { hostname: data.hostname, profileId });
 
   const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
   const cookieStoreId = profileId === DEFAULT_CONTAINER_ID ? undefined : profileId;
