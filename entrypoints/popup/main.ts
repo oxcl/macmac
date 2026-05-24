@@ -293,11 +293,13 @@ async function handleCreate(data: AppData): Promise<void> {
     ]);
 
     const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
-    await browser.tabs.create({
+    await browser.runtime.sendMessage({
+      type: 'createTab',
       url: `https://${hostname}`,
       cookieStoreId: newContainer.cookieStoreId,
+      index: currentTab.index,
+      oldTabId: currentTab.id,
     });
-    if (currentTab.id) await browser.tabs.remove(currentTab.id);
     window.close();
   } catch (err) {
     createMessage.textContent = `Error creating container: ${err}`;
@@ -314,17 +316,13 @@ async function handleOpenInNewTab(profileId: string, data: AppData): Promise<voi
 
   const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
   const cookieStoreId = profileId === DEFAULT_CONTAINER_ID ? undefined : profileId;
-  const newTab = await browser.tabs.create({
+  await browser.runtime.sendMessage({
+    type: 'createTab',
     url: `https://${data.hostname}`,
     cookieStoreId,
+    index: currentTab.index,
+    oldTabId: currentTab.id,
   });
-  if (newTab.id) {
-    await browser.runtime.sendMessage({
-      type: 'skipAutoSwitch',
-      tabId: newTab.id,
-    });
-  }
-  if (currentTab.id) await browser.tabs.remove(currentTab.id);
   window.close();
 }
 
