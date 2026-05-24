@@ -1,0 +1,14 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "dependencies": {
+        "wxt": "github:Semro/wxt",
+      },
+    },
+  },
+  "packages": {
+    "wxt": ["wxt@github:Semro/wxt#1b138f8", {}, "Semro-wxt-1b138f8", "sha512-n/O85JHD3RfWBZVwSg1sC/AqQV0F12wYKJQDNsc+8Kwi1fvHU6j4hLDHnxJQ9Z/gI10UfICzD/NDVtfy2MkmPw=="],
+  }
+}
