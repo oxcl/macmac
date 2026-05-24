@@ -1,97 +1,186 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #1a1a1a;
+  background-color: #f9f9fa;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  width: 320px;
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 12px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #54bc4ae0);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #3178c6aa);
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.card {
-  padding: 2em;
+header .logo {
+  width: 28px;
+  height: 28px;
 }
 
-.read-the-docs {
-  color: #888;
+header h1 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.hostname-display {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+  padding: 6px 8px;
+  background: #e8e8e8;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.create-container-section {
+  margin-bottom: 12px;
+}
+
+.create-container-section h2 {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #444;
+}
+
+.form-group {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.form-group label {
+  display: none;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #0078d4;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  padding: 5px 10px;
+  font-size: 12px;
+  background: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover {
+  background: #006cbd;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+#createMessage {
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+#createMessage.error {
+  color: #d32f2f;
+}
+
+.containers-list h2 {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #444;
+}
+
+.container-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: white;
+}
+
+.container-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.container-header h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.container-id {
+  font-size: 10px;
+  color: #999;
+}
+
+.container-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.switch-btn {
+  background: #28a745;
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+.switch-btn:hover {
+  background: #218838;
+}
+
+.rename-btn {
+  background: #6c757d;
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+.rename-btn:hover {
+  background: #5a6268;
+}
+
+.delete-btn {
+  background: #dc3545;
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+}
+
+.status-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 6px;
+  background: #28a745;
+  color: white;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
 }
