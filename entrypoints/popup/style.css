@@ -101,6 +101,22 @@ button:active {
   transform: translateY(1px);
 }
 
+.create-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  background: white;
+  color: #1a1a1a;
+  border: 2px solid #0078d4;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background: #f0f0f0;
+}
+
 #createMessage {
   margin-top: 6px;
   font-size: 11px;

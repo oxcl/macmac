@@ -1,7 +1,7 @@
 import { lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
 
 export default defineBackground(() => {
-  browser.tabs.onUpdated.addListener(async (tabId: number, changeInfo: any, tab: any) => {
+  browser.tabs.onUpdated.addListener(async (tabId: number, changeInfo: Browser.tabs.OnUpdatedInfo, tab: Browser.tabs.Tab) => {
     if (changeInfo.status === 'complete' && tab.url) {
       try {
         const url = new URL(tab.url);

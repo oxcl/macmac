@@ -16,20 +16,15 @@
       <div id="hostname-display" class="hostname-display"></div>
       <p id="no-hostname" class="hidden">No hostname detected.</p>
 
-      <section id="create-section" class="create-container-section">
-        <h2>Create New Account</h2>
-        <div class="form-group">
-          <label for="accountName">Account Name:</label>
-          <input type="text" id="accountName" placeholder="e.g. Work" />
-        </div>
-        <button id="createContainerBtn" type="button">Create</button>
-        <div id="createMessage" class="message"></div>
-      </section>
-
       <section id="containers-section" class="containers-list">
         <h2>Available Accounts</h2>
         <div id="container-items"></div>
       </section>
+
+      <div id="create-section" class="create-container-section">
+        <button id="createContainerBtn" type="button" class="create-btn">Create New Account</button>
+        <div id="createMessage" class="message"></div>
+      </div>
     </div>
 
     <div id="modal-overlay" class="modal-overlay hidden">

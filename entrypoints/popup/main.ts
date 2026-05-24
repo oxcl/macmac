@@ -14,7 +14,7 @@ import {
 
 interface AppData {
   hostname: string | null;
-  containers: any[];
+  containers: Browser.contextualIdentities.ContextualIdentity[];
   currentProfiles: Profile[];
   lastSelectedId: string | null;
 }
@@ -34,7 +34,7 @@ async function loadData(): Promise<AppData> {
     }
   }
 
-  let containers: any[] = [];
+  let containers: Browser.contextualIdentities.ContextualIdentity[] = [];
   try {
     containers = await browser.contextualIdentities.query({});
   } catch (err) {
@@ -67,7 +67,7 @@ function renderContainerList(data: AppData): void {
 
   for (const profile of data.currentProfiles) {
     const isActive = profile.id === (data.lastSelectedId ?? DEFAULT_CONTAINER_ID);
-    const containerData = data.containers.find((c: any) => c.cookieStoreId === profile.id);
+    const containerData = data.containers.find(c => c.cookieStoreId === profile.id);
     const color = containerData?.color || 'gray';
 
     const profileDiv = document.createElement('div');
@@ -177,20 +177,13 @@ function showPrompt(message: string, defaultValue: string): Promise<ModalResult>
 // --- Event Handlers ---
 
 async function handleCreate(data: AppData): Promise<void> {
-  const nameInput = document.getElementById('accountName') as HTMLInputElement;
-  const createMessage = document.getElementById('createMessage')!;
-  const accountName = nameInput.value.trim();
-
-  if (!accountName) {
-    createMessage.textContent = 'Please enter an account name';
-    createMessage.className = 'message error';
-    return;
-  }
-
   if (!data.hostname) return;
+
+  const createMessage = document.getElementById('createMessage')!;
 
   try {
     const hostname = data.hostname;
+    const accountName = `Account ${data.currentProfiles.length}`;
     const containerName = formatContainerName(accountName, hostname);
 
     const containerColors = ['blue', 'turquoise', 'green', 'yellow', 'orange', 'red', 'pink', 'purple'];
@@ -271,7 +264,13 @@ async function handleRename(profileId: string, data: AppData): Promise<void> {
   if (trimmed === '' || trimmed === profile.name) return;
 
   const currentProfiles = await profiles.getValue();
-  currentProfiles[profileId] = { ...currentProfiles[profileId], name: trimmed };
+  const existing = currentProfiles[profileId];
+  currentProfiles[profileId] = {
+    id: profileId,
+    name: trimmed,
+    hostnames: existing?.hostnames ?? [data.hostname],
+    isDefault: existing?.isDefault ?? profile.isDefault,
+  };
   await profiles.setValue(currentProfiles);
 
   if (!profile.isDefault) {
@@ -329,14 +328,9 @@ async function handleDelete(profileId: string, data: AppData): Promise<void> {
 
 function setupEventListeners(data: AppData): void {
   const createBtn = document.getElementById('createContainerBtn')!;
-  const nameInput = document.getElementById('accountName') as HTMLInputElement;
   const containerItems = document.getElementById('container-items')!;
 
   createBtn.addEventListener('click', () => handleCreate(data));
-
-  nameInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') handleCreate(data);
-  });
 
   containerItems.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
