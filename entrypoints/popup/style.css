@@ -120,15 +120,17 @@ header h1 {
 }
 
 .container-item.active {
-  background: var(--accent-dim);
-  border-color: var(--accent-border);
+  background: rgba(74, 222, 128, 0.08);
+  border-color: rgba(74, 222, 128, 0.4);
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.15);
+  cursor: default;
 }
 
 .container-item.active:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.5);
+  transform: none;
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.15);
 }
 
 .container-item.default-item {
@@ -249,9 +251,9 @@ header h1 {
   transform: translateY(-50%);
   width: 6px;
   height: 6px;
-  background: var(--accent);
+  background: #4ade80;
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
 }
 
 /* Create button */

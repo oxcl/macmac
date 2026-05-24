@@ -11,7 +11,7 @@ export default defineBackground(() => {
 
   browser.tabs.onUpdated.addListener(
     async (tabId: number, changeInfo: Browser.tabs.OnUpdatedInfo, tab: Browser.tabs.Tab) => {
-      if (changeInfo.status === 'complete' && tab.url) {
+      if (changeInfo.status === 'loading' && tab.url) {
         try {
           if (manualTabIds.has(tabId)) {
             manualTabIds.delete(tabId);
@@ -28,9 +28,17 @@ export default defineBackground(() => {
             return;
           }
 
-          await browser.tabs.update(tabId, { cookieStoreId: containerId });
+          if (tab.cookieStoreId === containerId) {
+            return;
+          }
+
+          const newTab = await browser.tabs.create({ url: tab.url, cookieStoreId: containerId });
+          if (newTab.id) {
+            manualTabIds.add(newTab.id);
+          }
+          await browser.tabs.remove(tabId);
         } catch (err) {
-          console.error('Error in background script:', err);
+          console.error('[background] Error switching tab:', err);
         }
       }
     }
