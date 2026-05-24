@@ -1,4 +1,4 @@
-import { lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
+import { lastSelected } from '@/utils/storage';
 
 const manualTabIds = new Set<number>();
 
