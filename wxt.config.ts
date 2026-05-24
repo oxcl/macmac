@@ -7,7 +7,7 @@ export default defineConfig({
       'cookies',
       'tabs',
       'storage',
-      'webRequestBlocking',
+      'webNavigation',
       '<all_urls>',
     ],
   },
