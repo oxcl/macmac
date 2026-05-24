@@ -319,6 +319,10 @@ async function handleCreate(data: AppData): Promise<void> {
 async function handleOpenInNewTab(profileId: string, data: AppData): Promise<void> {
   if (!data.hostname) return;
 
+  const lastMap = await lastSelected.getValue();
+  lastMap[data.hostname] = profileId;
+  await lastSelected.setValue(lastMap);
+
   const cookieStoreId = profileId === DEFAULT_CONTAINER_ID ? undefined : profileId;
   const newTab = await browser.tabs.create({
     url: `https://${data.hostname}`,
@@ -368,17 +372,44 @@ async function handleRename(profileId: string, data: AppData): Promise<void> {
     return;
   }
 
-  const currentProfiles = await profiles.getValue();
-  const existing = currentProfiles[profileId];
-  currentProfiles[profileId] = {
-    id: profileId,
-    name: trimmed,
-    hostnames: existing?.hostnames ?? [data.hostname],
-    isDefault: existing?.isDefault ?? profile.isDefault,
-  };
-  await profiles.setValue(currentProfiles);
+  const [currentProfiles, currentHostnameMap] = await Promise.all([
+    profiles.getValue(),
+    hostnameProfiles.getValue(),
+  ]);
 
-  if (!profile.isDefault) {
+  if (profile.isDefault && profileId === DEFAULT_CONTAINER_ID) {
+    const namedDefault: Profile = {
+      id: DEFAULT_CONTAINER_ID,
+      name: trimmed,
+      hostnames: [data.hostname!],
+      isDefault: true,
+    };
+
+    const profileUpdates: Record<string, Profile> = {
+      ...currentProfiles,
+      [DEFAULT_CONTAINER_ID]: namedDefault,
+    };
+
+    const newHostnameMap = { ...currentHostnameMap };
+    const oldIds = newHostnameMap[data.hostname!] ?? [];
+    if (!oldIds.includes(DEFAULT_CONTAINER_ID)) {
+      newHostnameMap[data.hostname!] = [DEFAULT_CONTAINER_ID, ...oldIds];
+    }
+
+    await Promise.all([
+      profiles.setValue(profileUpdates),
+      hostnameProfiles.setValue(newHostnameMap),
+    ]);
+  } else {
+    const existing = currentProfiles[profileId];
+    currentProfiles[profileId] = {
+      id: profileId,
+      name: trimmed,
+      hostnames: existing?.hostnames ?? [data.hostname],
+      isDefault: existing?.isDefault ?? profile.isDefault,
+    };
+    await profiles.setValue(currentProfiles);
+
     const containerName = formatContainerName(trimmed, data.hostname);
     await browser.contextualIdentities.update(profileId, {
       name: containerName,
