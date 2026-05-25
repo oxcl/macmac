@@ -31,8 +31,8 @@ async function onContainerClick(e: Event): Promise<void> {
     e.stopPropagation();
     const accountId = deleteBtn.dataset.accountId;
     if (accountId) {
-      await handleDelete(accountId, currentData);
-      await init();
+      const tabSwitched = await handleDelete(accountId, currentData);
+      if (!tabSwitched) await init();
     }
     return;
   }

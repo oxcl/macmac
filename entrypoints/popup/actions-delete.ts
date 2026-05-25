@@ -8,9 +8,9 @@ import type { AppData } from './types';
 
 const tabService = createProxyService(TAB_SERVICE_KEY);
 
-export async function handleDelete(accountId: string, data: AppData): Promise<void> {
+export async function handleDelete(accountId: string, data: AppData): Promise<boolean> {
   const result = await showConfirm(t('deleteConfirm'));
-  if (!result.confirmed) return;
+  if (!result.confirmed) return false;
 
   await browser.contextualIdentities.remove(accountId);
   tabService.cleanupBindingsForContainer(accountId);
@@ -54,6 +54,9 @@ export async function handleDelete(accountId: string, data: AppData): Promise<vo
       if (currentTab.id) {
         await tabService.openInDefault(`https://${hostname}`, currentTab.index, currentTab.id);
       }
+      window.close();
+      return true;
     }
   }
+  return false;
 }
