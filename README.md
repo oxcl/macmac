@@ -1,6 +1,6 @@
 # MacMac 🦊
 
-[中文](README.zh.md) · [Русский](README.ru.md) · [Español](README.es.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md)
+[中文](translations/README.zh.md) · [Русский](translations/README.ru.md) · [Español](translations/README.es.md) · [العربية](translations/README.ar.md) · [हिन्दी](translations/README.hi.md)
 
 Account-based container management for Firefox.
 
