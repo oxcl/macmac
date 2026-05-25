@@ -39,6 +39,7 @@ async function loadData(): Promise<AppData> {
     containers = await browser.contextualIdentities.query({});
   } catch (err) {
     console.error('Failed to query containers:', err);
+    showError('Failed to query containers.');
   }
 
   let currentProfiles: Profile[] = [];
@@ -51,6 +52,19 @@ async function loadData(): Promise<AppData> {
   }
 
   return { hostname, containers, currentProfiles, lastSelectedId };
+}
+
+// --- Error Display ---
+
+function showError(message: string): void {
+  const errorBar = document.getElementById('error-bar')!;
+  errorBar.textContent = message;
+  errorBar.classList.remove('hidden');
+}
+
+function clearError(): void {
+  const errorBar = document.getElementById('error-bar')!;
+  errorBar.classList.add('hidden');
 }
 
 // --- Rendering ---
@@ -86,40 +100,67 @@ function getContainerColor(color: string): string {
 }
 
 function renderContainerList(data: AppData): void {
-  const containerItems = document.getElementById('container-items')!;
-  containerItems.innerHTML = '';
+  const activeItems = document.getElementById('active-items')!;
+  const otherItems = document.getElementById('other-items')!;
+  const otherGroup = document.getElementById('other-group')!;
+  activeItems.innerHTML = '';
+  otherItems.innerHTML = '';
 
-  for (const profile of data.currentProfiles) {
-    const isActive = profile.id === (data.lastSelectedId ?? DEFAULT_CONTAINER_ID);
+  const activeId = data.lastSelectedId ?? DEFAULT_CONTAINER_ID;
+  const activeProfile = data.currentProfiles.find((p) => p.id === activeId);
+  const otherProfiles = data.currentProfiles.filter((p) => p.id !== activeId);
+
+  let delay = 0.15;
+
+  function createItem(profile: Profile, isActive: boolean): HTMLDivElement {
     const containerData = data.containers.find((c) => c.cookieStoreId === profile.id);
     const color = containerData?.color || 'gray';
     const colorHex = getContainerColor(color);
 
-    const profileDiv = document.createElement('div');
-    profileDiv.className = `container-item${isActive ? ' active' : ''}${profile.isDefault ? ' default-item' : ''}`;
-    profileDiv.dataset.profileId = profile.id;
-    const idx = data.currentProfiles.indexOf(profile);
-    profileDiv.style.opacity = '0';
-    profileDiv.style.animation = `fadeSlideIn 0.3s ease forwards`;
-    profileDiv.style.animationDelay = `${0.15 + idx * 0.04}s`;
+    const div = document.createElement('div');
+    div.className = `container-item${isActive ? ' active' : ''}${profile.isDefault ? ' default-item' : ''}`;
+    div.dataset.profileId = profile.id;
+    div.style.opacity = '0';
+    div.style.animation = `fadeSlideIn 0.3s ease forwards`;
+    div.style.animationDelay = `${delay}s`;
+    delay += 0.04;
 
-    profileDiv.innerHTML = `
+    div.innerHTML = `
       <div class="container-content">
         <div class="container-color" style="background: ${colorHex};"></div>
         <div class="container-name">${escapeHtml(profile.name)}</div>
         <div class="container-actions">
           <button class="action-btn rename-btn" data-profile-id="${profile.id}" title="Rename">
-            <img src="/icon/rename.svg" alt="Rename">
+            <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
+              <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+            </svg>
+          </button>
+          <button class="action-btn newtab-btn" data-profile-id="${profile.id}" title="Open in New Tab">
+            <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
+              <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h240v80H200v560h560v-240h80v240q0 33-23.5 56.5T760-120H200Zm440-400v-120H520v-80h120v-120h80v120h120v80H720v120h-80Z"/>
+            </svg>
           </button>
           <button class="action-btn delete-btn" data-profile-id="${profile.id}" ${profile.isDefault ? 'disabled' : ''} title="Delete">
-            <img src="/icon/delete.svg" alt="Delete">
+            <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
+              <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+            </svg>
           </button>
         </div>
       </div>
       ${isActive ? '<div class="active-indicator"></div>' : ''}
     `;
-    containerItems.appendChild(profileDiv);
+    return div;
   }
+
+  if (activeProfile) {
+    activeItems.appendChild(createItem(activeProfile, true));
+  }
+
+  for (const profile of otherProfiles) {
+    otherItems.appendChild(createItem(profile, false));
+  }
+
+  otherGroup.classList.toggle('hidden', otherProfiles.length === 0);
 }
 
 // --- Modal ---
@@ -241,8 +282,6 @@ function showPrompt(message: string, defaultValue: string): Promise<ModalResult>
 async function handleCreate(data: AppData): Promise<void> {
   if (!data.hostname) return;
 
-  const createMessage = document.getElementById('createMessage')!;
-
   try {
     const hostname = data.hostname;
     const accountName = `Account ${data.currentProfiles.length}`;
@@ -299,8 +338,8 @@ async function handleCreate(data: AppData): Promise<void> {
     });
     window.close();
   } catch (err) {
-    createMessage.textContent = `Error creating container: ${err}`;
-    createMessage.className = 'message error';
+    console.error('Failed to create container:', err);
+    showError(`Error creating container: ${err}`);
   }
 }
 
@@ -485,6 +524,7 @@ function setupEventListeners(data: AppData): void {
 }
 
 async function init(): Promise<void> {
+  clearError();
   const data = await loadData();
 
   const hostnameDisplay = document.getElementById('hostname-display')!;
@@ -510,5 +550,8 @@ async function init(): Promise<void> {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  init().catch((err) => console.error('Failed to start app:', err));
+  init().catch((err) => {
+    console.error('Failed to start app:', err);
+    showError('Failed to start the app.');
+  });
 });
