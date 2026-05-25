@@ -158,10 +158,10 @@
 
       const doCopy = () => {
         if (copyTimer) clearTimeout(copyTimer);
-        copyBtn.textContent = 'Copied';
+        copyBtn.textContent = copyBtn.dataset.copiedLabel || 'Copied';
         copyBtn.classList.add('copied');
         copyTimer = setTimeout(() => {
-          copyBtn.textContent = 'Copy';
+          copyBtn.textContent = copyBtn.dataset.copyLabel || 'Copy';
           copyBtn.classList.remove('copied');
         }, 2000);
       };

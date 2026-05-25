@@ -665,7 +665,7 @@ a:focus-visible {
   font-size: 0.95rem;
   font-weight: 600;
   color: #0f172a;
-  text-align: left;
+  text-align: start;
   transition: color 0.2s;
 }
 
@@ -675,7 +675,7 @@ a:focus-visible {
 
 .token-item:not(.has-networks) {
   padding: 0.875rem 1.125rem;
-  text-align: left;
+  text-align: start;
   font-size: 0.95rem;
   font-weight: 600;
   color: #0f172a;
@@ -783,7 +783,7 @@ a:focus-visible {
   cursor: pointer;
   flex: 1;
   min-width: 0;
-  text-align: left;
+  text-align: start;
   transition:
     background 0.2s,
     border-color 0.2s;
