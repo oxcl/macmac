@@ -6,6 +6,7 @@ import {
   synthesizeDefaultAccount,
   type Account,
 } from '@/utils/storage';
+import { t } from '@/utils/i18n';
 import { showError } from './error';
 import type { AppData } from './types';
 
@@ -14,7 +15,7 @@ export async function handleCreate(data: AppData): Promise<void> {
 
   try {
     const hostname = data.hostname;
-    const accountName = `Account ${data.currentAccounts.length}`;
+    const accountName = `${t('accountPrefix')}${data.currentAccounts.length}`;
     const containerName = formatContainerName(accountName, hostname);
 
     const newContainer = await browser.contextualIdentities.create({
@@ -71,6 +72,6 @@ export async function handleCreate(data: AppData): Promise<void> {
     window.close();
   } catch (err) {
     console.error('Failed to create container:', err);
-    showError(`Error creating container: ${err}`);
+    showError(`${t('errorCreating')}${err}`);
   }
 }

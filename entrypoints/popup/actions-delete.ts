@@ -1,9 +1,10 @@
 import { accounts, hostnameAccounts, lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
+import { t } from '@/utils/i18n';
 import { showConfirm } from './modal';
 import type { AppData } from './types';
 
 export async function handleDelete(accountId: string, data: AppData): Promise<void> {
-  const result = await showConfirm('Delete this account? This will remove its container.');
+  const result = await showConfirm(t('deleteConfirm'));
   if (!result.confirmed) return;
 
   await browser.contextualIdentities.remove(accountId);

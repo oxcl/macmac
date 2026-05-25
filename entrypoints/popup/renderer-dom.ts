@@ -1,4 +1,5 @@
 import { DEFAULT_CONTAINER_ID, type Account } from '@/utils/storage';
+import { t } from '@/utils/i18n';
 import type { AppData } from './types';
 
 function escapeHtml(str: string): string {
@@ -62,17 +63,17 @@ export function renderContainerList(data: AppData): void {
         <div class="container-color" style="background: ${colorHex};"></div>
         <div class="container-name">${escapeHtml(account.name)}</div>
         <div class="container-actions">
-          <button class="action-btn rename-btn" data-account-id="${account.id}" title="Rename">
+          <button class="action-btn rename-btn" data-account-id="${account.id}" title="${t('rename')}">
             <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
               <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
             </svg>
           </button>
-          <button class="action-btn newtab-btn" data-account-id="${account.id}" title="Open in New Tab" ${isActive ? 'disabled' : ''}>
+          <button class="action-btn newtab-btn" data-account-id="${account.id}" title="${t('openInNewTab')}" ${isActive ? 'disabled' : ''}>
             <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
               <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h240v80H200v560h560v-240h80v240q0 33-23.5 56.5T760-120H200Zm440-400v-120H520v-80h120v-120h80v120h120v80H720v120h-80Z"/>
             </svg>
           </button>
-          <button class="action-btn delete-btn" data-account-id="${account.id}" ${account.isDefault ? 'disabled' : ''} title="Delete">
+          <button class="action-btn delete-btn" data-account-id="${account.id}" ${account.isDefault ? 'disabled' : ''} title="${t('delete')}">
             <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
               <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
             </svg>

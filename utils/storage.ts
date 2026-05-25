@@ -33,6 +33,10 @@ export const supportReminder = storage.defineItem<SupportReminder | null>('local
   fallback: null,
 });
 
+export const language = storage.defineItem<string>('local:language', {
+  fallback: '',
+});
+
 export const DEFAULT_CONTAINER_ID = 'firefox-default';
 
 // When there's only one hostname or no registered container for this

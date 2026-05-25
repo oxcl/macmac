@@ -1,4 +1,5 @@
 import { DEFAULT_CONTAINER_ID } from '@/utils/storage';
+import { t } from '@/utils/i18n';
 import type { AppData } from './types';
 import { clearError } from './error';
 import { loadAppData } from './renderer-data';
@@ -64,7 +65,7 @@ export async function init(): Promise<void> {
   const containersSection = document.getElementById('containers-section')!;
 
   if (currentData.hostname) {
-    hostnameDisplay.textContent = `Website: ${currentData.hostname}`;
+    hostnameDisplay.textContent = `${t('websitePrefix')}${currentData.hostname}`;
     hostnameDisplay.classList.remove('hidden');
     noHostname.classList.add('hidden');
     createSection.classList.remove('hidden');

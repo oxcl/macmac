@@ -1,4 +1,5 @@
 import { getAccountsForHostname, lastSelected, type Account } from '@/utils/storage';
+import { t } from '@/utils/i18n';
 import type { AppData } from './types';
 import { showError } from './error';
 
@@ -20,7 +21,7 @@ export async function loadAppData(): Promise<AppData> {
     containers = await browser.contextualIdentities.query({});
   } catch (err) {
     console.error('Failed to query containers:', err);
-    showError('Failed to query containers.');
+    showError(t('failedContainers'));
   }
 
   let currentAccounts: Account[] = [];

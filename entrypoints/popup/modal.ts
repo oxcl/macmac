@@ -1,3 +1,5 @@
+import { t } from '@/utils/i18n';
+
 export type ModalResult = { confirmed: false } | { confirmed: true; value?: string };
 export type SupportAction = 'github' | 'rate' | 'donate' | 'not-interested';
 
@@ -9,7 +11,7 @@ export function showConfirm(message: string): Promise<ModalResult> {
     const cancelBtn = document.getElementById('modal-cancel')!;
     const confirmBtn = document.getElementById('modal-confirm')!;
 
-    title.textContent = 'Confirm';
+    title.textContent = t('confirm');
     body.textContent = message;
     overlay.classList.remove('hidden');
 
@@ -57,7 +59,7 @@ export function showPrompt(defaultValue: string): Promise<ModalResult> {
     const cancelBtn = document.getElementById('modal-cancel')!;
     const confirmBtn = document.getElementById('modal-confirm')!;
 
-    title.textContent = 'Rename Account';
+    title.textContent = t('renameAccount');
     body.innerHTML = '';
     const input = document.createElement('input');
     input.type = 'text';

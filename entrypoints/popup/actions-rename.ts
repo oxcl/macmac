@@ -5,6 +5,7 @@ import {
   formatContainerName,
   type Account,
 } from '@/utils/storage';
+import { t } from '@/utils/i18n';
 import { showConfirm, showPrompt } from './modal';
 import type { AppData } from './types';
 
@@ -19,17 +20,17 @@ export async function handleRename(accountId: string, data: AppData): Promise<vo
   if (trimmed === '' || trimmed === account.name) return;
 
   if (trimmed === 'Default') {
-    await showConfirm('"Default" is a reserved name. Please choose another.');
+    await showConfirm(t('nameReserved'));
     return;
   }
 
   if (trimmed.length > 50) {
-    await showConfirm('Name must be 50 characters or less.');
+    await showConfirm(t('nameTooLong'));
     return;
   }
 
   if (/[()]/.test(trimmed)) {
-    await showConfirm('Name cannot contain parentheses ( ).');
+    await showConfirm(t('nameNoParens'));
     return;
   }
 
@@ -37,7 +38,7 @@ export async function handleRename(accountId: string, data: AppData): Promise<vo
     (p) => p.id !== accountId && p.name.toLowerCase() === trimmed.toLowerCase()
   );
   if (duplicate) {
-    await showConfirm(`A container named "${trimmed}" already exists for this website.`);
+    await showConfirm(t('nameDuplicate', trimmed));
     return;
   }
 
