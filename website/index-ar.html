@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MacMac — Multi-Account Container Manager for Firefox</title>
+    <title>MacMac — مدير الحسابات المتعددة لفايرفوكس</title>
     <meta
       name="description"
-      content="MacMac is a Firefox extension that lets you create and switch between multiple accounts on the same website using Firefox Containers. Works automatically, no manual switching needed."
+      content="MacMac هو إضافة فايرفوكس تتيح لك إنشاء والتبديل بين حسابات متعددة على نفس الموقع باستخدام حاويات فايرفوكس. يعمل تلقائيًا دون حاجة للتبديل اليدوي."
     />
     <meta
       name="keywords"
@@ -14,7 +14,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#4f46e5" />
-    <link rel="canonical" href="https://oxcl.github.io/macmac/" />
+    <link rel="canonical" href="https://oxcl.github.io/macmac/index-ar.html" />
     <link rel="alternate" hreflang="en" href="https://oxcl.github.io/macmac/" />
     <link rel="alternate" hreflang="zh" href="https://oxcl.github.io/macmac/index-zh.html" />
     <link rel="alternate" hreflang="ru" href="https://oxcl.github.io/macmac/index-ru.html" />
@@ -24,12 +24,12 @@
     <link rel="alternate" hreflang="x-default" href="https://oxcl.github.io/macmac/" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="MacMac — Multi-Account Container Manager for Firefox" />
+    <meta property="og:title" content="MacMac — مدير الحسابات المتعددة لفايرفوكس" />
     <meta
       property="og:description"
-      content="Create and switch between multiple accounts on the same website. Each account fully isolated with Firefox Containers."
+      content="أنشئ وانتقل بين حسابات متعددة على نفس الموقع. كل حساب معززول بالكامل بحاويات فايرفوكس."
     />
-    <meta property="og:url" content="https://oxcl.github.io/macmac/" />
+    <meta property="og:url" content="https://oxcl.github.io/macmac/index-ar.html" />
     <meta property="og:image" content="https://oxcl.github.io/macmac/images/logo.png" />
     <meta property="og:image:width" content="128" />
     <meta property="og:image:height" content="128" />
@@ -37,10 +37,10 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MacMac — Multi-Account Container Manager for Firefox" />
+    <meta name="twitter:title" content="MacMac — مدير الحسابات المتعددة لفايرفوكس" />
     <meta
       name="twitter:description"
-      content="Manage multiple accounts on any website with Firefox Containers."
+      content="أدر حسابات متعددة على أي موقع باستخدام حاويات فايرفوكس."
     />
     <meta name="twitter:image" content="https://oxcl.github.io/macmac/images/logo.png" />
     <meta name="twitter:image:width" content="128" />
@@ -54,8 +54,8 @@
         "name": "MacMac",
         "operatingSystem": "Firefox",
         "applicationCategory": "BrowserExtension",
-        "description": "Create and switch between multiple accounts on the same website using Firefox Containers. Each account is fully isolated.",
-        "url": "https://oxcl.github.io/macmac/",
+        "description": "أنشئ وانتقل بين حسابات متعددة على نفس الموقع باستخدام حاويات فايرفوكس. كل حساب معززول بالكامل.",
+        "url": "https://oxcl.github.io/macmac/index-ar.html",
         "image": "https://oxcl.github.io/macmac/images/logo.png",
         "author": {
           "@type": "Person",
@@ -68,10 +68,10 @@
           "priceCurrency": "USD"
         },
         "featureList": [
-          "Create multiple accounts per website",
-          "Automatic container switching",
-          "Persistent account selection",
-          "Simple popup interface"
+          "إنشاء حسابات متعددة لكل موقع",
+          "تبديل تلقائي للحاويات",
+          "حفظ اختيار الحساب",
+          "واجهة بسيطة"
         ],
         "applicationSubCategory": "Firefox Extension",
         "browserRequirements": "Firefox"
@@ -113,16 +113,16 @@
     <!-- Navbar -->
     <header class="navbar" id="navbar" role="banner">
       <div class="container nav-container">
-        <a href="#" class="nav-brand" aria-label="MacMac home">
+        <a href="#" class="nav-brand" aria-label="الصفحة الرئيسية لـ MacMac">
           <img src="images/logo-32.png" alt="" width="32" height="32" aria-hidden="true" />
           <span>MacMac</span>
         </a>
-        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <button class="nav-toggle" aria-label="تبديل قائمة التنقل" aria-expanded="false">
           <span class="nav-toggle-bar"></span>
           <span class="nav-toggle-bar"></span>
           <span class="nav-toggle-bar"></span>
         </button>
-        <nav aria-label="Main navigation">
+        <nav aria-label="التنقل الرئيسي">
           <ul class="nav-links">
             <li>
               <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener"
@@ -130,10 +130,10 @@
                 GitHub</a
               >
             </li>
-            <li><a href="#donate">Donate</a></li>
+            <li><a href="#donate">تبرع</a></li>
             <li class="lang-dropdown">
               <button class="lang-btn" aria-haspopup="true" aria-expanded="false">
-                Language
+                اللغة
                 <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
                   <path
                     d="M1 1l4 4 4-4"
@@ -161,32 +161,32 @@
 
     <main>
       <!-- Hero Section -->
-      <section id="hero" aria-label="MacMac hero">
+      <section id="hero" aria-label="MacMac الرئيسي">
         <div class="container hero-container">
           <div class="hero-text">
             <h1>
               <span class="h1-brand">MacMac</span>
-              <span class="h1-sub">Multi-Account Container Manager for Firefox</span>
+              <span class="h1-sub">مدير الحسابات المتعددة لفايرفوكس</span>
             </h1>
-            <p class="tagline">Multiple accounts. Same website. Fully isolated.</p>
+            <p class="tagline">حسابات متعددة. نفس الموقع. عزل كامل.</p>
             <p class="hero-desc">
-              A Firefox extension that lets you create and switch between multiple accounts on the same website. Each account runs in its own container with separate cookies, sessions, and data.
+              إضافة فايرفوكس تتيح لك إنشاء والتبديل بين حسابات متعددة على نفس الموقع. كل حساب يعمل في حاوية مستقلة بookies وجلسات وبيانات منفصلة.
             </p>
             <div class="hero-buttons">
               <a href="#" class="btn btn-primary btn-lg"
                 ><img src="images/firefox.png" alt="" width="20" height="20" aria-hidden="true" />
-                Get it on Firefox Add-ons</a
+                حصل عليه من Firefox Add-ons</a
               >
               <a href="https://github.com/oxcl/macmac/releases" class="btn btn-secondary btn-lg"
                 ><svg width="20" height="20" aria-hidden="true"><use href="#icon-github" /></svg>
-                Download from GitHub</a
+                تحميل من GitHub</a
               >
             </div>
           </div>
           <div class="hero-visual">
             <img
               src="images/hero-light.png"
-              alt="MacMac extension popup interface showing container management for the current website"
+              alt="واجهة إضافة MacMac لإدارة الحاويات للموقع الحالي"
               class="hero-screenshot hero-light-img"
             />
             <img
@@ -200,38 +200,38 @@
       </section>
 
       <!-- Stats Section -->
-      <section id="stats" aria-label="MacMac statistics">
+      <section id="stats" aria-label="إحصائيات MacMac">
         <div class="container stats-container">
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-download" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">Downloads</span>
+            <span class="stat-label">التحميلات</span>
           </div>
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-star" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">Store Rating</span>
+            <span class="stat-label">تقييم المتجر</span>
           </div>
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-github" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">GitHub Stars</span>
+            <span class="stat-label">نجوم GitHub</span>
           </div>
         </div>
       </section>
 
       <!-- Story / How It Works -->
-      <section id="how-it-works" aria-label="How MacMac works">
+      <section id="how-it-works" aria-label="كيف يعمل MacMac">
         <div class="container">
-          <h2>How It Works</h2>
+          <h2>كيف يعمل</h2>
           <p class="section-sub">
-            How MacMac manages multiple accounts per website.
+            كيف يدير MacMac حسابات متعددة لكل موقع.
           </p>
 
           <div class="story-step" id="step-1">
@@ -241,7 +241,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration of a user frustrated by multiple browser tabs with different accounts on the same website"
+                aria-label="رسم يوضح مستخدمًا محبطًا بسبب علامات تبويب متعددة بحسابات مختلفة على نفس الموقع"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -306,17 +306,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Multiple accounts mixed together — confusing and error-prone
+                  حسابات متعددة مختلطة — مربكة ومعرضة للأخطاء
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">01</span>
-              <h3>The Problem</h3>
+              <h3>المشكلة</h3>
               <p>
-                Juggling multiple accounts on the same website is frustrating. You log out, log back
-                in, lose your place, accidentally post from the wrong account. Browser profiles help
-                but they're heavy and don't share bookmarks or extensions.
+                إدارة حسابات متعددة على نفس الموقع مزعجة. تسجل خروج، ثم دخول، تفقد مكانك، وتنشر بالخطأ من الحساب الخاطئ. ملفات تعريف المتصفح تساعد لكنها ثقيلة ولا تشارك الإضافات أو الإشارات المرجعية.
               </p>
             </div>
           </div>
@@ -328,7 +326,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration showing a user creating separate container accounts on the same website"
+                aria-label="رسم يوضح مستخدمًا ينشئ حسابات حاويات منفصلة على نفس الموقع"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -364,7 +362,7 @@
                   font-size="11"
                   fill="#16a34a"
                 >
-                  Switch to this account
+                  التبديل إلى هذا الحساب
                 </text>
                 <rect
                   x="60"
@@ -424,16 +422,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Create separate accounts — each in its own container
+                  أنشئ حسابات منفصلة — كل واحد في حاويته الخاصة
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">02</span>
-              <h3>Create Accounts</h3>
+              <h3>إنشاء الحسابات</h3>
               <p>
-                Create multiple accounts for the same website. Each one is backed by its own Firefox
-                Container, keeping cookies, sessions, and data completely isolated from one another.
+                أنشئ حسابات متعددة لموقع واحد. كل حساب مدعوم بحاوية فايرفوكس مستقلة، تحافظ على cookies والجلسات والبيانات معزولة بالكامل عن بعضها.
               </p>
             </div>
           </div>
@@ -445,7 +442,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Diagram showing automatic container switching when navigating between websites"
+                aria-label="رسم يوضح التبديل التلقائي للحاويات عند التنقل بين المواقع"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -481,7 +478,7 @@
                   font-size="11"
                   fill="#16a34a"
                 >
-                  Work account
+                  حساب العمل
                 </text>
                 <rect x="65" y="115" width="60" height="20" fill="#e2e8f0" rx="4" />
                 <rect x="135" y="115" width="80" height="20" fill="#e2e8f0" rx="4" />
@@ -526,7 +523,7 @@
                   font-size="11"
                   fill="#2563eb"
                 >
-                  Personal account
+                  حساب شخصي
                 </text>
                 <path
                   d="M300 150 L300 190"
@@ -549,7 +546,7 @@
                   font-size="12"
                   fill="#64748b"
                 >
-                  Automatic switching on navigation
+                  تبديل تلقائي عند التنقل
                 </text>
                 <text
                   x="300"
@@ -559,16 +556,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  MacMac remembers and switches automatically
+                  MacMac يتذكر ويبدل تلقائيًا
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">03</span>
-              <h3>Automatic Switching</h3>
+              <h3>التبديل التلقائي</h3>
               <p>
-                MacMac remembers which account you used last for each website. When you navigate to
-                a site, it switches to the right container automatically. You just browse.
+                MacMac يتذكر آخر حساب استخدمته لكل موقع. عندما تنتقل إلى موقع، يبدل إلى الحاوية المناسبة تلقائيًا. فقط تصفح.
               </p>
             </div>
           </div>
@@ -580,7 +576,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration of a happy user with organized browser tabs each in their correct container"
+                aria-label="رسم لمستخدم سعيد بعلامات تبويب منظمة كل واحدة في حاويتها الصحيحة"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -685,7 +681,7 @@
                   font-size="9"
                   fill="#16a34a"
                 >
-                  Work
+                  العمل
                 </text>
                 <rect
                   x="60"
@@ -712,7 +708,7 @@
                   font-size="9"
                   fill="#2563eb"
                 >
-                  Personal
+                  شخصي
                 </text>
                 <rect x="400" y="280" width="100" height="10" fill="#f59e0b" rx="3" opacity="0.6" />
                 <text
@@ -723,7 +719,7 @@
                   font-size="9"
                   fill="#d97706"
                 >
-                  School
+                  المدرسة
                 </text>
                 <circle cx="520" cy="300" r="20" fill="#22c55e" opacity="0.15" />
                 <path
@@ -742,16 +738,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Every website in the right container — automatically
+                  كل الموقع في الحاوية الصحيحة — تلقائيًا
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">04</span>
-              <h3>It Just Works</h3>
+              <h3>يعمل ببساطة</h3>
               <p>
-                Once set up, every website opens in the right container. Your accounts stay
-                separate, your sessions stay clean, and you don't have to think about it.
+                بعد الإعداد، كل موقع يفتح في الحاوية الصحيحة. حساباتك تبقى منفصلة، جلساتك نظيفة، ولا تحتاج للتفكير في الأمر.
               </p>
             </div>
           </div>
@@ -759,68 +754,52 @@
       </section>
 
       <!-- FAQ Section -->
-      <section id="faq" aria-label="Frequently asked questions">
+      <section id="faq" aria-label="الأسئلة الشائعة">
         <div class="container faq-container">
-          <h2>Frequently Asked Questions</h2>
+          <h2>الأسئلة الشائعة</h2>
 
           <div class="faq-list">
             <details class="faq-item">
-              <summary>How is MacMac different from Firefox's built-in Container feature?</summary>
+              <summary>كيف يختلف MacMac عن ميزة الحاويات المدمجة في فايرفوكس؟</summary>
               <p>
-                Firefox's built-in Container feature lets you manually assign tabs to containers.
-                MacMac builds on that by automatically remembering which container you used last for
-                each website and switching to it — no manual selection required. It also provides a
-                dedicated popup interface for managing all your accounts in one place.
+                ميزة الحاويات المدمجة في فايرفوكس تتيح لك تعيين علامات التبويب يدويًا للحاويات. MacMac يبني على ذلك بتذكر آخر حاوية استخدمتها لكل موقع والتبديل إليها تلقائيًا — دون حاجة لاختيار يدوي. كما يوفر واجهة منبثقة مخصصة لإدارة جميع حساباتك في مكان واحد.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Is my data private? Does MacMac collect any information?</summary>
+              <summary>هل بياناتي خاصة؟ هل يجمع MacMac أي معلومات؟</summary>
               <p>
-                MacMac is fully private. All data — your container mappings, preferences, and
-                settings — is stored locally in your browser's storage using the WebExtensions
-                Storage API. MacMac does not collect, transmit, or share any personal information,
-                browsing history, or usage data. The extension is open source, so you can verify
-                this yourself.
+                MacMac خاص بالكامل. جميع البيانات — خرائط الحاويات والتفضيلات والإعدادات — مخزنة محليًا في متصفحك باستخدام WebExtensions Storage API. لا يجمع MacMac أو ينقل أو يشارك أي معلومات شخصية أو سجل تصفح أو بيانات استخدام. الإضافة مفتوحة المصدر، يمكنك التحقق من ذلك بنفسك.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Can I use MacMac with websites I'm already logged into?</summary>
+              <summary>هل يمكنني استخدام MacMac مع مواقع سجلت دخولها بالفعل؟</summary>
               <p>
-                Yes. When you create a new container for a website, it starts with a clean slate —
-                separate cookies, storage, and sessions. You can log into your existing accounts
-                from within the new container without affecting your other sessions. Each container
-                is fully isolated from the others.
+                نعم. عندما تنشئ حاوية جديدة لموقع، تبدأ من صفحة بيضاء — cookies وتخزين وجلسات منفصلة. يمكنك تسجيل الدخول لحساباتك الحالية من الحاوية الجديدة دون التأثير على جلساتك الأخرى. كل حاوية معزولة بالكامل عن الأخرى.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Which Firefox versions are supported?</summary>
+              <summary>ما إصدارات فايرفوكس المدعومة؟</summary>
               <p>
-                MacMac requires Firefox 89 or later, as it relies on the
-                <code>contextualIdentities</code> API which is available in these versions. The
-                extension is tested against the latest stable release of Firefox and Firefox
-                Developer Edition.
+                يتطلب MacMac فايرفوكس 89 أو أحدث، لأنه يعتمد على واجهة
+                <code>contextualIdentities</code> المتوفرة في هذه الإصدارات. تم اختبار الإضافة مع أحدث إصدار مستقر من فايرفوكس و Firefox Developer Edition.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>How do I uninstall MacMac?</summary>
+              <summary>كيف أزيل MacMac؟</summary>
               <p>
-                Go to Firefox's Add-ons and Themes page (<code>about:addons</code>), find MacMac in
-                the Extensions list, and click Remove. Your containers and their data will remain in
-                Firefox, but MacMac will no longer manage automatic switching for them.
+                اذهب إلى صفحة الإضافات والسمات في فايرفوكس (<code>about:addons</code>)، ابحث عن MacMac في قائمة الإضافات، وانقر على إزالة. ستبقى حاوياتك وبياناتها في فايرفوكس، لكن MacMac لن يدير التبديل التلقائي لها بعد الآن.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Is MacMac open source?</summary>
+              <summary>هل MacMac مفتوح المصدر؟</summary>
               <p>
-                Yes. MacMac is completely open source. You can view the source code, report issues,
-                and contribute on
-                <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">GitHub</a>. The
-                extension is free to use and always will be.
+                نعم. MacMac مفتوح المصدر بالكامل. يمكنك عرض الكود المصدري والإبلاغ عن المشكلات والمساهمة على
+                <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">GitHub</a>. الإضافة مجانية وسيبقى كذلك دائمًا.
               </p>
             </details>
           </div>
@@ -828,26 +807,25 @@
       </section>
 
       <!-- CTA Section -->
-      <section id="cta" aria-label="Download MacMac">
+      <section id="cta" aria-label="تحميل MacMac">
         <div class="container cta-container">
-          <h2>Try MacMac</h2>
+          <h2>جرب MacMac</h2>
           <p>
-            Download MacMac for Firefox and start managing multiple accounts on any website.
+            حمّل MacMac لفايرفوكس وابدأ إدارة حسابات متعددة على أي موقع.
           </p>
-          <a href="#" class="btn btn-accent btn-lg">Download for Firefox</a>
+          <a href="#" class="btn btn-accent btn-lg">تحميل لفايرفوكس</a>
         </div>
       </section>
 
       <!-- Donate Section -->
-      <section id="donate" aria-label="Support MacMac development">
+      <section id="donate" aria-label="دعم تطوير MacMac">
         <div class="container donate-container">
-          <h2>Support MacMac</h2>
+          <h2>ادعم MacMac</h2>
           <p class="section-sub">
-            MacMac is free and open source. If you find it useful, consider supporting development
-            with a donation.
+            MacMac مجاني ومفتوح المصدر. إذا وجدته مفيدًا، فكر في دعم التطوير بتبرع.
           </p>
 
-          <div class="donate-content">
+          <div class="donate-content" dir="ltr" style="text-align: start;">
             <div class="donate-selector">
               <button
                 class="token-item active"
@@ -1068,18 +1046,18 @@
                 <img
                   id="donate-qr"
                   src="images/qr/btc.png"
-                  alt="QR Code for BTC address"
+                  alt="رمز QR لعنوان BTC"
                   width="260"
                   height="260"
                   class="qr-image"
                 />
-                <p class="qr-label">Scan to donate</p>
+                <p class="qr-label">امسح للتبرع</p>
               </div>
               <div class="donate-address-row">
                 <code id="donate-address" class="address-text"
                   >bc1qhngkx9670q2vc4w494yfys3cpx2ykne90tanl7</code
                 >
-                <button class="copy-btn" id="copy-btn" type="button" data-copy-label="Copy" data-copied-label="Copied">Copy</button>
+                <button class="copy-btn" id="copy-btn" type="button" data-copy-label="نسخ" data-copied-label="تم النسخ">نسخ</button>
               </div>
             </div>
           </div>
@@ -1095,20 +1073,20 @@
           <span>MacMac</span>
         </div>
         <div class="footer-info">
-          <p>Built by <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">oxcl</a></p>
+          <p>تم الإنشاء بواسطة <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">oxcl</a></p>
           <p>
             <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener"
               ><svg width="14" height="14" aria-hidden="true"><use href="#icon-github" /></svg>
               GitHub</a
             >
-            &middot; <a href="PRIVACY_POLICY.html" rel="privacy-policy">Privacy Policy</a> &middot;
+            &middot; <a href="PRIVACY_POLICY.html" rel="privacy-policy">سياسة الخصوصية</a> &middot;
             <a href="mailto:oxcl@proton.me"
               ><svg width="14" height="14" aria-hidden="true"><use href="#icon-mail" /></svg>
               oxcl@proton.me</a
             >
           </p>
         </div>
-        <p class="footer-copy">&copy; <span id="year"></span> oxcl. All rights reserved.</p>
+        <p class="footer-copy">&copy; <span id="year"></span> oxcl. جميع الحقوق محفوظة.</p>
       </div>
     </footer>
 

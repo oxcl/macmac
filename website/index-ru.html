@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MacMac — Multi-Account Container Manager for Firefox</title>
+    <title>MacMac — Менеджер нескольких аккаунтов для Firefox</title>
     <meta
       name="description"
-      content="MacMac is a Firefox extension that lets you create and switch between multiple accounts on the same website using Firefox Containers. Works automatically, no manual switching needed."
+      content="MacMac — расширение Firefox для создания и переключения между несколькими аккаунтами на одном сайте. Работает автоматически."
     />
     <meta
       name="keywords"
@@ -14,7 +14,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#4f46e5" />
-    <link rel="canonical" href="https://oxcl.github.io/macmac/" />
+    <link rel="canonical" href="https://oxcl.github.io/macmac/index-ru.html" />
     <link rel="alternate" hreflang="en" href="https://oxcl.github.io/macmac/" />
     <link rel="alternate" hreflang="zh" href="https://oxcl.github.io/macmac/index-zh.html" />
     <link rel="alternate" hreflang="ru" href="https://oxcl.github.io/macmac/index-ru.html" />
@@ -24,12 +24,12 @@
     <link rel="alternate" hreflang="x-default" href="https://oxcl.github.io/macmac/" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="MacMac — Multi-Account Container Manager for Firefox" />
+    <meta property="og:title" content="MacMac — Менеджер нескольких аккаунтов для Firefox" />
     <meta
       property="og:description"
-      content="Create and switch between multiple accounts on the same website. Each account fully isolated with Firefox Containers."
+      content="Создавайте и переключайтесь между несколькими аккаунтами на одном сайте. Каждый аккаунт изолирован с помощью Firefox Containers."
     />
-    <meta property="og:url" content="https://oxcl.github.io/macmac/" />
+    <meta property="og:url" content="https://oxcl.github.io/macmac/index-ru.html" />
     <meta property="og:image" content="https://oxcl.github.io/macmac/images/logo.png" />
     <meta property="og:image:width" content="128" />
     <meta property="og:image:height" content="128" />
@@ -37,10 +37,10 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MacMac — Multi-Account Container Manager for Firefox" />
+    <meta name="twitter:title" content="MacMac — менеджер нескольких аккаунтов для Firefox" />
     <meta
       name="twitter:description"
-      content="Manage multiple accounts on any website with Firefox Containers."
+      content="Управляйте несколькими аккаунтами на любом сайте с помощью Firefox Containers."
     />
     <meta name="twitter:image" content="https://oxcl.github.io/macmac/images/logo.png" />
     <meta name="twitter:image:width" content="128" />
@@ -54,8 +54,8 @@
         "name": "MacMac",
         "operatingSystem": "Firefox",
         "applicationCategory": "BrowserExtension",
-        "description": "Create and switch between multiple accounts on the same website using Firefox Containers. Each account is fully isolated.",
-        "url": "https://oxcl.github.io/macmac/",
+        "description": "Создавайте и переключайтесь между несколькими аккаунтами на одном сайте. Каждый аккаунт полностью изолирован.",
+        "url": "https://oxcl.github.io/macmac/index-ru.html",
         "image": "https://oxcl.github.io/macmac/images/logo.png",
         "author": {
           "@type": "Person",
@@ -68,10 +68,10 @@
           "priceCurrency": "USD"
         },
         "featureList": [
-          "Create multiple accounts per website",
-          "Automatic container switching",
-          "Persistent account selection",
-          "Simple popup interface"
+          "Создание нескольких аккаунтов на сайт",
+          "Автопереключение контейнеров",
+          "Запоминание выбора аккаунта",
+          "Простой интерфейс"
         ],
         "applicationSubCategory": "Firefox Extension",
         "browserRequirements": "Firefox"
@@ -113,16 +113,16 @@
     <!-- Navbar -->
     <header class="navbar" id="navbar" role="banner">
       <div class="container nav-container">
-        <a href="#" class="nav-brand" aria-label="MacMac home">
+        <a href="#" class="nav-brand" aria-label="MacMac главная">
           <img src="images/logo-32.png" alt="" width="32" height="32" aria-hidden="true" />
           <span>MacMac</span>
         </a>
-        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <button class="nav-toggle" aria-label="Переключить меню" aria-expanded="false">
           <span class="nav-toggle-bar"></span>
           <span class="nav-toggle-bar"></span>
           <span class="nav-toggle-bar"></span>
         </button>
-        <nav aria-label="Main navigation">
+        <nav aria-label="Главная навигация">
           <ul class="nav-links">
             <li>
               <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener"
@@ -130,10 +130,10 @@
                 GitHub</a
               >
             </li>
-            <li><a href="#donate">Donate</a></li>
+            <li><a href="#donate">Донат</a></li>
             <li class="lang-dropdown">
               <button class="lang-btn" aria-haspopup="true" aria-expanded="false">
-                Language
+                Язык
                 <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
                   <path
                     d="M1 1l4 4 4-4"
@@ -166,27 +166,27 @@
           <div class="hero-text">
             <h1>
               <span class="h1-brand">MacMac</span>
-              <span class="h1-sub">Multi-Account Container Manager for Firefox</span>
+              <span class="h1-sub">Менеджер нескольких аккаунтов для Firefox</span>
             </h1>
-            <p class="tagline">Multiple accounts. Same website. Fully isolated.</p>
+            <p class="tagline">Несколько аккаунтов. Один сайт. Полная изоляция.</p>
             <p class="hero-desc">
-              A Firefox extension that lets you create and switch between multiple accounts on the same website. Each account runs in its own container with separate cookies, sessions, and data.
+              Расширение Firefox для создания и переключения между несколькими аккаунтами на одном сайте. Каждый аккаунт работает в своём контейнере с отдельными cookies, сессиями и данными.
             </p>
             <div class="hero-buttons">
               <a href="#" class="btn btn-primary btn-lg"
                 ><img src="images/firefox.png" alt="" width="20" height="20" aria-hidden="true" />
-                Get it on Firefox Add-ons</a
+                Установить из Firefox Add-ons</a
               >
               <a href="https://github.com/oxcl/macmac/releases" class="btn btn-secondary btn-lg"
                 ><svg width="20" height="20" aria-hidden="true"><use href="#icon-github" /></svg>
-                Download from GitHub</a
+                Скачать с GitHub</a
               >
             </div>
           </div>
           <div class="hero-visual">
             <img
               src="images/hero-light.png"
-              alt="MacMac extension popup interface showing container management for the current website"
+              alt="Интерфейс расширения MacMac для управления контейнерами на текущем сайте"
               class="hero-screenshot hero-light-img"
             />
             <img
@@ -207,31 +207,31 @@
               <use href="#icon-download" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">Downloads</span>
+            <span class="stat-label">Загрузки</span>
           </div>
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-star" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">Store Rating</span>
+            <span class="stat-label">Оценка</span>
           </div>
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-github" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">GitHub Stars</span>
+            <span class="stat-label">Звёзды GitHub</span>
           </div>
         </div>
       </section>
 
-      <!-- Story / How It Works -->
-      <section id="how-it-works" aria-label="How MacMac works">
+      <!-- Story / How It Рorks -->
+      <section id="how-it-works" aria-label="Как работает MacMac">
         <div class="container">
-          <h2>How It Works</h2>
+          <h2>Как это работает</h2>
           <p class="section-sub">
-            How MacMac manages multiple accounts per website.
+            Как MacMac управляет несколькими аккаунтами на одном сайте.
           </p>
 
           <div class="story-step" id="step-1">
@@ -241,7 +241,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration of a user frustrated by multiple browser tabs with different accounts on the same website"
+                aria-label="Иллюстрация пользователя, запутавшегося во вкладках с разными аккаунтами"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -306,17 +306,17 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Multiple accounts mixed together — confusing and error-prone
+                  Несколько аккаунтов смешаны — легко ошибиться
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">01</span>
-              <h3>The Problem</h3>
+              <h3>Проблема</h3>
               <p>
-                Juggling multiple accounts on the same website is frustrating. You log out, log back
-                in, lose your place, accidentally post from the wrong account. Browser profiles help
-                but they're heavy and don't share bookmarks or extensions.
+                Управление несколькими аккаунтами на одном сайте — это раздражающе. Вы выходите,
+                снова входите, теряете место и случайно публикуете не с того аккаунта. Профили браузера
+                помогают, но они тяжёлые и не делятся закладками или расширениями.
               </p>
             </div>
           </div>
@@ -328,7 +328,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration showing a user creating separate container accounts on the same website"
+                aria-label="Иллюстрация создания отдельных аккаунтов-контейнеров на одном сайте"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -364,7 +364,7 @@
                   font-size="11"
                   fill="#16a34a"
                 >
-                  Switch to this account
+                  Переключить на этот аккаунт
                 </text>
                 <rect
                   x="60"
@@ -424,16 +424,16 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Create separate accounts — each in its own container
+                  Создайте отдельные аккаунты — каждый в своём контейнере
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">02</span>
-              <h3>Create Accounts</h3>
+              <h3>Создание аккаунтов</h3>
               <p>
-                Create multiple accounts for the same website. Each one is backed by its own Firefox
-                Container, keeping cookies, sessions, and data completely isolated from one another.
+                Создайте несколько аккаунтов для одного сайта. Каждый работает в своём контейнере
+                Firefox, полностью изолируя cookies, сессии и данные друг от друга.
               </p>
             </div>
           </div>
@@ -445,7 +445,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Diagram showing automatic container switching when navigating between websites"
+                aria-label="Схема автоматического переключения контейнеров при навигации"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -468,7 +468,7 @@
                   fill="#ffffff"
                   font-weight="bold"
                 >
-                  W
+                  Р
                 </text>
                 <rect x="115" y="70" width="120" height="14" fill="#1e293b" rx="3" opacity="0.6" />
                 <rect x="115" y="90" width="200" height="12" fill="#94a3b8" rx="3" opacity="0.3" />
@@ -481,7 +481,7 @@
                   font-size="11"
                   fill="#16a34a"
                 >
-                  Work account
+                  Рабочий аккаунт
                 </text>
                 <rect x="65" y="115" width="60" height="20" fill="#e2e8f0" rx="4" />
                 <rect x="135" y="115" width="80" height="20" fill="#e2e8f0" rx="4" />
@@ -505,7 +505,7 @@
                   fill="#ffffff"
                   font-weight="bold"
                 >
-                  P
+                  Л
                 </text>
                 <rect x="115" y="230" width="120" height="14" fill="#1e293b" rx="3" opacity="0.6" />
                 <rect x="115" y="250" width="200" height="12" fill="#94a3b8" rx="3" opacity="0.3" />
@@ -526,7 +526,7 @@
                   font-size="11"
                   fill="#2563eb"
                 >
-                  Personal account
+                  Личный аккаунт
                 </text>
                 <path
                   d="M300 150 L300 190"
@@ -549,7 +549,7 @@
                   font-size="12"
                   fill="#64748b"
                 >
-                  Automatic switching on navigation
+                  Автопереключение при навигации
                 </text>
                 <text
                   x="300"
@@ -559,16 +559,17 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  MacMac remembers and switches automatically
+                  MacMac запоминает и переключает автоматически
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">03</span>
-              <h3>Automatic Switching</h3>
+              <h3>Автопереключение</h3>
               <p>
-                MacMac remembers which account you used last for each website. When you navigate to
-                a site, it switches to the right container automatically. You just browse.
+                MacMac запоминает, какой аккаунт вы использовали последним на каждом сайте. При
+                переходе на сайт он автоматически переключается на нужный контейнер. Просто бродите
+                по сети.
               </p>
             </div>
           </div>
@@ -580,7 +581,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration of a happy user with organized browser tabs each in their correct container"
+                aria-label="Иллюстрация пользователя с упорядоченными вкладками в правильных контейнерах"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -685,7 +686,7 @@
                   font-size="9"
                   fill="#16a34a"
                 >
-                  Work
+                  Работа
                 </text>
                 <rect
                   x="60"
@@ -712,7 +713,7 @@
                   font-size="9"
                   fill="#2563eb"
                 >
-                  Personal
+                  Личное
                 </text>
                 <rect x="400" y="280" width="100" height="10" fill="#f59e0b" rx="3" opacity="0.6" />
                 <text
@@ -723,7 +724,7 @@
                   font-size="9"
                   fill="#d97706"
                 >
-                  School
+                  Учёба
                 </text>
                 <circle cx="520" cy="300" r="20" fill="#22c55e" opacity="0.15" />
                 <path
@@ -742,16 +743,16 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Every website in the right container — automatically
+                  Каждый сайт в нужном контейнере — автоматически
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">04</span>
-              <h3>It Just Works</h3>
+              <h3>Просто работает</h3>
               <p>
-                Once set up, every website opens in the right container. Your accounts stay
-                separate, your sessions stay clean, and you don't have to think about it.
+                После настройки каждый сайт откроется в нужном контейнере. Аккаунты остаются
+                разделёнными, сессии чистыми — об этом не нужно думать.
               </p>
             </div>
           </div>
@@ -759,68 +760,65 @@
       </section>
 
       <!-- FAQ Section -->
-      <section id="faq" aria-label="Frequently asked questions">
+      <section id="faq" aria-label="Частые вопросы">
         <div class="container faq-container">
-          <h2>Frequently Asked Questions</h2>
+          <h2>Частые вопросы</h2>
 
           <div class="faq-list">
             <details class="faq-item">
-              <summary>How is MacMac different from Firefox's built-in Container feature?</summary>
+              <summary>Чем MacMac отличается от встроенной функции контейнеров Firefox?</summary>
               <p>
-                Firefox's built-in Container feature lets you manually assign tabs to containers.
-                MacMac builds on that by automatically remembering which container you used last for
-                each website and switching to it — no manual selection required. It also provides a
-                dedicated popup interface for managing all your accounts in one place.
+                Встроенная функция контейнеров Firefox позволяет вручную назначать вкладки в контейнеры.
+                MacMac расширяет это, автоматически запоминая последний использованный контейнер
+                для каждого сайта и переключаясь на него — без ручного выбора. Также есть
+                удобный попап для управления всеми аккаунтами в одном месте.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Is my data private? Does MacMac collect any information?</summary>
+              <summary>Мои данные в безопасности? MacMac собирает информацию?</summary>
               <p>
-                MacMac is fully private. All data — your container mappings, preferences, and
-                settings — is stored locally in your browser's storage using the WebExtensions
-                Storage API. MacMac does not collect, transmit, or share any personal information,
-                browsing history, or usage data. The extension is open source, so you can verify
-                this yourself.
+                MacMac полностью приватен. Все данные — маппинги контейнеров, настройки —
+                хранятся локально в браузере через WebExtensions Storage API. MacMac не собирает,
+                не передаёт и не расшаривает личную информацию, историю просмотров или данные использования.
+                Расширение с открытым исходным кодом — вы можете проверить сами.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Can I use MacMac with websites I'm already logged into?</summary>
+              <summary>Можно ли использовать MacMac на сайтах, где я уже авторизован?</summary>
               <p>
-                Yes. When you create a new container for a website, it starts with a clean slate —
-                separate cookies, storage, and sessions. You can log into your existing accounts
-                from within the new container without affecting your other sessions. Each container
-                is fully isolated from the others.
+                Да. Когда вы создаёте новый контейнер для сайта, он начинается с чистого листа —
+                отдельные cookie, хранилище и сессии. Вы можете войти в существующие аккаунты
+                из нового контейнера, не затрагивая другие сессии. Каждый контейнер полностью изолирован.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Which Firefox versions are supported?</summary>
+              <summary>Какие версии Firefox поддерживаются?</summary>
               <p>
-                MacMac requires Firefox 89 or later, as it relies on the
-                <code>contextualIdentities</code> API which is available in these versions. The
-                extension is tested against the latest stable release of Firefox and Firefox
-                Developer Edition.
+                MacMac требует Firefox 89 или новее, так как использует
+                <code>contextualIdentities</code> API, доступный в этих версиях.
+                Расширение тестируется на последней стабильной версии Firefox и Firefox Developer Edition.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>How do I uninstall MacMac?</summary>
+              <summary>Как удалить MacMac?</summary>
               <p>
-                Go to Firefox's Add-ons and Themes page (<code>about:addons</code>), find MacMac in
-                the Extensions list, and click Remove. Your containers and their data will remain in
-                Firefox, but MacMac will no longer manage automatic switching for them.
+                Перейдите на страницу дополнений Firefox (<code>about:addons</code>), найдите MacMac в
+                списке расширений и нажмите «Удалить». Ваши контейнеры и данные останутся в Firefox,
+                но MacMac больше не будет управлять автоматическим переключением.
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Is MacMac open source?</summary>
+              <summary>MacMac — это open source?</summary>
               <p>
-                Yes. MacMac is completely open source. You can view the source code, report issues,
-                and contribute on
-                <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">GitHub</a>. The
-                extension is free to use and always will be.
+                Да. MacMac полностью open source. Вы можете посмотреть исходный код, сообщить о проблемах
+                и внести вклад на
+                <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">GitHub</a>.
+                Расширение бесплатное и всегда будет бесплатным.
               </p>
             </details>
           </div>
@@ -828,23 +826,23 @@
       </section>
 
       <!-- CTA Section -->
-      <section id="cta" aria-label="Download MacMac">
+      <section id="cta" aria-label="Скачать MacMac">
         <div class="container cta-container">
-          <h2>Try MacMac</h2>
+          <h2>Попробуйте MacMac</h2>
           <p>
-            Download MacMac for Firefox and start managing multiple accounts on any website.
+            Скачайте MacMac для Firefox и начните управлять несколькими аккаунтами на любом сайте.
           </p>
-          <a href="#" class="btn btn-accent btn-lg">Download for Firefox</a>
+          <a href="#" class="btn btn-accent btn-lg">Скачать для Firefox</a>
         </div>
       </section>
 
       <!-- Donate Section -->
-      <section id="donate" aria-label="Support MacMac development">
+      <section id="donate" aria-label="Поддержать разработку MacMac">
         <div class="container donate-container">
-          <h2>Support MacMac</h2>
+          <h2>Поддержать MacMac</h2>
           <p class="section-sub">
-            MacMac is free and open source. If you find it useful, consider supporting development
-            with a donation.
+            MacMac бесплатный и с открытым исходным кодом. Если он вам полезен, поддержите разработку
+            донатом.
           </p>
 
           <div class="donate-content">
@@ -1068,18 +1066,18 @@
                 <img
                   id="donate-qr"
                   src="images/qr/btc.png"
-                  alt="QR Code for BTC address"
+                  alt="QR-код BTC адреса"
                   width="260"
                   height="260"
                   class="qr-image"
                 />
-                <p class="qr-label">Scan to donate</p>
+                <p class="qr-label">Сканируйте для доната</p>
               </div>
               <div class="donate-address-row">
                 <code id="donate-address" class="address-text"
                   >bc1qhngkx9670q2vc4w494yfys3cpx2ykne90tanl7</code
                 >
-                <button class="copy-btn" id="copy-btn" type="button" data-copy-label="Copy" data-copied-label="Copied">Copy</button>
+                <button class="copy-btn" id="copy-btn" type="button" data-copy-label="Копировать" data-copied-label="Скопировано">Копировать</button>
               </div>
             </div>
           </div>
@@ -1095,20 +1093,20 @@
           <span>MacMac</span>
         </div>
         <div class="footer-info">
-          <p>Built by <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">oxcl</a></p>
+          <p>Автор: <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">oxcl</a></p>
           <p>
             <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener"
               ><svg width="14" height="14" aria-hidden="true"><use href="#icon-github" /></svg>
               GitHub</a
             >
-            &middot; <a href="PRIVACY_POLICY.html" rel="privacy-policy">Privacy Policy</a> &middot;
+            &middot; <a href="PRIVACY_POLICY.html" rel="privacy-policy">Политика конфиденциальности</a> &middot;
             <a href="mailto:oxcl@proton.me"
               ><svg width="14" height="14" aria-hidden="true"><use href="#icon-mail" /></svg>
               oxcl@proton.me</a
             >
           </p>
         </div>
-        <p class="footer-copy">&copy; <span id="year"></span> oxcl. All rights reserved.</p>
+        <p class="footer-copy">&copy; <span id="year"></span> oxcl. Все права защищены.</p>
       </div>
     </footer>
 

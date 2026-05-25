@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MacMac — Multi-Account Container Manager for Firefox</title>
+    <title>MacMac — Firefox 多账号容器管理器</title>
     <meta
       name="description"
-      content="MacMac is a Firefox extension that lets you create and switch between multiple accounts on the same website using Firefox Containers. Works automatically, no manual switching needed."
+      content="MacMac 是一款 Firefox 扩展，让你在同一网站上创建和切换多个账号。自动完成，无需手动切换。"
     />
     <meta
       name="keywords"
@@ -14,7 +14,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#4f46e5" />
-    <link rel="canonical" href="https://oxcl.github.io/macmac/" />
+    <link rel="canonical" href="https://oxcl.github.io/macmac/index-zh.html" />
     <link rel="alternate" hreflang="en" href="https://oxcl.github.io/macmac/" />
     <link rel="alternate" hreflang="zh" href="https://oxcl.github.io/macmac/index-zh.html" />
     <link rel="alternate" hreflang="ru" href="https://oxcl.github.io/macmac/index-ru.html" />
@@ -24,12 +24,12 @@
     <link rel="alternate" hreflang="x-default" href="https://oxcl.github.io/macmac/" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="MacMac — Multi-Account Container Manager for Firefox" />
+    <meta property="og:title" content="MacMac — Firefox 多账号容器管理器" />
     <meta
       property="og:description"
-      content="Create and switch between multiple accounts on the same website. Each account fully isolated with Firefox Containers."
+      content="在同一网站上创建和切换多个账号。每个账号通过 Firefox 容器完全隔离。"
     />
-    <meta property="og:url" content="https://oxcl.github.io/macmac/" />
+    <meta property="og:url" content="https://oxcl.github.io/macmac/index-zh.html" />
     <meta property="og:image" content="https://oxcl.github.io/macmac/images/logo.png" />
     <meta property="og:image:width" content="128" />
     <meta property="og:image:height" content="128" />
@@ -40,7 +40,7 @@
     <meta name="twitter:title" content="MacMac — Multi-Account Container Manager for Firefox" />
     <meta
       name="twitter:description"
-      content="Manage multiple accounts on any website with Firefox Containers."
+      content="使用 Firefox 容器管理任意网站上的多个账号。"
     />
     <meta name="twitter:image" content="https://oxcl.github.io/macmac/images/logo.png" />
     <meta name="twitter:image:width" content="128" />
@@ -54,8 +54,8 @@
         "name": "MacMac",
         "operatingSystem": "Firefox",
         "applicationCategory": "BrowserExtension",
-        "description": "Create and switch between multiple accounts on the same website using Firefox Containers. Each account is fully isolated.",
-        "url": "https://oxcl.github.io/macmac/",
+        "description": "在同一网站上创建和切换多个账号。每个账号完全隔离。",
+        "url": "https://oxcl.github.io/macmac/index-zh.html",
         "image": "https://oxcl.github.io/macmac/images/logo.png",
         "author": {
           "@type": "Person",
@@ -68,10 +68,10 @@
           "priceCurrency": "USD"
         },
         "featureList": [
-          "Create multiple accounts per website",
-          "Automatic container switching",
-          "Persistent account selection",
-          "Simple popup interface"
+          "为同一网站创建多个账号",
+          "自动切换容器",
+          "持久记住账号选择",
+          "简洁的弹窗界面"
         ],
         "applicationSubCategory": "Firefox Extension",
         "browserRequirements": "Firefox"
@@ -113,16 +113,16 @@
     <!-- Navbar -->
     <header class="navbar" id="navbar" role="banner">
       <div class="container nav-container">
-        <a href="#" class="nav-brand" aria-label="MacMac home">
+        <a href="#" class="nav-brand" aria-label="MacMac 首页">
           <img src="images/logo-32.png" alt="" width="32" height="32" aria-hidden="true" />
           <span>MacMac</span>
         </a>
-        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <button class="nav-toggle" aria-label="切换导航菜单" aria-expanded="false">
           <span class="nav-toggle-bar"></span>
           <span class="nav-toggle-bar"></span>
           <span class="nav-toggle-bar"></span>
         </button>
-        <nav aria-label="Main navigation">
+        <nav aria-label="主导航">
           <ul class="nav-links">
             <li>
               <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener"
@@ -130,10 +130,10 @@
                 GitHub</a
               >
             </li>
-            <li><a href="#donate">Donate</a></li>
+            <li><a href="#donate">捐赠</a></li>
             <li class="lang-dropdown">
               <button class="lang-btn" aria-haspopup="true" aria-expanded="false">
-                Language
+                语言
                 <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
                   <path
                     d="M1 1l4 4 4-4"
@@ -166,27 +166,27 @@
           <div class="hero-text">
             <h1>
               <span class="h1-brand">MacMac</span>
-              <span class="h1-sub">Multi-Account Container Manager for Firefox</span>
+              <span class="h1-sub">Firefox 多账号容器管理器</span>
             </h1>
-            <p class="tagline">Multiple accounts. Same website. Fully isolated.</p>
+            <p class="tagline">多个账号。同一网站。完全隔离。</p>
             <p class="hero-desc">
-              A Firefox extension that lets you create and switch between multiple accounts on the same website. Each account runs in its own container with separate cookies, sessions, and data.
+              一款 Firefox 扩展，让你在同一网站上创建和切换多个账号。每个账号运行在独立容器中，拥有独立的 cookies、会话和数据。
             </p>
             <div class="hero-buttons">
               <a href="#" class="btn btn-primary btn-lg"
                 ><img src="images/firefox.png" alt="" width="20" height="20" aria-hidden="true" />
-                Get it on Firefox Add-ons</a
+                在 Firefox 附加组件中获取</a
               >
               <a href="https://github.com/oxcl/macmac/releases" class="btn btn-secondary btn-lg"
                 ><svg width="20" height="20" aria-hidden="true"><use href="#icon-github" /></svg>
-                Download from GitHub</a
+                从 GitHub 下载</a
               >
             </div>
           </div>
           <div class="hero-visual">
             <img
               src="images/hero-light.png"
-              alt="MacMac extension popup interface showing container management for the current website"
+              alt="MacMac 扩展弹窗界面，显示当前网站的容器管理"
               class="hero-screenshot hero-light-img"
             />
             <img
@@ -207,31 +207,31 @@
               <use href="#icon-download" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">Downloads</span>
+            <span class="stat-label">下载量</span>
           </div>
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-star" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">Store Rating</span>
+            <span class="stat-label">商店评分</span>
           </div>
           <div class="stat-item">
             <svg width="40" height="40" aria-hidden="true" class="stat-icon">
               <use href="#icon-github" />
             </svg>
             <span class="stat-number">--</span>
-            <span class="stat-label">GitHub Stars</span>
+            <span class="stat-label">GitHub 星标</span>
           </div>
         </div>
       </section>
 
       <!-- Story / How It Works -->
-      <section id="how-it-works" aria-label="How MacMac works">
+      <section id="how-it-works" aria-label="MacMac 工作原理">
         <div class="container">
-          <h2>How It Works</h2>
+          <h2>工作原理</h2>
           <p class="section-sub">
-            How MacMac manages multiple accounts per website.
+            MacMac 如何管理同一网站上的多个账号。
           </p>
 
           <div class="story-step" id="step-1">
@@ -241,7 +241,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration of a user frustrated by multiple browser tabs with different accounts on the same website"
+                aria-label="用户在同一网站上管理多个账号感到困扰的示意图"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -306,17 +306,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Multiple accounts mixed together — confusing and error-prone
+                  多个账号混在一起——容易出错
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">01</span>
-              <h3>The Problem</h3>
+              <h3>问题所在</h3>
               <p>
-                Juggling multiple accounts on the same website is frustrating. You log out, log back
-                in, lose your place, accidentally post from the wrong account. Browser profiles help
-                but they're heavy and don't share bookmarks or extensions.
+                在同一网站上管理多个账号令人头疼。你得反复登录登出，丢失页面进度，还可能不小心用错账号发帖。浏览器配置文件能帮上忙，但它们很重，而且无法共享书签或扩展。
               </p>
             </div>
           </div>
@@ -328,7 +326,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration showing a user creating separate container accounts on the same website"
+                aria-label="用户在同一网站上创建独立容器账号的示意图"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -364,7 +362,7 @@
                   font-size="11"
                   fill="#16a34a"
                 >
-                  Switch to this account
+                  切换到此账号
                 </text>
                 <rect
                   x="60"
@@ -424,16 +422,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Create separate accounts — each in its own container
+                  创建独立账号——每个都有自己的容器
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">02</span>
-              <h3>Create Accounts</h3>
+              <h3>创建账号</h3>
               <p>
-                Create multiple accounts for the same website. Each one is backed by its own Firefox
-                Container, keeping cookies, sessions, and data completely isolated from one another.
+                为同一网站创建多个账号。每个账号由独立的 Firefox 容器支持，cookies、会话和数据完全互相隔离。
               </p>
             </div>
           </div>
@@ -445,7 +442,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Diagram showing automatic container switching when navigating between websites"
+                aria-label="浏览网站时自动切换容器的示意图"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -481,7 +478,7 @@
                   font-size="11"
                   fill="#16a34a"
                 >
-                  Work account
+                  工作账号
                 </text>
                 <rect x="65" y="115" width="60" height="20" fill="#e2e8f0" rx="4" />
                 <rect x="135" y="115" width="80" height="20" fill="#e2e8f0" rx="4" />
@@ -526,7 +523,7 @@
                   font-size="11"
                   fill="#2563eb"
                 >
-                  Personal account
+                  个人账号
                 </text>
                 <path
                   d="M300 150 L300 190"
@@ -549,7 +546,7 @@
                   font-size="12"
                   fill="#64748b"
                 >
-                  Automatic switching on navigation
+                  浏览时自动切换
                 </text>
                 <text
                   x="300"
@@ -559,16 +556,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  MacMac remembers and switches automatically
+                  MacMac 记住并自动切换
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">03</span>
-              <h3>Automatic Switching</h3>
+              <h3>自动切换</h3>
               <p>
-                MacMac remembers which account you used last for each website. When you navigate to
-                a site, it switches to the right container automatically. You just browse.
+                MacMac 会记住你在每个网站上最后使用的账号。当你访问某个网站时，它会自动切换到对应的容器。你只需正常浏览。
               </p>
             </div>
           </div>
@@ -580,7 +576,7 @@
                 height="400"
                 viewBox="0 0 600 400"
                 role="img"
-                aria-label="Illustration of a happy user with organized browser tabs each in their correct container"
+                aria-label="用户浏览器标签页井然有序地分布在各自容器中的示意图"
               >
                 <rect width="600" height="400" fill="#f8fafc" rx="12" />
                 <rect
@@ -685,7 +681,7 @@
                   font-size="9"
                   fill="#16a34a"
                 >
-                  Work
+                  工作
                 </text>
                 <rect
                   x="60"
@@ -712,7 +708,7 @@
                   font-size="9"
                   fill="#2563eb"
                 >
-                  Personal
+                  个人
                 </text>
                 <rect x="400" y="280" width="100" height="10" fill="#f59e0b" rx="3" opacity="0.6" />
                 <text
@@ -723,7 +719,7 @@
                   font-size="9"
                   fill="#d97706"
                 >
-                  School
+                  学校
                 </text>
                 <circle cx="520" cy="300" r="20" fill="#22c55e" opacity="0.15" />
                 <path
@@ -742,16 +738,15 @@
                   font-size="13"
                   fill="#64748b"
                 >
-                  Every website in the right container — automatically
+                  每个网站都在正确的容器中——自动完成
                 </text>
               </svg>
             </div>
             <div class="step-text">
               <span class="step-number" aria-hidden="true">04</span>
-              <h3>It Just Works</h3>
+              <h3>开箱即用</h3>
               <p>
-                Once set up, every website opens in the right container. Your accounts stay
-                separate, your sessions stay clean, and you don't have to think about it.
+                设置完成后，每个网站都会在正确的容器中打开。你的账号保持分离，会话保持干净，无需操心。
               </p>
             </div>
           </div>
@@ -759,68 +754,54 @@
       </section>
 
       <!-- FAQ Section -->
-      <section id="faq" aria-label="Frequently asked questions">
+      <section id="faq" aria-label="常见问题">
         <div class="container faq-container">
-          <h2>Frequently Asked Questions</h2>
+          <h2>常见问题</h2>
 
           <div class="faq-list">
             <details class="faq-item">
-              <summary>How is MacMac different from Firefox's built-in Container feature?</summary>
+              <summary>MacMac 和 Firefox 内置的容器功能有什么区别？</summary>
               <p>
-                Firefox's built-in Container feature lets you manually assign tabs to containers.
-                MacMac builds on that by automatically remembering which container you used last for
-                each website and switching to it — no manual selection required. It also provides a
-                dedicated popup interface for managing all your accounts in one place.
+                Firefox 内置的容器功能需要你手动将标签页分配到容器。MacMac 在此基础上自动记住你在每个网站上最后使用的容器并切换过去——无需手动选择。它还提供了一个专门的弹窗界面，让你在一个地方管理所有账号。
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Is my data private? Does MacMac collect any information?</summary>
+              <summary>我的数据安全吗？MacMac 会收集信息吗？</summary>
               <p>
-                MacMac is fully private. All data — your container mappings, preferences, and
-                settings — is stored locally in your browser's storage using the WebExtensions
-                Storage API. MacMac does not collect, transmit, or share any personal information,
-                browsing history, or usage data. The extension is open source, so you can verify
-                this yourself.
+                MacMac 完全保护隐私。所有数据——你的容器映射、偏好设置和配置——都通过 WebExtensions Storage API 存储在浏览器本地。MacMac 不会收集、传输或分享任何个人信息、浏览历史或使用数据。该扩展是开源的，你可以自行验证。
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Can I use MacMac with websites I'm already logged into?</summary>
+              <summary>我可以在已经登录的网站上使用 MacMac 吗？</summary>
               <p>
-                Yes. When you create a new container for a website, it starts with a clean slate —
-                separate cookies, storage, and sessions. You can log into your existing accounts
-                from within the new container without affecting your other sessions. Each container
-                is fully isolated from the others.
+                可以。当你为某个网站创建新容器时，它从一张白纸开始——独立的 cookies、存储和会话。你可以在新容器中登录已有账号，不会影响其他会话。每个容器与其他容器完全隔离。
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Which Firefox versions are supported?</summary>
+              <summary>支持哪些 Firefox 版本？</summary>
               <p>
-                MacMac requires Firefox 89 or later, as it relies on the
-                <code>contextualIdentities</code> API which is available in these versions. The
-                extension is tested against the latest stable release of Firefox and Firefox
-                Developer Edition.
+                MacMac 需要 Firefox 89 或更高版本，因为它依赖于这些版本中提供的
+                <code>contextualIdentities</code> API。该扩展针对最新的 Firefox 稳定版和 Firefox
+                Developer Edition 进行测试。
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>How do I uninstall MacMac?</summary>
+              <summary>如何卸载 MacMac？</summary>
               <p>
-                Go to Firefox's Add-ons and Themes page (<code>about:addons</code>), find MacMac in
-                the Extensions list, and click Remove. Your containers and their data will remain in
-                Firefox, but MacMac will no longer manage automatic switching for them.
+                前往 Firefox 的附加组件和主题页面（<code>about:addons</code>），在扩展列表中找到
+                MacMac，点击移除。你的容器及其数据将保留在 Firefox 中，但 MacMac 将不再管理它们的自动切换。
               </p>
             </details>
 
             <details class="faq-item">
-              <summary>Is MacMac open source?</summary>
+              <summary>MacMac 是开源的吗？</summary>
               <p>
-                Yes. MacMac is completely open source. You can view the source code, report issues,
-                and contribute on
-                <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">GitHub</a>. The
-                extension is free to use and always will be.
+                是的。MacMac 完全开源。你可以在
+                <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">GitHub</a> 上查看源代码、报告问题和参与贡献。该扩展免费使用，并将永远免费。
               </p>
             </details>
           </div>
@@ -828,23 +809,22 @@
       </section>
 
       <!-- CTA Section -->
-      <section id="cta" aria-label="Download MacMac">
+      <section id="cta" aria-label="下载 MacMac">
         <div class="container cta-container">
-          <h2>Try MacMac</h2>
+          <h2>试试 MacMac</h2>
           <p>
-            Download MacMac for Firefox and start managing multiple accounts on any website.
+            下载 MacMac for Firefox，开始管理任意网站上的多个账号。
           </p>
-          <a href="#" class="btn btn-accent btn-lg">Download for Firefox</a>
+          <a href="#" class="btn btn-accent btn-lg">下载 Firefox 版</a>
         </div>
       </section>
 
       <!-- Donate Section -->
-      <section id="donate" aria-label="Support MacMac development">
+      <section id="donate" aria-label="支持 MacMac 开发">
         <div class="container donate-container">
-          <h2>Support MacMac</h2>
+          <h2>支持 MacMac</h2>
           <p class="section-sub">
-            MacMac is free and open source. If you find it useful, consider supporting development
-            with a donation.
+            MacMac 免费且开源。如果你觉得它有用，欢迎通过捐赠支持开发。
           </p>
 
           <div class="donate-content">
@@ -1068,18 +1048,18 @@
                 <img
                   id="donate-qr"
                   src="images/qr/btc.png"
-                  alt="QR Code for BTC address"
+                  alt="BTC 地址二维码"
                   width="260"
                   height="260"
                   class="qr-image"
                 />
-                <p class="qr-label">Scan to donate</p>
+                <p class="qr-label">扫码捐赠</p>
               </div>
               <div class="donate-address-row">
                 <code id="donate-address" class="address-text"
                   >bc1qhngkx9670q2vc4w494yfys3cpx2ykne90tanl7</code
                 >
-                <button class="copy-btn" id="copy-btn" type="button" data-copy-label="Copy" data-copied-label="Copied">Copy</button>
+                <button class="copy-btn" id="copy-btn" type="button" data-copy-label="复制" data-copied-label="已复制">复制</button>
               </div>
             </div>
           </div>
@@ -1095,20 +1075,20 @@
           <span>MacMac</span>
         </div>
         <div class="footer-info">
-          <p>Built by <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">oxcl</a></p>
+          <p>由 <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener">oxcl</a></p>
           <p>
             <a href="https://github.com/oxcl/macmac" target="_blank" rel="noopener"
               ><svg width="14" height="14" aria-hidden="true"><use href="#icon-github" /></svg>
               GitHub</a
             >
-            &middot; <a href="PRIVACY_POLICY.html" rel="privacy-policy">Privacy Policy</a> &middot;
+            &middot; <a href="PRIVACY_POLICY.html" rel="privacy-policy">隐私政策</a> &middot;
             <a href="mailto:oxcl@proton.me"
               ><svg width="14" height="14" aria-hidden="true"><use href="#icon-mail" /></svg>
               oxcl@proton.me</a
             >
           </p>
         </div>
-        <p class="footer-copy">&copy; <span id="year"></span> oxcl. All rights reserved.</p>
+        <p class="footer-copy">&copy; <span id="year"></span> oxcl. 保留所有权利。</p>
       </div>
     </footer>
 
