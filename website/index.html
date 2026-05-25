@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacMac — Multi-Account Container Manager for Firefox</title>
+  <meta name="description" content="MacMac is a Firefox extension that lets you create and switch between multiple accounts on the same website using Firefox Containers. Works automatically, no manual switching needed.">
+  <meta name="keywords" content="firefox containers, multi-account containers, firefox extension, browser containers, account management, privacy, firefox addon">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="canonical" href="https://oxcl.github.io/macmac/">
+  <link rel="alternate" hreflang="en" href="https://oxcl.github.io/macmac/">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MacMac — Multi-Account Container Manager for Firefox">
+  <meta property="og:description" content="Manage multiple accounts on any website with Firefox Containers. Create, switch, and organize accounts effortlessly.">
+  <meta property="og:url" content="https://oxcl.github.io/macmac/">
+  <meta property="og:image" content="https://oxcl.github.io/macmac/images/logo.png">
+  <meta property="og:image:width" content="128">
+  <meta property="og:image:height" content="128">
+  <meta property="og:site_name" content="MacMac">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MacMac — Multi-Account Container Manager for Firefox">
+  <meta name="twitter:description" content="Manage multiple accounts on any website with Firefox Containers.">
+  <meta name="twitter:image" content="https://oxcl.github.io/macmac/images/logo.png">
+  <meta name="twitter:image:width" content="128">
+  <meta name="twitter:image:height" content="128">
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MacMac",
+    "operatingSystem": "Firefox",
+    "applicationCategory": "BrowserExtension",
+    "description": "Manage multiple accounts on any website using Firefox Containers. Create separate accounts for work, personal, school — all on the same website.",
+    "url": "https://oxcl.github.io/macmac/",
+    "image": "https://oxcl.github.io/macmac/images/logo.png",
+    "author": {
+      "@type": "Person",
+      "name": "oxcl",
+      "url": "https://github.com/oxcl"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Create multiple accounts per website",
+      "Automatic container switching",
+      "Persistent account selection",
+      "Simple popup interface"
+    ],
+    "applicationSubCategory": "Firefox Extension",
+    "browserRequirements": "Firefox"
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="images/logo.png" sizes="128x128">
+</head>
+<body>
+
+  <svg style="display:none" aria-hidden="true">
+    <symbol id="icon-download" viewBox="0 -960 960 960">
+      <path fill="currentColor" d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 -960 960 960">
+      <path fill="currentColor" d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/>
+    </symbol>
+    <symbol id="icon-github" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+    </symbol>
+    <symbol id="icon-mail" viewBox="0 -960 960 960">
+      <path fill="currentColor" d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/>
+    </symbol>
+  </svg>
+
+  <!-- Navbar -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="container nav-container">
+      <a href="#" class="nav-brand" aria-label="MacMac home">
+        <img src="images/logo-32.png" alt="" width="32" height="32" aria-hidden="true">
+        <span>MacMac</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="https://github.com/oxcl" target="_blank" rel="noopener"><svg width="16" height="16" aria-hidden="true"><use href="#icon-github"/></svg> GitHub</a></li>
+          <li><a href="#donate">Donate</a></li>
+          <li class="lang-dropdown">
+            <button class="lang-btn" aria-haspopup="true" aria-expanded="false">
+              Language
+              <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <ul class="lang-menu">
+              <li><a href="index.html" lang="en" hreflang="en">English</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" aria-label="MacMac hero">
+      <div class="container hero-container">
+        <div class="hero-text">
+          <h1>
+            <span class="h1-brand">MacMac</span>
+            <span class="h1-sub">Multi-Account Container Manager for Firefox</span>
+          </h1>
+          <p class="tagline">Manage multiple accounts on any website</p>
+          <p class="hero-desc">A Firefox extension that brings account-based container management to your browser. Create separate accounts for work, personal, and school — all on the same website, automatically organized.</p>
+          <div class="hero-buttons">
+            <a href="#" class="btn btn-primary btn-lg"><img src="images/firefox.png" alt="" width="20" height="20" aria-hidden="true"> Get it on Firefox Add-ons</a>
+            <a href="#" class="btn btn-secondary btn-lg"><svg width="20" height="20" aria-hidden="true"><use href="#icon-github"/></svg> Download from GitHub</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <svg width="800" height="500" viewBox="0 0 800 500" class="hero-screenshot" role="img" aria-label="MacMac extension popup interface showing container management for the current website">
+            <rect width="800" height="500" fill="#eef2ff" rx="12"/>
+            <rect x="50" y="40" width="700" height="420" fill="#ffffff" rx="8" stroke="#c7d2fe" stroke-width="2"/>
+            <rect x="80" y="70" width="120" height="30" fill="#4f46e5" rx="4" opacity="0.15"/>
+            <rect x="80" y="120" width="220" height="20" fill="#1e293b" rx="3" opacity="0.6"/>
+            <rect x="80" y="155" width="300" height="16" fill="#94a3b8" rx="3" opacity="0.4"/>
+            <rect x="80" y="200" width="200" height="40" fill="#4f46e5" rx="6" opacity="0.8"/>
+            <rect x="300" y="200" width="200" height="40" fill="#e2e8f0" rx="6"/>
+            <rect x="80" y="280" width="280" height="180" fill="#f1f5f9" rx="8" stroke="#e2e8f0" stroke-width="1"/>
+            <rect x="380" y="280" width="340" height="180" fill="#f1f5f9" rx="8" stroke="#e2e8f0" stroke-width="1"/>
+            <circle cx="180" cy="370" r="40" fill="#c7d2fe" opacity="0.5"/>
+            <rect x="140" y="420" width="80" height="16" fill="#94a3b8" rx="3" opacity="0.4"/>
+            <circle cx="550" cy="350" r="24" fill="#4f46e5" opacity="0.15"/>
+            <circle cx="550" cy="350" r="16" fill="#4f46e5" opacity="0.25"/>
+            <rect x="500" y="390" width="100" height="12" fill="#94a3b8" rx="3" opacity="0.3"/>
+            <rect x="520" y="410" width="60" height="12" fill="#94a3b8" rx="3" opacity="0.2"/>
+            <text x="400" y="490" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#64748b">MacMac Popup — Container Management Interface</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" aria-label="MacMac statistics">
+      <div class="container stats-container">
+        <div class="stat-item">
+          <svg width="40" height="40" aria-hidden="true" class="stat-icon"><use href="#icon-download"/></svg>
+          <span class="stat-number">--</span>
+          <span class="stat-label">Downloads</span>
+        </div>
+        <div class="stat-item">
+          <svg width="40" height="40" aria-hidden="true" class="stat-icon"><use href="#icon-star"/></svg>
+          <span class="stat-number">--</span>
+          <span class="stat-label">Store Rating</span>
+        </div>
+        <div class="stat-item">
+          <svg width="40" height="40" aria-hidden="true" class="stat-icon"><use href="#icon-github"/></svg>
+          <span class="stat-number">--</span>
+          <span class="stat-label">GitHub Stars</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story / How It Works -->
+    <section id="how-it-works" aria-label="How MacMac works">
+      <div class="container">
+        <h2>How It Works</h2>
+        <p class="section-sub">See how MacMac transforms the way you manage accounts in Firefox.</p>
+
+        <div class="story-step" id="step-1">
+          <div class="step-image">
+            <svg width="600" height="400" viewBox="0 0 600 400" role="img" aria-label="Illustration of a user frustrated by multiple browser tabs with different accounts on the same website">
+              <rect width="600" height="400" fill="#fef2f2" rx="12"/>
+              <rect x="40" y="40" width="520" height="320" fill="#ffffff" rx="8" stroke="#fecaca" stroke-width="2"/>
+              <rect x="70" y="70" width="460" height="80" fill="#fef2f2" rx="8" stroke="#fecaca" stroke-width="1"/>
+              <rect x="90" y="90" width="40" height="40" fill="#ef4444" rx="4" opacity="0.6"/>
+              <rect x="145" y="95" width="180" height="14" fill="#1e293b" rx="3" opacity="0.5"/>
+              <rect x="145" y="115" width="120" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="420" y="95" width="90" height="30" fill="#ef4444" rx="6" opacity="0.15"/>
+              <line x1="70" y1="170" x2="530" y2="170" stroke="#fecaca" stroke-width="1"/>
+              <rect x="70" y="180" width="460" height="80" fill="#fef2f2" rx="8" stroke="#fecaca" stroke-width="1"/>
+              <rect x="90" y="200" width="40" height="40" fill="#f97316" rx="4" opacity="0.6"/>
+              <rect x="145" y="205" width="180" height="14" fill="#1e293b" rx="3" opacity="0.5"/>
+              <rect x="145" y="225" width="120" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="420" y="205" width="90" height="30" fill="#f97316" rx="6" opacity="0.15"/>
+              <line x1="70" y1="280" x2="530" y2="280" stroke="#fecaca" stroke-width="1"/>
+              <rect x="70" y="290" width="460" height="80" fill="#fff7ed" rx="8" stroke="#fed7aa" stroke-width="1"/>
+              <rect x="90" y="310" width="40" height="40" fill="#f59e0b" rx="4" opacity="0.6"/>
+              <rect x="145" y="315" width="180" height="14" fill="#1e293b" rx="3" opacity="0.5"/>
+              <rect x="145" y="335" width="120" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="420" y="315" width="90" height="30" fill="#f59e0b" rx="6" opacity="0.15"/>
+              <text x="300" y="395" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#64748b">Multiple accounts mixed together — confusing and error-prone</text>
+            </svg>
+          </div>
+          <div class="step-text">
+            <span class="step-number" aria-hidden="true">01</span>
+            <h3>The Problem</h3>
+            <p>Juggling multiple accounts on the same website is frustrating. Constant log in and log out, shared sessions that mix up your data, and browser profiles that don't talk to each other. It's a productivity killer — and a privacy risk.</p>
+          </div>
+        </div>
+
+        <div class="story-step" id="step-2">
+          <div class="step-image">
+            <svg width="600" height="400" viewBox="0 0 600 400" role="img" aria-label="Illustration showing a user creating separate container accounts for Work, Personal, and School on the same website">
+              <rect width="600" height="400" fill="#f0fdf4" rx="12"/>
+              <rect x="40" y="40" width="520" height="320" fill="#ffffff" rx="8" stroke="#bbf7d0" stroke-width="2"/>
+              <rect x="60" y="70" width="200" height="120" fill="#f0fdf4" rx="8" stroke="#86efac" stroke-width="1.5"/>
+              <rect x="85" y="85" width="30" height="30" fill="#22c55e" rx="6"/>
+              <rect x="130" y="90" width="100" height="12" fill="#1e293b" rx="3" opacity="0.6"/>
+              <rect x="130" y="108" width="80" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="85" y="130" width="150" height="35" fill="#22c55e" rx="6" opacity="0.15"/>
+              <rect x="85" y="130" width="150" height="35" fill="#22c55e" rx="6" opacity="0.08"/>
+              <text x="160" y="152" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#16a34a">Switch to this account</text>
+              <rect x="60" y="210" width="200" height="120" fill="#fef2f2" rx="8" stroke="#fecaca" stroke-width="1.5"/>
+              <rect x="85" y="225" width="30" height="30" fill="#3b82f6" rx="6"/>
+              <rect x="130" y="230" width="100" height="12" fill="#1e293b" rx="3" opacity="0.6"/>
+              <rect x="130" y="248" width="80" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="340" y="70" width="200" height="120" fill="#fffbeb" rx="8" stroke="#fde68a" stroke-width="1.5"/>
+              <rect x="365" y="85" width="30" height="30" fill="#f59e0b" rx="6"/>
+              <rect x="410" y="90" width="100" height="12" fill="#1e293b" rx="3" opacity="0.6"/>
+              <rect x="410" y="108" width="80" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="340" y="210" width="200" height="120" fill="#faf5ff" rx="8" stroke="#e9d5ff" stroke-width="1.5"/>
+              <rect x="365" y="225" width="30" height="30" fill="#a855f7" rx="6"/>
+              <rect x="410" y="230" width="100" height="12" fill="#1e293b" rx="3" opacity="0.6"/>
+              <rect x="410" y="248" width="80" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="240" y="165" width="120" height="30" fill="#f1f5f9" rx="15"/>
+              <text x="300" y="185" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#64748b">macmac.com</text>
+              <text x="300" y="395" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#64748b">Create separate accounts — each in its own container</text>
+            </svg>
+          </div>
+          <div class="step-text">
+            <span class="step-number" aria-hidden="true">02</span>
+            <h3>Create Accounts</h3>
+            <p>With MacMac, create separate accounts for each of your identities. Work, Personal, School — all on the same website. Each account is backed by a Firefox Container, keeping cookies, sessions, and data completely isolated from one another.</p>
+          </div>
+        </div>
+
+        <div class="story-step" id="step-3">
+          <div class="step-image">
+            <svg width="600" height="400" viewBox="0 0 600 400" role="img" aria-label="Diagram showing automatic container switching when navigating between websites">
+              <rect width="600" height="400" fill="#f0f9ff" rx="12"/>
+              <rect x="40" y="40" width="520" height="140" fill="#ffffff" rx="8" stroke="#bae6fd" stroke-width="2"/>
+              <rect x="65" y="65" width="35" height="35" fill="#22c55e" rx="6"/>
+              <text x="82" y="87" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#ffffff" font-weight="bold">W</text>
+              <rect x="115" y="70" width="120" height="14" fill="#1e293b" rx="3" opacity="0.6"/>
+              <rect x="115" y="90" width="200" height="12" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="400" y="70" width="130" height="28" fill="#22c55e" rx="6" opacity="0.15"/>
+              <text x="465" y="89" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#16a34a">Work account</text>
+              <rect x="65" y="115" width="60" height="20" fill="#e2e8f0" rx="4"/>
+              <rect x="135" y="115" width="80" height="20" fill="#e2e8f0" rx="4"/>
+              <rect x="40" y="200" width="520" height="140" fill="#ffffff" rx="8" stroke="#bae6fd" stroke-width="2"/>
+              <rect x="65" y="225" width="35" height="35" fill="#3b82f6" rx="6"/>
+              <text x="82" y="247" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#ffffff" font-weight="bold">P</text>
+              <rect x="115" y="230" width="120" height="14" fill="#1e293b" rx="3" opacity="0.6"/>
+              <rect x="115" y="250" width="200" height="12" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="400" y="230" width="130" height="28" fill="#3b82f6" rx="6" opacity="0.15"/>
+              <text x="465" y="249" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#2563eb">Personal account</text>
+              <path d="M300 150 L300 190" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,4"/>
+              <path d="M300 310 L300 340" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,4"/>
+              <rect x="210" y="350" width="180" height="24" fill="#f1f5f9" rx="12"/>
+              <text x="300" y="367" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#64748b">Automatic switching on navigation</text>
+              <text x="300" y="395" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#64748b">MacMac remembers and switches automatically</text>
+            </svg>
+          </div>
+          <div class="step-text">
+            <span class="step-number" aria-hidden="true">03</span>
+            <h3>Automatic Switching</h3>
+            <p>MacMac remembers which account you used last for each website. When you navigate to a site, it automatically switches to the right container in the background. No more manual picking — just browse and MacMac handles the rest.</p>
+          </div>
+        </div>
+
+        <div class="story-step" id="step-4">
+          <div class="step-image">
+            <svg width="600" height="400" viewBox="0 0 600 400" role="img" aria-label="Illustration of a happy user with organized browser tabs each in their correct container">
+              <rect width="600" height="400" fill="#faf5ff" rx="12"/>
+              <rect x="40" y="40" width="520" height="320" fill="#ffffff" rx="8" stroke="#e9d5ff" stroke-width="2"/>
+              <rect x="40" y="40" width="520" height="40" fill="#f5f3ff" rx="8" stroke="#e9d5ff" stroke-width="1"/>
+              <rect x="55" y="50" width="120" height="24" fill="#ffffff" rx="6" stroke="#ddd6fe" stroke-width="1"/>
+              <rect x="70" y="55" width="14" height="14" fill="#22c55e" rx="3"/>
+              <text x="92" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#64748b">facebook.com</text>
+              <rect x="185" y="50" width="120" height="24" fill="#ffffff" rx="6" stroke="#ddd6fe" stroke-width="1"/>
+              <rect x="200" y="55" width="14" height="14" fill="#3b82f6" rx="3"/>
+              <text x="222" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#64748b">gmail.com</text>
+              <rect x="315" y="50" width="120" height="24" fill="#ffffff" rx="6" stroke="#ddd6fe" stroke-width="1"/>
+              <rect x="330" y="55" width="14" height="14" fill="#f59e0b" rx="3"/>
+              <text x="352" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#64748b">github.com</text>
+              <rect x="60" y="95" width="480" height="100" fill="#f8fafc" rx="8" stroke="#e2e8f0" stroke-width="1"/>
+              <rect x="85" y="110" width="50" height="50" fill="#e2e8f0" rx="8"/>
+              <rect x="150" y="115" width="200" height="12" fill="#1e293b" rx="3" opacity="0.5"/>
+              <rect x="150" y="135" width="160" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="400" y="115" width="100" height="10" fill="#22c55e" rx="3" opacity="0.6"/>
+              <text x="450" y="123" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#16a34a">Work</text>
+              <rect x="60" y="210" width="480" height="130" fill="#f8fafc" rx="8" stroke="#e2e8f0" stroke-width="1"/>
+              <rect x="85" y="225" width="50" height="50" fill="#e2e8f0" rx="8"/>
+              <rect x="150" y="230" width="200" height="12" fill="#1e293b" rx="3" opacity="0.5"/>
+              <rect x="150" y="250" width="160" height="10" fill="#94a3b8" rx="3" opacity="0.3"/>
+              <rect x="150" y="270" width="240" height="10" fill="#cbd5e1" rx="3" opacity="0.5"/>
+              <rect x="150" y="288" width="200" height="10" fill="#cbd5e1" rx="3" opacity="0.4"/>
+              <rect x="150" y="306" width="160" height="10" fill="#cbd5e1" rx="3" opacity="0.3"/>
+              <rect x="400" y="230" width="100" height="10" fill="#3b82f6" rx="3" opacity="0.6"/>
+              <text x="450" y="238" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#2563eb">Personal</text>
+              <rect x="400" y="280" width="100" height="10" fill="#f59e0b" rx="3" opacity="0.6"/>
+              <text x="450" y="288" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#d97706">School</text>
+              <circle cx="520" cy="300" r="20" fill="#22c55e" opacity="0.15"/>
+              <path d="M512 300 l6 6 12-12" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="300" y="395" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#64748b">Every website in the right container — organized and effortless</text>
+            </svg>
+          </div>
+          <div class="step-text">
+            <span class="step-number" aria-hidden="true">04</span>
+            <h3>Seamless Workflow</h3>
+            <p>Every website opens in the right container automatically. Your accounts stay organized, your sessions stay separate, and your workflow stays smooth. No more context switching — just a clean, productive browsing experience.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" aria-label="Frequently asked questions">
+      <div class="container faq-container">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>How is MacMac different from Firefox's built-in Container feature?</summary>
+            <p>Firefox's built-in Container feature lets you manually assign tabs to containers. MacMac builds on that by automatically remembering which container you used last for each website and switching to it — no manual selection required. It also provides a dedicated popup interface for managing all your accounts in one place.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Is my data private? Does MacMac collect any information?</summary>
+            <p>MacMac is fully private. All data — your container mappings, preferences, and settings — is stored locally in your browser's storage using the WebExtensions Storage API. MacMac does not collect, transmit, or share any personal information, browsing history, or usage data. The extension is open source, so you can verify this yourself.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Can I use MacMac with websites I'm already logged into?</summary>
+            <p>Yes. When you create a new container for a website, it starts with a clean slate — separate cookies, storage, and sessions. You can log into your existing accounts from within the new container without affecting your other sessions. Each container is fully isolated from the others.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Which Firefox versions are supported?</summary>
+            <p>MacMac requires Firefox 89 or later, as it relies on the <code>contextualIdentities</code> API which is available in these versions. The extension is tested against the latest stable release of Firefox and Firefox Developer Edition.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I uninstall MacMac?</summary>
+            <p>Go to Firefox's Add-ons and Themes page (<code>about:addons</code>), find MacMac in the Extensions list, and click Remove. Your containers and their data will remain in Firefox, but MacMac will no longer manage automatic switching for them.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Is MacMac open source?</summary>
+            <p>Yes. MacMac is completely open source. You can view the source code, report issues, and contribute on <a href="https://github.com/oxcl" target="_blank" rel="noopener">GitHub</a>. The extension is free to use and always will be.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="cta" aria-label="Download MacMac">
+      <div class="container cta-container">
+        <h2>Ready to Simplify Your Browsing?</h2>
+        <p>Download MacMac for Firefox and start managing multiple accounts on any website — effortlessly.</p>
+        <a href="#" class="btn btn-accent btn-lg">Download for Firefox Now</a>
+      </div>
+    </section>
+
+    <!-- Donate Section -->
+    <section id="donate" aria-label="Support MacMac development">
+      <div class="container donate-container">
+        <h2>Support MacMac</h2>
+        <p class="section-sub">MacMac is free and open source. If you find it useful, consider supporting development with a donation.</p>
+
+        <div class="donate-content">
+          <div class="donate-qr">
+            <svg width="250" height="250" viewBox="0 0 250 250" role="img" aria-label="QR code for cryptocurrency donations to support MacMac development">
+              <rect width="250" height="250" fill="#ffffff" rx="12"/>
+              <rect width="250" height="250" fill="#f8fafc" rx="12" stroke="#e2e8f0" stroke-width="1"/>
+              <g fill="#1e293b" opacity="0.15">
+                <rect x="30" y="30" width="8" height="8" rx="1"/>
+                <rect x="46" y="30" width="8" height="8" rx="1"/>
+                <rect x="62" y="30" width="8" height="8" rx="1"/>
+                <rect x="86" y="30" width="8" height="8" rx="1"/>
+                <rect x="110" y="30" width="8" height="8" rx="1"/>
+                <rect x="134" y="30" width="8" height="8" rx="1"/>
+                <rect x="158" y="30" width="8" height="8" rx="1"/>
+                <rect x="182" y="30" width="8" height="8" rx="1"/>
+                <rect x="30" y="46" width="8" height="8" rx="1"/>
+                <rect x="62" y="46" width="8" height="8" rx="1"/>
+                <rect x="86" y="46" width="8" height="8" rx="1"/>
+                <rect x="134" y="46" width="8" height="8" rx="1"/>
+                <rect x="182" y="46" width="8" height="8" rx="1"/>
+                <rect x="30" y="62" width="8" height="8" rx="1"/>
+                <rect x="62" y="62" width="8" height="8" rx="1"/>
+                <rect x="86" y="62" width="8" height="8" rx="1"/>
+                <rect x="110" y="62" width="8" height="8" rx="1"/>
+                <rect x="134" y="62" width="8" height="8" rx="1"/>
+                <rect x="158" y="62" width="8" height="8" rx="1"/>
+                <rect x="30" y="86" width="8" height="8" rx="1"/>
+                <rect x="62" y="86" width="8" height="8" rx="1"/>
+                <rect x="134" y="86" width="8" height="8" rx="1"/>
+                <rect x="182" y="86" width="8" height="8" rx="1"/>
+                <rect x="30" y="110" width="8" height="8" rx="1"/>
+                <rect x="46" y="110" width="8" height="8" rx="1"/>
+                <rect x="62" y="110" width="8" height="8" rx="1"/>
+                <rect x="86" y="110" width="8" height="8" rx="1"/>
+                <rect x="134" y="110" width="8" height="8" rx="1"/>
+                <rect x="158" y="110" width="8" height="8" rx="1"/>
+                <rect x="182" y="110" width="8" height="8" rx="1"/>
+                <rect x="30" y="134" width="8" height="8" rx="1"/>
+                <rect x="62" y="134" width="8" height="8" rx="1"/>
+                <rect x="86" y="134" width="8" height="8" rx="1"/>
+                <rect x="110" y="134" width="8" height="8" rx="1"/>
+                <rect x="182" y="134" width="8" height="8" rx="1"/>
+                <rect x="30" y="158" width="8" height="8" rx="1"/>
+                <rect x="46" y="158" width="8" height="8" rx="1"/>
+                <rect x="62" y="158" width="8" height="8" rx="1"/>
+                <rect x="86" y="158" width="8" height="8" rx="1"/>
+                <rect x="110" y="158" width="8" height="8" rx="1"/>
+                <rect x="134" y="158" width="8" height="8" rx="1"/>
+                <rect x="158" y="158" width="8" height="8" rx="1"/>
+                <rect x="30" y="182" width="8" height="8" rx="1"/>
+                <rect x="62" y="182" width="8" height="8" rx="1"/>
+                <rect x="86" y="182" width="8" height="8" rx="1"/>
+                <rect x="134" y="182" width="8" height="8" rx="1"/>
+                <rect x="182" y="182" width="8" height="8" rx="1"/>
+                <rect x="30" y="206" width="8" height="8" rx="1"/>
+                <rect x="62" y="206" width="8" height="8" rx="1"/>
+                <rect x="86" y="206" width="8" height="8" rx="1"/>
+                <rect x="110" y="206" width="8" height="8" rx="1"/>
+                <rect x="134" y="206" width="8" height="8" rx="1"/>
+                <rect x="158" y="206" width="8" height="8" rx="1"/>
+                <rect x="182" y="206" width="8" height="8" rx="1"/>
+              </g>
+              <rect x="105" y="105" width="40" height="40" fill="#ffffff" rx="4" stroke="#e2e8f0" stroke-width="1"/>
+              <text x="125" y="132" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#4f46e5" font-weight="bold">M</text>
+              <text x="125" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#64748b">QR Code Placeholder</text>
+            </svg>
+            <p class="qr-label">Scan to donate</p>
+          </div>
+
+          <div class="donate-wallets">
+            <h3>Cryptocurrency Wallets</h3>
+            <ul class="wallet-list">
+              <li>
+                <span class="wallet-name">Bitcoin</span>
+                <code class="wallet-address"></code>
+              </li>
+              <li>
+                <span class="wallet-name">Monero</span>
+                <code class="wallet-address"></code>
+              </li>
+              <li>
+                <span class="wallet-name">Ethereum</span>
+                <code class="wallet-address"></code>
+              </li>
+              <li>
+                <span class="wallet-name">Tether (USDT)</span>
+                <code class="wallet-address"></code>
+              </li>
+              <li>
+                <span class="wallet-name">Tron (TRX)</span>
+                <code class="wallet-address"></code>
+              </li>
+              <li>
+                <span class="wallet-name">Telegram</span>
+                <code class="wallet-address"></code>
+              </li>
+              <li>
+                <span class="wallet-name">TON</span>
+                <code class="wallet-address"></code>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <img src="images/logo-24.png" alt="" width="24" height="24" aria-hidden="true">
+        <span>MacMac</span>
+      </div>
+      <div class="footer-info">
+        <p>Built by <a href="https://github.com/oxcl" target="_blank" rel="noopener">oxcl</a></p>
+        <p><a href="https://github.com/oxcl" target="_blank" rel="noopener"><svg width="14" height="14" aria-hidden="true"><use href="#icon-github"/></svg> GitHub</a> &middot; <a href="../PRIVACY_POLICY.html" rel="privacy-policy">Privacy Policy</a> &middot; <a href="mailto:oxcl@proton.me"><svg width="14" height="14" aria-hidden="true"><use href="#icon-mail"/></svg> oxcl@proton.me</a></p>
+      </div>
+      <p class="footer-copy">&copy; <span id="year"></span> oxcl. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

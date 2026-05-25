@@ -3,6 +3,7 @@
   "description": "manifest.json description",
   "private": true,
   "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "wxt -b firefox",
@@ -16,7 +17,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "build:website": "node website/build.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -28,6 +30,10 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.3",
+    "clean-css-cli": "^5.6.3",
+    "html-minifier-terser": "^7.2.0",
+    "minify-selectors": "^2.8.2",
+    "terser": "^5.37.0",
     "typescript": "^5.9.3",
     "wxt": "^0.20.26"
   },
@@ -60,7 +66,8 @@
     "ignorePatterns": [
       "node_modules",
       ".output",
-      "dist"
+      "dist",
+      "website-dist"
     ]
   },
   "prettier": {
