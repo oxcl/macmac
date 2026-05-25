@@ -30,6 +30,10 @@ export async function handleOpenInTabWithoutSwitch(
 ): Promise<void> {
   if (!data.hostname) return;
 
+  const lastMap = await lastSelected.getValue();
+  lastMap[data.hostname] = accountId;
+  await lastSelected.setValue(lastMap);
+
   const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
   const cookieStoreId = accountId === DEFAULT_CONTAINER_ID ? undefined : accountId;
   await browser.runtime.sendMessage({

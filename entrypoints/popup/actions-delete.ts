@@ -8,6 +8,7 @@ export async function handleDelete(accountId: string, data: AppData): Promise<vo
   if (!result.confirmed) return;
 
   await browser.contextualIdentities.remove(accountId);
+  await browser.runtime.sendMessage({ type: 'cleanupTabBindings', cookieStoreId: accountId });
 
   const [currentAccounts, currentHostnameMap, lastMap] = await Promise.all([
     accounts.getValue(),

@@ -29,8 +29,17 @@ export async function loadAppData(): Promise<AppData> {
 
   if (hostname) {
     currentAccounts = await getAccountsForHostname(hostname);
-    const lastMap = await lastSelected.getValue();
-    lastSelectedId = lastMap[hostname] ?? null;
+
+    const binding: { hostname: string; cookieStoreId: string } | null = currentTab.id
+      ? await browser.runtime.sendMessage({ type: 'getTabBinding', tabId: currentTab.id })
+      : null;
+
+    if (binding && binding.hostname === hostname) {
+      lastSelectedId = binding.cookieStoreId;
+    } else {
+      const lastMap = await lastSelected.getValue();
+      lastSelectedId = lastMap[hostname] ?? null;
+    }
   }
 
   return { hostname, containers, currentAccounts, lastSelectedId };
