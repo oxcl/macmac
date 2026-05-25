@@ -5,14 +5,17 @@ export default defineConfig({
     homepage_url: 'https://oxcl.github.io/macmac',
     permissions: [
       'contextualIdentities',
-      'cookies',
       'tabs',
       'storage',
       'webNavigation',
-      '<all_urls>',
     ],
-  },
-  suppressWarnings: {
-    firefoxDataCollection: true,
+    browser_specific_settings: {
+      gecko: {
+        id: "@oxcl.macmac",
+        data_collection_permissions: {
+          required: ["none"]
+        }
+      }
+    },
   },
 });
