@@ -104,33 +104,9 @@
   let copyTimer = null;
 
   if (qrImg && addressEl && copyBtn) {
-    function setActiveToken(token) {
-      document.querySelectorAll('.token-btn').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.token === token);
-      });
-
-      document.querySelectorAll('.token-networks').forEach((group) => {
-        group.classList.toggle('active', group.dataset.token === token);
-      });
-
-      const activeNet = document.querySelector(
-        `.token-networks[data-token="${token}"] .network-btn.active`
-      );
-      if (activeNet) setActiveNetwork(activeNet);
-    }
-
-    function setActiveNetwork(btn) {
-      btn.closest('.token-networks').querySelectorAll('.network-btn').forEach((b) => {
-        b.classList.remove('active');
-      });
-      btn.classList.add('active');
-
-      const address = btn.dataset.address;
-      const qrSrc = btn.dataset.qr;
-
+    function setQR(address, qrSrc) {
       qrImg.style.opacity = '0';
       qrImg.style.transform = 'scale(0.95)';
-
       setTimeout(() => {
         qrImg.src = qrSrc;
         addressEl.textContent = address;
@@ -141,17 +117,39 @@
       }, 200);
     }
 
-    document.querySelectorAll('.token-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (btn.classList.contains('active')) return;
-        setActiveToken(btn.dataset.token);
+    // Single-network token clicks
+    document.querySelectorAll('.token-item:not(.has-networks)').forEach((item) => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.token-item').forEach((i) => i.classList.remove('active'));
+        item.classList.add('active');
+        setQR(item.dataset.address, item.dataset.qr);
       });
     });
 
-    document.querySelectorAll('.network-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
+    // Multi-network token header clicks (toggle expand)
+    document.querySelectorAll('.token-header').forEach((header) => {
+      header.addEventListener('click', () => {
+        const item = header.closest('.token-item');
+        const wasExpanded = item.classList.contains('expanded');
+        item.classList.toggle('expanded');
+        if (!wasExpanded) {
+          document.querySelectorAll('.token-item').forEach((i) => i.classList.remove('active'));
+          item.classList.add('active');
+          const activeNet = item.querySelector('.network-btn.active');
+          if (activeNet) setQR(activeNet.dataset.address, activeNet.dataset.qr);
+        }
+      });
+    });
+
+    // Network button clicks (inside expanded tokens)
+    document.querySelectorAll('.token-body .network-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (btn.classList.contains('active')) return;
-        setActiveNetwork(btn);
+        const item = btn.closest('.token-item');
+        item.querySelectorAll('.network-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        setQR(btn.dataset.address, btn.dataset.qr);
       });
     });
 
