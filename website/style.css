@@ -352,15 +352,15 @@ a:focus-visible {
 }
 
 .btn-primary {
-  background: #0f172a;
+  background: #4f46e5;
   color: #ffffff;
-  border-color: #0f172a;
+  border-color: #4f46e5;
 }
 
 .btn-primary:hover,
 .btn-primary:focus-visible {
-  background: #1e293b;
-  border-color: #1e293b;
+  background: #4338ca;
+  border-color: #4338ca;
   color: #ffffff;
 }
 
@@ -1103,14 +1103,14 @@ a:focus-visible {
   }
 
   .btn-primary {
-    background: #292524;
-    border-color: #292524;
+    background: #4f46e5;
+    border-color: #4f46e5;
   }
 
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    background: #3f3f46;
-    border-color: #3f3f46;
+    background: #4338ca;
+    border-color: #4338ca;
   }
 
   .hero-text h1 {
