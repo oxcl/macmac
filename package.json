@@ -1,7 +1,6 @@
 {
   "name": "macmac",
-  "description": "manifest.json description",
-  "private": true,
+  "description": "🦊 Multi Account Manager for Firefox. Manage multiple accounts on any website, effortlessly. Free and open-source SessionBox-style profile switcher.",
   "version": "0.5.0",
   "license": "MIT",
   "repository": {
