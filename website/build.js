@@ -26,7 +26,15 @@ const htmlOpts = {
   minifyJS: false,
 };
 
-for (const file of ['index.html', 'index-zh.html', 'index-ru.html', 'index-ar.html', 'index-es.html', 'index-hi.html', 'PRIVACY_POLICY.html']) {
+for (const file of [
+  'index.html',
+  'index-zh.html',
+  'index-ru.html',
+  'index-ar.html',
+  'index-es.html',
+  'index-hi.html',
+  'PRIVACY_POLICY.html',
+]) {
   const fp = resolve(OUT, file);
   if (existsSync(fp)) {
     writeFileSync(fp, await minifyHtml(readFileSync(fp, 'utf-8'), htmlOpts));

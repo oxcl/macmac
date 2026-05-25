@@ -22,8 +22,10 @@ Open the popup on any website and click **Create New Account**. MacMac creates a
 
 Each container is named `AccountName (hostname)` internally — e.g., `Account 1 (facebook.com)` — which binds it to that site.
 
-## 🛠️ Implementation 
+## 🛠️ Implementation
+
 Under the hood, three storage keys handle everything:
+
 - `accounts` — account metadata (id, name, hostnames)
 - `hostnameAccounts` — hostname-to-account lookup
 - `lastSelected` — per-hostname preference for which account to use

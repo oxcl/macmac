@@ -23,6 +23,7 @@ Cada contenedor se nombra internamente como `NombreCuenta (host)` — por ejempl
 ## Implementación
 
 Tres claves de almacenamiento manejan toda la lógica:
+
 - `accounts` — metadatos de las cuentas (id, nombre, hosts)
 - `hostnameAccounts` — mapeo de host a cuentas
 - `lastSelected` — preferencia de cuenta por host

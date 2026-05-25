@@ -23,6 +23,7 @@ Firefox 的账户容器管理扩展。
 ## 实现细节
 
 三个存储键处理所有逻辑：
+
 - `accounts` — 账户元数据（id、名称、主机名）
 - `hostnameAccounts` — 主机名到账户的映射
 - `lastSelected` — 每个主机名的首选账户
