@@ -96,4 +96,102 @@
       }
     });
   });
+
+  // --- Donate: token & network switching ---
+  const qrImg = document.getElementById('donate-qr');
+  const addressEl = document.getElementById('donate-address');
+  const copyBtn = document.getElementById('copy-btn');
+  let copyTimer = null;
+
+  if (qrImg && addressEl && copyBtn) {
+    function setActiveToken(token) {
+      document.querySelectorAll('.token-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.token === token);
+      });
+
+      document.querySelectorAll('.token-networks').forEach((group) => {
+        group.classList.toggle('active', group.dataset.token === token);
+      });
+
+      const activeNet = document.querySelector(
+        `.token-networks[data-token="${token}"] .network-btn.active`
+      );
+      if (activeNet) setActiveNetwork(activeNet);
+    }
+
+    function setActiveNetwork(btn) {
+      btn.closest('.token-networks').querySelectorAll('.network-btn').forEach((b) => {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+
+      const address = btn.dataset.address;
+      const qrSrc = btn.dataset.qr;
+
+      qrImg.style.opacity = '0';
+      qrImg.style.transform = 'scale(0.95)';
+
+      setTimeout(() => {
+        qrImg.src = qrSrc;
+        addressEl.textContent = address;
+        requestAnimationFrame(() => {
+          qrImg.style.opacity = '1';
+          qrImg.style.transform = 'scale(1)';
+        });
+      }, 200);
+    }
+
+    document.querySelectorAll('.token-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('active')) return;
+        setActiveToken(btn.dataset.token);
+      });
+    });
+
+    document.querySelectorAll('.network-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('active')) return;
+        setActiveNetwork(btn);
+      });
+    });
+
+    // Copy
+    function copyAddress() {
+      const text = addressEl.textContent;
+      if (!text) return;
+
+      const doCopy = () => {
+        if (copyTimer) clearTimeout(copyTimer);
+        copyBtn.textContent = 'Copied';
+        copyBtn.classList.add('copied');
+        copyTimer = setTimeout(() => {
+          copyBtn.textContent = 'Copy';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      };
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(doCopy).catch(() => {
+          fallbackCopy(text, doCopy);
+        });
+      } else {
+        fallbackCopy(text, doCopy);
+      }
+    }
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      ta.style.pointerEvents = 'none';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); cb(); } catch (e) { /* noop */ }
+      document.body.removeChild(ta);
+    }
+
+    copyBtn.addEventListener('click', copyAddress);
+    addressEl.addEventListener('click', copyAddress);
+  }
 })();

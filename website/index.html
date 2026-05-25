@@ -382,105 +382,61 @@
         <p class="section-sub">MacMac is free and open source. If you find it useful, consider supporting development with a donation.</p>
 
         <div class="donate-content">
-          <div class="donate-qr">
-            <svg width="250" height="250" viewBox="0 0 250 250" role="img" aria-label="QR code for cryptocurrency donations to support MacMac development">
-              <rect width="250" height="250" fill="#ffffff" rx="12"/>
-              <rect width="250" height="250" fill="#f8fafc" rx="12" stroke="#e2e8f0" stroke-width="1"/>
-              <g fill="#1e293b" opacity="0.15">
-                <rect x="30" y="30" width="8" height="8" rx="1"/>
-                <rect x="46" y="30" width="8" height="8" rx="1"/>
-                <rect x="62" y="30" width="8" height="8" rx="1"/>
-                <rect x="86" y="30" width="8" height="8" rx="1"/>
-                <rect x="110" y="30" width="8" height="8" rx="1"/>
-                <rect x="134" y="30" width="8" height="8" rx="1"/>
-                <rect x="158" y="30" width="8" height="8" rx="1"/>
-                <rect x="182" y="30" width="8" height="8" rx="1"/>
-                <rect x="30" y="46" width="8" height="8" rx="1"/>
-                <rect x="62" y="46" width="8" height="8" rx="1"/>
-                <rect x="86" y="46" width="8" height="8" rx="1"/>
-                <rect x="134" y="46" width="8" height="8" rx="1"/>
-                <rect x="182" y="46" width="8" height="8" rx="1"/>
-                <rect x="30" y="62" width="8" height="8" rx="1"/>
-                <rect x="62" y="62" width="8" height="8" rx="1"/>
-                <rect x="86" y="62" width="8" height="8" rx="1"/>
-                <rect x="110" y="62" width="8" height="8" rx="1"/>
-                <rect x="134" y="62" width="8" height="8" rx="1"/>
-                <rect x="158" y="62" width="8" height="8" rx="1"/>
-                <rect x="30" y="86" width="8" height="8" rx="1"/>
-                <rect x="62" y="86" width="8" height="8" rx="1"/>
-                <rect x="134" y="86" width="8" height="8" rx="1"/>
-                <rect x="182" y="86" width="8" height="8" rx="1"/>
-                <rect x="30" y="110" width="8" height="8" rx="1"/>
-                <rect x="46" y="110" width="8" height="8" rx="1"/>
-                <rect x="62" y="110" width="8" height="8" rx="1"/>
-                <rect x="86" y="110" width="8" height="8" rx="1"/>
-                <rect x="134" y="110" width="8" height="8" rx="1"/>
-                <rect x="158" y="110" width="8" height="8" rx="1"/>
-                <rect x="182" y="110" width="8" height="8" rx="1"/>
-                <rect x="30" y="134" width="8" height="8" rx="1"/>
-                <rect x="62" y="134" width="8" height="8" rx="1"/>
-                <rect x="86" y="134" width="8" height="8" rx="1"/>
-                <rect x="110" y="134" width="8" height="8" rx="1"/>
-                <rect x="182" y="134" width="8" height="8" rx="1"/>
-                <rect x="30" y="158" width="8" height="8" rx="1"/>
-                <rect x="46" y="158" width="8" height="8" rx="1"/>
-                <rect x="62" y="158" width="8" height="8" rx="1"/>
-                <rect x="86" y="158" width="8" height="8" rx="1"/>
-                <rect x="110" y="158" width="8" height="8" rx="1"/>
-                <rect x="134" y="158" width="8" height="8" rx="1"/>
-                <rect x="158" y="158" width="8" height="8" rx="1"/>
-                <rect x="30" y="182" width="8" height="8" rx="1"/>
-                <rect x="62" y="182" width="8" height="8" rx="1"/>
-                <rect x="86" y="182" width="8" height="8" rx="1"/>
-                <rect x="134" y="182" width="8" height="8" rx="1"/>
-                <rect x="182" y="182" width="8" height="8" rx="1"/>
-                <rect x="30" y="206" width="8" height="8" rx="1"/>
-                <rect x="62" y="206" width="8" height="8" rx="1"/>
-                <rect x="86" y="206" width="8" height="8" rx="1"/>
-                <rect x="110" y="206" width="8" height="8" rx="1"/>
-                <rect x="134" y="206" width="8" height="8" rx="1"/>
-                <rect x="158" y="206" width="8" height="8" rx="1"/>
-                <rect x="182" y="206" width="8" height="8" rx="1"/>
-              </g>
-              <rect x="105" y="105" width="40" height="40" fill="#ffffff" rx="4" stroke="#e2e8f0" stroke-width="1"/>
-              <text x="125" y="132" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#4f46e5" font-weight="bold">M</text>
-              <text x="125" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#64748b">QR Code Placeholder</text>
-            </svg>
-            <p class="qr-label">Scan to donate</p>
+          <div class="donate-selector">
+            <div class="donate-tokens">
+              <button class="token-btn active" data-token="btc" type="button">BTC</button>
+              <button class="token-btn" data-token="eth" type="button">ETH</button>
+              <button class="token-btn" data-token="usdt" type="button">USDT</button>
+              <button class="token-btn" data-token="usdc" type="button">USDC</button>
+              <button class="token-btn" data-token="bnb" type="button">BNB</button>
+              <button class="token-btn" data-token="trx" type="button">TRX</button>
+              <button class="token-btn" data-token="xmr" type="button">XMR</button>
+              <button class="token-btn" data-token="ton" type="button">TON</button>
+            </div>
+
+            <div class="donate-networks" id="donate-networks">
+              <div class="token-networks active" data-token="btc">
+                <button class="network-btn active" data-address="bc1qhngkx9670q2vc4w494yfys3cpx2ykne90tanl7" data-qr="images/qr/btc.png" type="button">Bitcoin (BIP 84)</button>
+              </div>
+              <div class="token-networks" data-token="eth">
+                <button class="network-btn active" data-address="0x808cC6a9A9b51fD0f422A1C3c07582bDDeAD0e71" data-qr="images/qr/eth.png" type="button">ERC20</button>
+              </div>
+              <div class="token-networks" data-token="usdt">
+                <button class="network-btn active" data-address="0x808cC6a9A9b51fD0f422A1C3c07582bDDeAD0e71" data-qr="images/qr/eth.png" type="button">USDT (ERC20)</button>
+                <button class="network-btn" data-address="TGT3bS4cns49wqMSCatCDHbwqYyCZReW53" data-qr="images/qr/tron.png" type="button">USDT (TRX)</button>
+                <button class="network-btn" data-address="9vrqETM8ByBbRB9foWyFfzrcmRmYQXjmsdKjz87jVoqg" data-qr="images/qr/sol.png" type="button">USDT (SOL)</button>
+              </div>
+              <div class="token-networks" data-token="usdc">
+                <button class="network-btn active" data-address="0x808cC6a9A9b51fD0f422A1C3c07582bDDeAD0e71" data-qr="images/qr/eth.png" type="button">USDC (ERC20)</button>
+                <button class="network-btn" data-address="TGT3bS4cns49wqMSCatCDHbwqYyCZReW53" data-qr="images/qr/tron.png" type="button">USDC (TRX)</button>
+                <button class="network-btn" data-address="0x808cC6a9A9b51fD0f422A1C3c07582bDDeAD0e71" data-qr="images/qr/eth.png" type="button">USDC (POL)</button>
+                <button class="network-btn" data-address="0x808cC6a9A9b51fD0f422A1C3c07582bDDeAD0e71" data-qr="images/qr/eth.png" type="button">USDC (BASE)</button>
+                <button class="network-btn" data-address="9vrqETM8ByBbRB9foWyFfzrcmRmYQXjmsdKjz87jVoqg" data-qr="images/qr/sol.png" type="button">USDC (SOL)</button>
+              </div>
+              <div class="token-networks" data-token="bnb">
+                <button class="network-btn active" data-address="0x808cC6a9A9b51fD0f422A1C3c07582bDDeAD0e71" data-qr="images/qr/eth.png" type="button">BNB (BSC)</button>
+              </div>
+              <div class="token-networks" data-token="trx">
+                <button class="network-btn active" data-address="TGT3bS4cns49wqMSCatCDHbwqYyCZReW53" data-qr="images/qr/tron.png" type="button">TRON (TRX)</button>
+              </div>
+              <div class="token-networks" data-token="xmr">
+                <button class="network-btn active" data-address="89tM6QHrNfXZEaZugfhuhYiiPdssTR8wv5CasP9ZRj9TWRKhooW32xA4zFr9tVQTo7AqbTe4BTCKW546cb4pj8YnAS39G4Q" data-qr="images/qr/xmr.png" type="button">XMR</button>
+              </div>
+              <div class="token-networks" data-token="ton">
+                <button class="network-btn active" data-address="UQDiyvAj3toOs1ezT7Yp3TpwtJIWeUi0tD7Mz_yKeoiuwmZD" data-qr="images/qr/ton.png" type="button">TON</button>
+              </div>
+            </div>
           </div>
 
-          <div class="donate-wallets">
-            <h3>Cryptocurrency Wallets</h3>
-            <ul class="wallet-list">
-              <li>
-                <span class="wallet-name">Bitcoin</span>
-                <code class="wallet-address"></code>
-              </li>
-              <li>
-                <span class="wallet-name">Monero</span>
-                <code class="wallet-address"></code>
-              </li>
-              <li>
-                <span class="wallet-name">Ethereum</span>
-                <code class="wallet-address"></code>
-              </li>
-              <li>
-                <span class="wallet-name">Tether (USDT)</span>
-                <code class="wallet-address"></code>
-              </li>
-              <li>
-                <span class="wallet-name">Tron (TRX)</span>
-                <code class="wallet-address"></code>
-              </li>
-              <li>
-                <span class="wallet-name">Telegram</span>
-                <code class="wallet-address"></code>
-              </li>
-              <li>
-                <span class="wallet-name">TON</span>
-                <code class="wallet-address"></code>
-              </li>
-            </ul>
+          <div class="donate-display">
+            <div class="donate-qr-wrap">
+              <img id="donate-qr" src="images/qr/btc.png" alt="QR Code for BTC address" width="220" height="220" class="qr-image">
+              <p class="qr-label">Scan to donate</p>
+            </div>
+            <div class="donate-address-row">
+              <code id="donate-address" class="address-text">bc1qhngkx9670q2vc4w494yfys3cpx2ykne90tanl7</code>
+              <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+            </div>
           </div>
         </div>
       </div>

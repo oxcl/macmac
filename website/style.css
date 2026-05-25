@@ -576,60 +576,160 @@ a:focus-visible {
   align-items: start;
 }
 
-.donate-qr {
-  text-align: center;
-}
-
-.donate-qr img {
-  margin: 0 auto;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-}
-
 .qr-label {
   margin-top: 0.75rem;
   font-size: 0.9rem;
   color: #64748b;
 }
 
-.donate-wallets h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 1.25rem;
-}
-
-.wallet-list {
-  list-style: none;
+/* Donate Selector */
+.donate-selector {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.25rem;
 }
 
-.wallet-list li {
+.donate-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.token-btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.token-btn:hover {
+  border-color: #c7d2fe;
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+.token-btn.active {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+}
+
+/* Network groups */
+.token-networks {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.token-networks.active {
+  display: flex;
+}
+
+.network-btn {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 999px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.network-btn:hover {
+  border-color: #c7d2fe;
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+.network-btn.active {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+}
+
+/* Donate Display */
+.donate-display {
+  text-align: center;
+}
+
+.donate-qr-wrap {
+  margin-bottom: 1.5rem;
+}
+
+.qr-image {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.donate-address-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  gap: 0.75rem;
+  justify-content: center;
 }
 
-.wallet-name {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #0f172a;
-  min-width: 120px;
-  flex-shrink: 0;
-}
-
-.wallet-address {
+.address-text {
   font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
   font-size: 0.8rem;
-  color: #64748b;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
   word-break: break-all;
-  min-height: 1.2em;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  transition: background 0.2s, border-color 0.2s;
+  line-height: 1.5;
+}
+
+.address-text:hover {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+}
+
+/* Copy Button */
+.copy-btn {
+  flex-shrink: 0;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1.5px solid #4f46e5;
+  background: #4f46e5;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.copy-btn:hover {
+  background: #4338ca;
+  border-color: #4338ca;
+}
+
+.copy-btn.copied {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
 }
 
 /* ===== Footer ===== */
@@ -788,14 +888,17 @@ a:focus-visible {
     display: flex;
   }
 
-  .wallet-list li {
+  .donate-address-row {
     flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
-  .wallet-name {
-    min-width: auto;
+  .address-text {
+    text-align: center;
+  }
+
+  .donate-content {
+    gap: 2rem;
   }
 }
 
@@ -1017,13 +1120,55 @@ a:focus-visible {
     color: #f1f5f9;
   }
 
-  .wallet-list li {
+  .token-btn {
     background: #1e293b;
     border-color: #334155;
+    color: #94a3b8;
   }
 
-  .wallet-name {
-    color: #e2e8f0;
+  .token-btn:hover {
+    border-color: #4f46e5;
+    color: #818cf8;
+    background: rgba(79, 70, 229, 0.15);
+  }
+
+  .token-btn.active {
+    background: #4f46e5;
+    color: #ffffff;
+    border-color: #4f46e5;
+  }
+
+  .network-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+  }
+
+  .network-btn:hover {
+    border-color: #4f46e5;
+    color: #818cf8;
+    background: rgba(79, 70, 229, 0.15);
+  }
+
+  .network-btn.active {
+    background: #4f46e5;
+    color: #ffffff;
+    border-color: #4f46e5;
+  }
+
+  .qr-image {
+    box-shadow: none;
+  }
+
+  .address-text {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+  }
+
+  .address-text:hover {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.15);
   }
 
   .nav-toggle-bar {
