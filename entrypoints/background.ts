@@ -126,10 +126,14 @@ export default defineBackground(() => {
     }
   });
 
+
+  // the moat of the extension. the auto switching logic is here.
   browser.webNavigation.onBeforeNavigate.addListener(async (details) => {
     if (details.frameId !== 0) return;
 
     if (pendingSwitches.has(details.tabId)) {
+      // this means the background script is handling some internal tab manipulation. this is a signal
+      // that the event must skip handling this tab as it's being handled already.
       pendingSwitches.delete(details.tabId);
       return;
     }
@@ -141,6 +145,9 @@ export default defineBackground(() => {
       const hostname = url.hostname;
       if (!hostname) return;
 
+      // don't handle navigation in tabs when navigating within the same host
+      // this makes the tabs sticky meaning that they won't suddenly switch context
+      // when user switches the account on another tab.
       const binding = tabBindings.get(details.tabId);
       if (binding && binding.hostname === hostname) return;
 
@@ -153,6 +160,8 @@ export default defineBackground(() => {
       const containerId = map[hostname];
       const isDefault = !tab.cookieStoreId || tab.cookieStoreId === DEFAULT_CONTAINER_ID;
 
+      // if the current tab is inside a container but user has navigated to a page that
+      // is using the default firefox container switch out of the container and open with default
       if (!containerId) {
         if (isDefault) return;
         await tabServiceImpl.openInDefault(details.url, tab.index, details.tabId);
