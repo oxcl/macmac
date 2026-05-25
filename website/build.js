@@ -1,7 +1,6 @@
-import { readFileSync, writeFileSync, cpSync, rmSync, readdirSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, cpSync, rmSync, existsSync } from 'fs';
 import { execSync } from 'child_process';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { resolve } from 'path';
 import { minify as minifyHtml } from 'html-minifier-terser';
 
 const SRC = resolve('website');
@@ -11,22 +10,6 @@ rmSync(OUT, { recursive: true, force: true });
 cpSync(SRC, OUT, { recursive: true, filter: (src) => !src.endsWith('build.js') });
 
 const flags = { stdio: 'inherit' };
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const platformDir = readdirSync(resolve(root, 'node_modules', '@minify-selectors')).find((d) =>
-  d.startsWith(process.platform)
-);
-if (!platformDir) throw new Error(`No minify-selectors binary for ${process.platform}`);
-const msBin = resolve(
-  root,
-  'node_modules',
-  '@minify-selectors',
-  platformDir,
-  'bin',
-  'minify-selectors'
-);
-
-execSync(`"${msBin}" --input "${OUT}" --output "${OUT}"`, flags);
 
 execSync(`bun x cleancss -o "${OUT}/style.css" "${OUT}/style.css"`, flags);
 
