@@ -23,6 +23,16 @@ export const lastSelected = storage.defineItem<Record<string, string>>('local:la
   fallback: {},
 });
 
+export interface SupportReminder {
+  installedAt: number;
+  lastDismissedAt: number | null;
+  dismissCount: number;
+}
+
+export const supportReminder = storage.defineItem<SupportReminder | null>('local:supportReminder', {
+  fallback: null,
+});
+
 export const DEFAULT_CONTAINER_ID = 'firefox-default';
 
 // When there's only one hostname or no registered container for this

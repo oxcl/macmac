@@ -71,11 +71,21 @@ body {
   animation: fadeSlideIn 0.35s ease both;
 }
 
-#app > *:nth-child(1) { animation-delay: 0.03s; }
-#app > *:nth-child(2) { animation-delay: 0.08s; }
-#app > *:nth-child(3) { animation-delay: 0.13s; }
-#app > *:nth-child(4) { animation-delay: 0.18s; }
-#app > *:nth-child(5) { animation-delay: 0.23s; }
+#app > *:nth-child(1) {
+  animation-delay: 0.03s;
+}
+#app > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+#app > *:nth-child(3) {
+  animation-delay: 0.13s;
+}
+#app > *:nth-child(4) {
+  animation-delay: 0.18s;
+}
+#app > *:nth-child(5) {
+  animation-delay: 0.23s;
+}
 
 #app {
   padding: 16px;
@@ -471,6 +481,98 @@ header h1 {
 
 .modal-btn.confirm:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* Support modal */
+.support-modal {
+  width: 290px;
+}
+
+.support-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.support-modal-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.support-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.support-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.support-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-border);
+  transform: translateY(-1px);
+}
+
+.support-btn .icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.support-btn:hover .icon {
+  opacity: 1;
+}
+
+.support-btn[data-action='github']:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.support-btn[data-action='rate']:hover {
+  background: rgba(255, 170, 0, 0.12);
+  border-color: rgba(255, 170, 0, 0.3);
+}
+
+.support-btn[data-action='donate']:hover {
+  background: rgba(236, 72, 153, 0.12);
+  border-color: rgba(236, 72, 153, 0.3);
+}
+
+.support-dismiss {
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.support-dismiss-btn {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: var(--radius);
+}
+
+.support-dismiss-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* Footer */

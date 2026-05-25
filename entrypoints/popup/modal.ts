@@ -1,4 +1,5 @@
 export type ModalResult = { confirmed: false } | { confirmed: true; value?: string };
+export type SupportAction = 'github' | 'rate' | 'donate' | 'not-interested';
 
 export function showConfirm(message: string): Promise<ModalResult> {
   return new Promise((resolve) => {
@@ -105,6 +106,59 @@ export function showPrompt(defaultValue: string): Promise<ModalResult> {
     cancelBtn.addEventListener('click', onCancel);
     confirmBtn.addEventListener('click', onConfirm);
     input.addEventListener('keydown', onInputKeydown);
+    overlay.addEventListener('click', onOverlayClick);
+    document.addEventListener('keydown', onKeydown);
+  });
+}
+
+export function showSupportModal(): Promise<SupportAction> {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById('support-modal-overlay')!;
+    const buttons = overlay.querySelectorAll<HTMLButtonElement>('.support-btn');
+    const dismissBtn = overlay.querySelector<HTMLButtonElement>('.support-dismiss-btn')!;
+
+    overlay.classList.remove('hidden');
+
+    function cleanup() {
+      overlay.classList.add('hidden');
+      for (const btn of buttons) {
+        btn.removeEventListener('click', onBtnClick);
+      }
+      dismissBtn.removeEventListener('click', onDismiss);
+      overlay.removeEventListener('click', onOverlayClick);
+      document.removeEventListener('keydown', onKeydown);
+    }
+
+    function onBtnClick(e: Event) {
+      const btn = e.currentTarget as HTMLElement;
+      const action = btn.dataset.action as SupportAction;
+      cleanup();
+      resolve(action);
+    }
+
+    function onDismiss() {
+      cleanup();
+      resolve('not-interested');
+    }
+
+    function onOverlayClick(e: MouseEvent) {
+      if (e.target === overlay) {
+        cleanup();
+        resolve('not-interested');
+      }
+    }
+
+    function onKeydown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        cleanup();
+        resolve('not-interested');
+      }
+    }
+
+    for (const btn of buttons) {
+      btn.addEventListener('click', onBtnClick);
+    }
+    dismissBtn.addEventListener('click', onDismiss);
     overlay.addEventListener('click', onOverlayClick);
     document.addEventListener('keydown', onKeydown);
   });

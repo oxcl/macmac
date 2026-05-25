@@ -1,4 +1,4 @@
-import { lastSelected, getProfilesForHostname } from '@/utils/storage';
+import { lastSelected, getAccountsForHostname, supportReminder } from '@/utils/storage';
 
 const manualTabIds = new Set<number>();
 
@@ -16,9 +16,9 @@ async function updateBadge(tabId: number): Promise<void> {
       browser.browserAction.setBadgeText({ tabId, text: '' });
       return;
     }
-    const profiles = await getProfilesForHostname(hostname);
-    if (profiles.length > 1) {
-      browser.browserAction.setBadgeText({ tabId, text: String(profiles.length) });
+    const accounts = await getAccountsForHostname(hostname);
+    if (accounts.length > 1) {
+      browser.browserAction.setBadgeText({ tabId, text: String(accounts.length) });
       browser.browserAction.setBadgeBackgroundColor({ tabId, color: '#0060df' });
     } else {
       browser.browserAction.setBadgeText({ tabId, text: '' });
@@ -34,6 +34,17 @@ async function updateBadgeForActiveTab(): Promise<void> {
 }
 
 export default defineBackground(() => {
+  browser.runtime.onInstalled.addListener(async () => {
+    const existing = await supportReminder.getValue();
+    if (!existing) {
+      await supportReminder.setValue({
+        installedAt: Date.now(),
+        lastDismissedAt: null,
+        dismissCount: 0,
+      });
+    }
+  });
+
   browser.runtime.onMessage.addListener(
     (
       message: {
@@ -79,7 +90,7 @@ export default defineBackground(() => {
   });
 
   browser.storage.onChanged.addListener((changes) => {
-    if (changes['local:hostnameProfiles']) {
+    if (changes['local:hostnameAccounts']) {
       updateBadgeForActiveTab();
     }
   });

@@ -1,8 +1,8 @@
 import {
   DEFAULT_CONTAINER_ID,
-  getProfilesForHostname,
+  getAccountsForHostname,
   lastSelected,
-  type Profile,
+  type Account,
 } from '@/utils/storage';
 import type { AppData } from './types';
 import { clearError, showError } from './error';
@@ -46,19 +46,19 @@ export function renderContainerList(data: AppData): void {
   otherItems.innerHTML = '';
 
   const activeId = data.lastSelectedId ?? DEFAULT_CONTAINER_ID;
-  const activeProfile = data.currentProfiles.find((p) => p.id === activeId);
-  const otherProfiles = data.currentProfiles.filter((p) => p.id !== activeId);
+  const activeAccount = data.currentAccounts.find((p) => p.id === activeId);
+  const otherAccounts = data.currentAccounts.filter((p) => p.id !== activeId);
 
   let delay = 0.15;
 
-  function createItem(profile: Profile, isActive: boolean): HTMLDivElement {
-    const containerData = data.containers.find((c) => c.cookieStoreId === profile.id);
+  function createItem(account: Account, isActive: boolean): HTMLDivElement {
+    const containerData = data.containers.find((c) => c.cookieStoreId === account.id);
     const color = containerData?.color || 'gray';
     const colorHex = getContainerColor(color);
 
     const div = document.createElement('div');
-    div.className = `container-item${isActive ? ' active' : ''}${profile.isDefault ? ' default-item' : ''}`;
-    div.dataset.profileId = profile.id;
+    div.className = `container-item${isActive ? ' active' : ''}${account.isDefault ? ' default-item' : ''}`;
+    div.dataset.accountId = account.id;
     div.style.opacity = '0';
     div.style.animation = `fadeSlideIn 0.3s ease forwards`;
     div.style.animationDelay = `${delay}s`;
@@ -67,19 +67,19 @@ export function renderContainerList(data: AppData): void {
     div.innerHTML = `
       <div class="container-content">
         <div class="container-color" style="background: ${colorHex};"></div>
-        <div class="container-name">${escapeHtml(profile.name)}</div>
+        <div class="container-name">${escapeHtml(account.name)}</div>
         <div class="container-actions">
-          <button class="action-btn rename-btn" data-profile-id="${profile.id}" title="Rename">
+          <button class="action-btn rename-btn" data-account-id="${account.id}" title="Rename">
             <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
               <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
             </svg>
           </button>
-          <button class="action-btn newtab-btn" data-profile-id="${profile.id}" title="Open in New Tab">
+          <button class="action-btn newtab-btn" data-account-id="${account.id}" title="Open in New Tab">
             <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
               <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h240v80H200v560h560v-240h80v240q0 33-23.5 56.5T760-120H200Zm440-400v-120H520v-80h120v-120h80v120h120v80H720v120h-80Z"/>
             </svg>
           </button>
-          <button class="action-btn delete-btn" data-profile-id="${profile.id}" ${profile.isDefault ? 'disabled' : ''} title="Delete">
+          <button class="action-btn delete-btn" data-account-id="${account.id}" ${account.isDefault ? 'disabled' : ''} title="Delete">
             <svg class="icon" viewBox="0 -960 960 960" fill="currentColor">
               <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
             </svg>
@@ -91,15 +91,15 @@ export function renderContainerList(data: AppData): void {
     return div;
   }
 
-  if (activeProfile) {
-    activeItems.appendChild(createItem(activeProfile, true));
+  if (activeAccount) {
+    activeItems.appendChild(createItem(activeAccount, true));
   }
 
-  for (const profile of otherProfiles) {
-    otherItems.appendChild(createItem(profile, false));
+  for (const account of otherAccounts) {
+    otherItems.appendChild(createItem(account, false));
   }
 
-  otherGroup.classList.toggle('hidden', otherProfiles.length === 0);
+  otherGroup.classList.toggle('hidden', otherAccounts.length === 0);
 }
 
 async function loadData(): Promise<AppData> {
@@ -123,33 +123,33 @@ async function loadData(): Promise<AppData> {
     showError('Failed to query containers.');
   }
 
-  let currentProfiles: Profile[] = [];
+  let currentAccounts: Account[] = [];
   let lastSelectedId: string | null = null;
 
   if (hostname) {
-    currentProfiles = await getProfilesForHostname(hostname);
+    currentAccounts = await getAccountsForHostname(hostname);
     const lastMap = await lastSelected.getValue();
     lastSelectedId = lastMap[hostname] ?? null;
   }
 
-  return { hostname, containers, currentProfiles, lastSelectedId };
+  return { hostname, containers, currentAccounts, lastSelectedId };
 }
 
 function setupEventListeners(data: AppData): void {
   const createBtn = document.getElementById('createContainerBtn')!;
-  const containerItems = document.getElementById('container-items')!;
+  const containersSection = document.getElementById('containers-section')!;
 
   createBtn.addEventListener('click', () => handleCreate(data));
 
-  containerItems.addEventListener('click', async (e) => {
+  containersSection.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement;
 
     const renameBtn = target.closest('.rename-btn') as HTMLElement | null;
     if (renameBtn) {
       e.stopPropagation();
-      const profileId = renameBtn.dataset.profileId;
-      if (profileId) {
-        await handleRename(profileId, data);
+      const accountId = renameBtn.dataset.accountId;
+      if (accountId) {
+        await handleRename(accountId, data);
         await init();
       }
       return;
@@ -158,9 +158,9 @@ function setupEventListeners(data: AppData): void {
     const deleteBtn = target.closest('.delete-btn') as HTMLElement | null;
     if (deleteBtn) {
       e.stopPropagation();
-      const profileId = deleteBtn.dataset.profileId;
-      if (profileId) {
-        await handleDelete(profileId, data);
+      const accountId = deleteBtn.dataset.accountId;
+      if (accountId) {
+        await handleDelete(accountId, data);
         await init();
       }
       return;
@@ -168,9 +168,9 @@ function setupEventListeners(data: AppData): void {
 
     const containerItem = target.closest('.container-item') as HTMLElement | null;
     if (containerItem) {
-      const profileId = containerItem.dataset.profileId;
+      const accountId = containerItem.dataset.accountId;
       const activeId = data.lastSelectedId ?? DEFAULT_CONTAINER_ID;
-      if (profileId && profileId !== activeId) handleOpenInNewTab(profileId, data);
+      if (accountId && accountId !== activeId) handleOpenInNewTab(accountId, data);
     }
   });
 }
