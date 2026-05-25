@@ -28,9 +28,9 @@ const msBin = resolve(
 
 execSync(`"${msBin}" --input "${OUT}" --output "${OUT}"`, flags);
 
-execSync(`npx cleancss -o "${OUT}/style.css" "${OUT}/style.css"`, flags);
+execSync(`bun x cleancss -o "${OUT}/style.css" "${OUT}/style.css"`, flags);
 
-execSync(`npx terser "${OUT}/main.js" -o "${OUT}/main.js" --compress --mangle`, flags);
+execSync(`bun x terser "${OUT}/main.js" -o "${OUT}/main.js" --compress --mangle`, flags);
 
 const htmlOpts = {
   collapseWhitespace: true,

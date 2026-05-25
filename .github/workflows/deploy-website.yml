@@ -5,16 +5,17 @@ on:
     branches: [main]
     paths: ['website/**']
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build:website
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run build:website
       - uses: peaceiris/actions-gh-pages@v3
         with:
           publish_branch: website
