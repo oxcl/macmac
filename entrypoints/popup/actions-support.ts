@@ -1,4 +1,4 @@
-import { supportReminder, type SupportReminder } from '@/utils/storage';
+import { StorageService, type SupportReminder } from '@/services/storage';
 import { showSupportModal, type SupportAction } from './modal';
 
 const supportUrls: Record<SupportAction, string> = {
@@ -20,9 +20,9 @@ function isSupportReminderDue(reminder: SupportReminder): boolean {
 }
 
 export async function checkSupportReminder(): Promise<void> {
-  let reminder = await supportReminder.getValue();
+  let reminder = await StorageService.supportReminder.getValue();
   if (!reminder) {
-    await supportReminder.setValue({
+    await StorageService.supportReminder.setValue({
       installedAt: Date.now(),
       lastDismissedAt: null,
       dismissCount: 0,
@@ -38,7 +38,7 @@ export async function checkSupportReminder(): Promise<void> {
     lastDismissedAt: Date.now(),
     dismissCount: reminder.dismissCount + 1,
   };
-  await supportReminder.setValue(nextReminder);
+  await StorageService.supportReminder.setValue(nextReminder);
 
   const url = supportUrls[action];
   if (url) {

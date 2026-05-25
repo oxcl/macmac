@@ -1,7 +1,6 @@
-import { accounts, hostnameAccounts, lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
-import { tabService } from '@/utils/tab-service-client';
-import { getCurrentTab, toHttpsUrl } from '@/utils/tabs';
-import { t } from '@/utils/i18n';
+import { StorageService } from '@/services/storage';
+import { tabService, getCurrentTab, toHttpsUrl } from '@/services/tabs';
+import { t } from '@/services/i18n';
 import { showConfirm } from './modal';
 import type { AppData } from './types';
 
@@ -13,9 +12,9 @@ export async function handleDelete(accountId: string, data: AppData): Promise<bo
   tabService.cleanupBindingsForContainer(accountId);
 
   const [currentAccounts, currentHostnameMap, lastMap] = await Promise.all([
-    accounts.getValue(),
-    hostnameAccounts.getValue(),
-    lastSelected.getValue(),
+    StorageService.accounts.getValue(),
+    StorageService.hostnameAccounts.getValue(),
+    StorageService.lastSelected.getValue(),
   ]);
 
   const { [accountId]: _removed, ...remainingAccounts } = currentAccounts;
@@ -34,15 +33,15 @@ export async function handleDelete(accountId: string, data: AppData): Promise<bo
 
     const hasDefault = newIds.some((id) => remainingAccounts[id]?.isDefault);
     if (!hasDefault) {
-      delete remainingAccounts[DEFAULT_CONTAINER_ID];
+      delete remainingAccounts[StorageService.DEFAULT_CONTAINER_ID];
     }
 
     const { [hostname]: _last, ...remainingLast } = lastMap;
 
     await Promise.all([
-      accounts.setValue(remainingAccounts),
-      hostnameAccounts.setValue(newHostnameMap),
-      lastSelected.setValue(remainingLast),
+      StorageService.accounts.setValue(remainingAccounts),
+      StorageService.hostnameAccounts.setValue(newHostnameMap),
+      StorageService.lastSelected.setValue(remainingLast),
     ]);
 
     const wasActive = data.lastSelectedId === accountId;

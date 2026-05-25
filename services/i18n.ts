@@ -1,4 +1,4 @@
-import { language } from './storage';
+import { StorageService } from './storage';
 
 type Translations = Record<string, string>;
 
@@ -338,7 +338,7 @@ function matchLang(code: string): string {
 }
 
 export async function initLanguage(): Promise<void> {
-  const stored = await language.getValue();
+  const stored = await StorageService.language.getValue();
   if (stored && translations[stored]) {
     currentLang = stored;
   } else {
@@ -359,7 +359,7 @@ export function t(key: string, ...args: string[]): string {
 export async function setLanguage(lang: string): Promise<void> {
   if (!translations[lang]) return;
   currentLang = lang;
-  await language.setValue(lang);
+  await StorageService.language.setValue(lang);
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' || lang === 'fa' ? 'rtl' : 'ltr';
 }

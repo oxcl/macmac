@@ -1,15 +1,6 @@
-import {
-  lastSelected,
-  formatContainerName,
-  synthesizeDefaultAccount,
-  getAccountAndHostnameMaps,
-  upsertAccount,
-  addAccountToHostname,
-  type Account,
-} from '@/utils/storage';
-import { tabService } from '@/utils/tab-service-client';
-import { getCurrentTab, toHttpsUrl } from '@/utils/tabs';
-import { t } from '@/utils/i18n';
+import { StorageService, type Account } from '@/services/storage';
+import { tabService, getCurrentTab, toHttpsUrl } from '@/services/tabs';
+import { t } from '@/services/i18n';
 import { showError } from './error';
 import type { AppData } from './types';
 
@@ -19,7 +10,7 @@ export async function handleCreate(data: AppData): Promise<void> {
   try {
     const hostname = data.hostname;
     const accountName = `${t('accountPrefix')}${data.currentAccounts.length + 1}`;
-    const containerName = formatContainerName(accountName, hostname);
+    const containerName = StorageService.formatContainerName(accountName, hostname);
 
     const newContainer = await browser.contextualIdentities.create({
       name: containerName,
@@ -34,21 +25,21 @@ export async function handleCreate(data: AppData): Promise<void> {
       isDefault: false,
     };
 
-    const [currentAccounts, currentHostnameMap] = await getAccountAndHostnameMaps();
+    const [currentAccounts, currentHostnameMap] = await StorageService.getAccountAndHostnameMaps();
     const accountIds = currentHostnameMap[hostname] ?? [];
     const hasStoredDefault = accountIds.some((id) => currentAccounts[id]?.isDefault);
 
-    await upsertAccount(newAccount);
-    await addAccountToHostname(hostname, newAccount.id);
+    await StorageService.upsertAccount(newAccount);
+    await StorageService.addAccountToHostname(hostname, newAccount.id);
 
     if (!hasStoredDefault) {
-      const defaultAccount = synthesizeDefaultAccount(hostname);
-      await upsertAccount(defaultAccount);
-      await addAccountToHostname(hostname, defaultAccount.id);
+      const defaultAccount = StorageService.synthesizeDefaultAccount(hostname);
+      await StorageService.upsertAccount(defaultAccount);
+      await StorageService.addAccountToHostname(hostname, defaultAccount.id);
     }
 
-    await lastSelected.setValue({
-      ...(await lastSelected.getValue()),
+    await StorageService.lastSelected.setValue({
+      ...(await StorageService.lastSelected.getValue()),
       [hostname]: newAccount.id,
     });
 

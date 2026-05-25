@@ -1,5 +1,5 @@
-import { DEFAULT_CONTAINER_ID } from '@/utils/storage';
-import { t } from '@/utils/i18n';
+import { StorageService } from '@/services/storage';
+import { t } from '@/services/i18n';
 import type { AppData } from './types';
 import { clearError } from './error';
 import { loadAppData } from './renderer-data';
@@ -50,7 +50,7 @@ async function onContainerClick(e: Event): Promise<void> {
   const containerItem = target.closest('.container-item') as HTMLElement | null;
   if (containerItem) {
     const accountId = containerItem.dataset.accountId;
-    const activeId = currentData.lastSelectedId ?? DEFAULT_CONTAINER_ID;
+    const activeId = currentData.lastSelectedId ?? StorageService.DEFAULT_CONTAINER_ID;
     if (accountId && accountId !== activeId) handleOpenInNewTab(accountId, currentData);
   }
 }

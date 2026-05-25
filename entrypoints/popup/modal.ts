@@ -1,4 +1,4 @@
-import { t } from '@/utils/i18n';
+import { t } from '@/services/i18n';
 
 export type ModalResult = { confirmed: false } | { confirmed: true; value?: string };
 export type SupportAction = 'github' | 'rate' | 'donate' | 'not-interested';

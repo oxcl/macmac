@@ -1,7 +1,6 @@
-import { getAccountsForHostname, lastSelected, type Account } from '@/utils/storage';
-import { tabService } from '@/utils/tab-service-client';
-import { getCurrentTab, getHostname } from '@/utils/tabs';
-import { t } from '@/utils/i18n';
+import { StorageService, type Account } from '@/services/storage';
+import { tabService, getCurrentTab, getHostname } from '@/services/tabs';
+import { t } from '@/services/i18n';
 import type { AppData } from './types';
 import { showError } from './error';
 
@@ -21,14 +20,14 @@ export async function loadAppData(): Promise<AppData> {
   let lastSelectedId: string | null = null;
 
   if (hostname) {
-    currentAccounts = await getAccountsForHostname(hostname);
+    currentAccounts = await StorageService.getAccountsForHostname(hostname);
 
     const binding = currentTab.id ? await tabService.getTabBinding(currentTab.id) : null;
 
     if (binding && binding.hostname === hostname) {
       lastSelectedId = binding.cookieStoreId;
     } else {
-      const lastMap = await lastSelected.getValue();
+      const lastMap = await StorageService.lastSelected.getValue();
       lastSelectedId = lastMap[hostname] ?? null;
     }
   }

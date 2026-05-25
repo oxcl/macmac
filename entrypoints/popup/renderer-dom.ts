@@ -1,5 +1,5 @@
-import { DEFAULT_CONTAINER_ID, type Account } from '@/utils/storage';
-import { t } from '@/utils/i18n';
+import { StorageService, type Account } from '@/services/storage';
+import { t } from '@/services/i18n';
 import type { AppData } from './types';
 
 function escapeHtml(str: string): string {
@@ -39,7 +39,7 @@ export function renderContainerList(data: AppData): void {
   activeItems.innerHTML = '';
   otherItems.innerHTML = '';
 
-  const activeId = data.lastSelectedId ?? DEFAULT_CONTAINER_ID;
+  const activeId = data.lastSelectedId ?? StorageService.DEFAULT_CONTAINER_ID;
   const activeAccount = data.currentAccounts.find((p) => p.id === activeId);
   const otherAccounts = data.currentAccounts.filter((p) => p.id !== activeId);
 

@@ -1,4 +1,4 @@
-import type { Account } from '@/utils/storage';
+import type { Account } from '@/services/storage';
 
 export interface AppData {
   hostname: string | null;

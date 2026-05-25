@@ -1,13 +1,12 @@
-import { setLastSelected } from '@/utils/storage';
-import { tabService } from '@/utils/tab-service-client';
-import { getCurrentTab, toHttpsUrl } from '@/utils/tabs';
+import { StorageService } from '@/services/storage';
+import { tabService, getCurrentTab, toHttpsUrl } from '@/services/tabs';
 import type { AppData } from './types';
 import { checkSupportReminder } from './actions-support';
 
 export async function handleOpenInNewTab(accountId: string, data: AppData): Promise<void> {
   if (!data.hostname) return;
 
-  await setLastSelected(data.hostname, accountId);
+  await StorageService.setLastSelected(data.hostname, accountId);
 
   const currentTab = await getCurrentTab();
   await tabService.openInAccount(
@@ -27,7 +26,7 @@ export async function handleOpenInTabWithoutSwitch(
 ): Promise<void> {
   if (!data.hostname) return;
 
-  await setLastSelected(data.hostname, accountId);
+  await StorageService.setLastSelected(data.hostname, accountId);
 
   const currentTab = await getCurrentTab();
   await tabService.openInAccount(toHttpsUrl(data.hostname), accountId, currentTab.index + 1);

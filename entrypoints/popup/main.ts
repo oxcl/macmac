@@ -1,4 +1,4 @@
-/// <reference path="../../types/global.d.ts" />
+/// <reference path="../../types.d.ts" />
 
 import './style.css';
 import { showError } from './error';
@@ -10,7 +10,7 @@ import {
   getSupportedLanguages,
   applyTranslations,
   t,
-} from '@/utils/i18n';
+} from '@/services/i18n';
 
 function setupLanguageSelector(): void {
   const selector = document.getElementById('lang-selector') as HTMLSelectElement;

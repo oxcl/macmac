@@ -1,12 +1,6 @@
 import { registerService } from '@webext-core/proxy-service';
-import {
-  lastSelected,
-  getAccountsForHostname,
-  supportReminder,
-  DEFAULT_CONTAINER_ID,
-} from '@/utils/storage';
-import { TAB_SERVICE_KEY, type TabService, type TabBinding } from '@/utils/tab-service';
-import { getHostname } from '@/utils/tabs';
+import { StorageService } from '@/services/storage';
+import { TAB_SERVICE_KEY, type TabService, type TabBinding, getHostname } from '@/services/tabs';
 
 // Tracks which container each tab is currently bound to. When the popup opens
 // a tab in a specific container, it registers the binding here so the
@@ -37,12 +31,12 @@ const tabServiceImpl: TabService = {
 
   async openInDefault(url, index, replaceCurrentTabId) {
     const newTab = await browser.tabs.create({ url, index });
-    registerNewTab(newTab, url, DEFAULT_CONTAINER_ID);
+    registerNewTab(newTab, url, StorageService.DEFAULT_CONTAINER_ID);
     if (replaceCurrentTabId) browser.tabs.remove(replaceCurrentTabId);
   },
 
   async openInAccount(url, accountId, index, replaceCurrentTabId) {
-    if (accountId === DEFAULT_CONTAINER_ID) {
+    if (accountId === StorageService.DEFAULT_CONTAINER_ID) {
       await this.openInDefault(url, index, replaceCurrentTabId);
     } else {
       await this.openInContainer(url, accountId, index, replaceCurrentTabId);
@@ -74,7 +68,7 @@ async function updateBadge(tabId: number): Promise<void> {
       browser.browserAction.setBadgeText({ tabId, text: '' });
       return;
     }
-    const accounts = await getAccountsForHostname(hostname);
+    const accounts = await StorageService.getAccountsForHostname(hostname);
     if (accounts.length > 1) {
       browser.browserAction.setBadgeText({ tabId, text: String(accounts.length) });
       browser.browserAction.setBadgeBackgroundColor({ tabId, color: '#0060df' });
@@ -95,9 +89,9 @@ export default defineBackground(() => {
   registerService(TAB_SERVICE_KEY, tabServiceImpl);
 
   browser.runtime.onInstalled.addListener(async () => {
-    const existing = await supportReminder.getValue();
+    const existing = await StorageService.supportReminder.getValue();
     if (!existing) {
-      await supportReminder.setValue({
+      await StorageService.supportReminder.setValue({
         installedAt: Date.now(),
         lastDismissedAt: null,
         dismissCount: 0,
@@ -125,7 +119,6 @@ export default defineBackground(() => {
       updateBadgeForActiveTab();
     }
   });
-
 
   // the moat of the extension. the auto switching logic is here.
   browser.webNavigation.onBeforeNavigate.addListener(async (details) => {
@@ -156,12 +149,14 @@ export default defineBackground(() => {
       }
 
       const tab = await browser.tabs.get(details.tabId);
-      const map = await lastSelected.getValue();
+      const map = await StorageService.lastSelected.getValue();
       const containerId = map[hostname];
-      const isDefault = !tab.cookieStoreId || tab.cookieStoreId === DEFAULT_CONTAINER_ID;
-
+      const isDefault =
+        !tab.cookieStoreId || tab.cookieStoreId === StorageService.DEFAULT_CONTAINER_ID;
+      
       // if the current tab is inside a container but user has navigated to a page that
       // is using the default firefox container switch out of the container and open with default
+
       if (!containerId) {
         if (isDefault) return;
         await tabServiceImpl.openInDefault(details.url, tab.index, details.tabId);
