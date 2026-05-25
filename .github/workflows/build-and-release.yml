@@ -1,0 +1,93 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run compile
+
+      - run: bun run lint
+
+      - name: Determine version
+        id: version
+        run: |
+          if [[ '${{ github.ref_type }}' == 'tag' ]]; then
+            echo 'is_nightly=false' >> "$GITHUB_OUTPUT"
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+            echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+          else
+            SHA="${GITHUB_SHA:0:7}"
+            DATE=$(date +%Y-%m-%d)
+            echo 'is_nightly=true' >> "$GITHUB_OUTPUT"
+            echo "version=0.0.0-nightly.${SHA}" >> "$GITHUB_OUTPUT"
+            echo "tag=nightly-${DATE}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update package.json version
+        run: npm pkg set version="${{ steps.version.outputs.version }}"
+
+      - name: Generate changelog
+        run: |
+          if [[ '${{ steps.version.outputs.is_nightly }}' == 'true' ]]; then
+            TAG=$(git tag --list 'nightly-*' --sort=-creatordate | head -1)
+            if [ -z "$TAG" ]; then
+              TAG=$(git tag --list 'v*' --sort=-version:refname | head -1)
+            fi
+          else
+            TAG=$(git tag --list 'v*' --sort=-version:refname | sed -n '2p')
+          fi
+
+          if [ -n "$TAG" ]; then
+            git log "$TAG"..HEAD --oneline --no-merges --format='* %h %s' > /tmp/changelog.md
+          else
+            git log --oneline --no-merges --format='* %h %s' > /tmp/changelog.md
+          fi
+
+      - run: bun run build:firefox
+
+      - run: bun run zip:firefox
+
+      - name: Publish nightly prerelease
+        if: steps.version.outputs.is_nightly == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG='${{ steps.version.outputs.tag }}'
+          gh release delete "$TAG" \
+            --repo '${{ github.repository }}' --yes 2>/dev/null || true
+          git tag -d "$TAG" 2>/dev/null || true
+          git push origin ":refs/tags/$TAG" 2>/dev/null || true
+          gh release create "$TAG" \
+            --repo '${{ github.repository }}' \
+            --title "Nightly $(date +%Y-%m-%d) (${{ steps.version.outputs.version }})" \
+            --notes-file /tmp/changelog.md \
+            --prerelease \
+            .output/*.zip
+
+      - name: Publish full release
+        if: steps.version.outputs.is_nightly == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG='${{ steps.version.outputs.tag }}'
+          gh release create "$TAG" \
+            --repo '${{ github.repository }}' \
+            --title "$TAG" \
+            --notes-file /tmp/changelog.md \
+            .output/*.zip
