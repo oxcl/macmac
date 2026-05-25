@@ -2,7 +2,6 @@ import {
   accounts,
   hostnameAccounts,
   lastSelected,
-  DEFAULT_CONTAINER_ID,
   formatContainerName,
   synthesizeDefaultAccount,
   type Account,

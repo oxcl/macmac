@@ -10,72 +10,68 @@ import { handleOpenInNewTab, handleOpenInTabWithoutSwitch } from './actions-open
 import { handleRename } from './actions-rename';
 import { handleDelete } from './actions-delete';
 
-function setupEventListeners(data: AppData): void {
-  const createBtn = document.getElementById('createContainerBtn')!;
-  const containersSection = document.getElementById('containers-section')!;
+let currentData: AppData;
+let listenersReady = false;
 
-  createBtn.addEventListener('click', () => handleCreate(data));
+async function onContainerClick(e: Event): Promise<void> {
+  const target = e.target as HTMLElement;
 
-  containersSection.addEventListener('click', async (e) => {
-    const target = e.target as HTMLElement;
-
-    const renameBtn = target.closest('.rename-btn') as HTMLElement | null;
-    if (renameBtn) {
-      e.stopPropagation();
-      const accountId = renameBtn.dataset.accountId;
-      if (accountId) {
-        await handleRename(accountId, data);
-        await init();
-      }
-      return;
+  const renameBtn = target.closest('.rename-btn') as HTMLElement | null;
+  if (renameBtn) {
+    e.stopPropagation();
+    const accountId = renameBtn.dataset.accountId;
+    if (accountId) {
+      await handleRename(accountId, currentData);
+      await init();
     }
+    return;
+  }
 
-    const deleteBtn = target.closest('.delete-btn') as HTMLElement | null;
-    if (deleteBtn) {
-      e.stopPropagation();
-      const accountId = deleteBtn.dataset.accountId;
-      if (accountId) {
-        await handleDelete(accountId, data);
-        await init();
-      }
-      return;
+  const deleteBtn = target.closest('.delete-btn') as HTMLElement | null;
+  if (deleteBtn) {
+    e.stopPropagation();
+    const accountId = deleteBtn.dataset.accountId;
+    if (accountId) {
+      await handleDelete(accountId, currentData);
+      await init();
     }
+    return;
+  }
 
-    const newTabBtn = target.closest('.newtab-btn') as HTMLElement | null;
-    if (newTabBtn) {
-      e.stopPropagation();
-      const accountId = newTabBtn.dataset.accountId;
-      if (accountId) {
-        handleOpenInTabWithoutSwitch(accountId, data);
-      }
-      return;
+  const newTabBtn = target.closest('.newtab-btn') as HTMLElement | null;
+  if (newTabBtn) {
+    e.stopPropagation();
+    const accountId = newTabBtn.dataset.accountId;
+    if (accountId) {
+      handleOpenInTabWithoutSwitch(accountId, currentData);
     }
+    return;
+  }
 
-    const containerItem = target.closest('.container-item') as HTMLElement | null;
-    if (containerItem) {
-      const accountId = containerItem.dataset.accountId;
-      const activeId = data.lastSelectedId ?? DEFAULT_CONTAINER_ID;
-      if (accountId && accountId !== activeId) handleOpenInNewTab(accountId, data);
-    }
-  });
+  const containerItem = target.closest('.container-item') as HTMLElement | null;
+  if (containerItem) {
+    const accountId = containerItem.dataset.accountId;
+    const activeId = currentData.lastSelectedId ?? DEFAULT_CONTAINER_ID;
+    if (accountId && accountId !== activeId) handleOpenInNewTab(accountId, currentData);
+  }
 }
 
 export async function init(): Promise<void> {
   clearError();
-  const data = await loadAppData();
+  currentData = await loadAppData();
 
   const hostnameDisplay = document.getElementById('hostname-display')!;
   const noHostname = document.getElementById('no-hostname')!;
   const createSection = document.getElementById('create-section')!;
   const containersSection = document.getElementById('containers-section')!;
 
-  if (data.hostname) {
-    hostnameDisplay.textContent = `Website: ${data.hostname}`;
+  if (currentData.hostname) {
+    hostnameDisplay.textContent = `Website: ${currentData.hostname}`;
     hostnameDisplay.classList.remove('hidden');
     noHostname.classList.add('hidden');
     createSection.classList.remove('hidden');
     containersSection.classList.remove('hidden');
-    renderContainerList(data);
+    renderContainerList(currentData);
   } else {
     hostnameDisplay.classList.add('hidden');
     noHostname.classList.remove('hidden');
@@ -83,5 +79,9 @@ export async function init(): Promise<void> {
     containersSection.classList.add('hidden');
   }
 
-  setupEventListeners(data);
+  if (!listenersReady) {
+    document.getElementById('createContainerBtn')!.addEventListener('click', () => handleCreate(currentData));
+    containersSection.addEventListener('click', onContainerClick);
+    listenersReady = true;
+  }
 }
