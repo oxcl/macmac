@@ -52,10 +52,12 @@ export async function handleCreate(data: AppData): Promise<void> {
       newHostnameMap[hostname] = [defaultAccount.id, ...newHostnameMap[hostname]];
     }
 
+    const lastMap = await lastSelected.getValue();
+    lastMap[hostname] = newAccount.id;
     await Promise.all([
       accounts.setValue(accountUpdates),
       hostnameAccounts.setValue(newHostnameMap),
-      lastSelected.setValue({ [hostname]: newAccount.id }),
+      lastSelected.setValue(lastMap),
     ]);
 
     const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
