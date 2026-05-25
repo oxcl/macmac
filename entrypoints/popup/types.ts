@@ -1,8 +1,8 @@
-import type { Profile } from '@/utils/storage';
+import type { Account } from '@/utils/storage';
 
 export interface AppData {
   hostname: string | null;
   containers: Browser.contextualIdentities.ContextualIdentity[];
-  currentProfiles: Profile[];
+  currentAccounts: Account[];
   lastSelectedId: string | null;
 }

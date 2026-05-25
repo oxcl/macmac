@@ -11,12 +11,6 @@ import { showConfirm, showPrompt } from './modal';
 import { showError } from './error';
 import type { AppData } from './types';
 
-let reinit: () => Promise<void> = async () => {};
-
-export function setReinit(fn: () => Promise<void>): void {
-  reinit = fn;
-}
-
 export async function handleCreate(data: AppData): Promise<void> {
   if (!data.hostname) return;
 
@@ -176,8 +170,6 @@ export async function handleRename(profileId: string, data: AppData): Promise<vo
       name: containerName,
     });
   }
-
-  await reinit();
 }
 
 export async function handleDelete(profileId: string, data: AppData): Promise<void> {
@@ -219,6 +211,4 @@ export async function handleDelete(profileId: string, data: AppData): Promise<vo
       lastSelected.setValue(remainingLast),
     ]);
   }
-
-  await reinit();
 }

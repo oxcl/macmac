@@ -19,7 +19,7 @@ Compact instructions for agents working on the MacMac Firefox extension.
       main.ts           # Popup logic (UI + container management)
       style.css         # Popup styles
   /utils
-    storage.ts          # Storage definitions, profile types, helper functions
+    storage.ts          # Storage definitions, Account types, helper functions
   /types
     global.d.ts         # Browser API type augmentations
   wxt.config.ts         # WXT configuration (permissions, warnings)
@@ -101,8 +101,8 @@ Containers must follow the format `name (hostname)` (e.g., `Work (facebook.com)`
 
 All storage uses WXT's `storage.defineItem` API with `local:` prefix:
 
-- `local:profiles`: `Record<string, Profile>` — maps container ID to `Profile` object (`id`, `name`, `hostnames`, `isDefault`).
-- `local:hostnameProfiles`: `Record<string, string[]>` — maps hostname to array of container IDs.
+- `local:accounts`: `Record<string, Account>` — maps account ID to `Account` object (`id`, `name`, `hostnames`, `isDefault`).
+- `local:hostnameAccounts`: `Record<string, string[]>` — maps hostname to array of account IDs.
 - `local:lastSelected`: `Record<string, string>` — maps hostname to the cookieStoreId of the last selected container. If absent or `null`, default container is used.
 
 ### Background Script Logic
@@ -114,7 +114,7 @@ All storage uses WXT's `storage.defineItem` API with `local:` prefix:
 
 ### Popup Logic
 
-- Displays containers for the current hostname (loaded from `hostnameProfiles` storage).
+- Displays containers for the current hostname (loaded from `hostnameAccounts` storage).
 - Allows creating new containers (unnamed if no name provided).
 - Allows renaming (preserving hostname prefix).
 - Allows deleting containers (cleans up `lastSelected` if needed).

@@ -1,28 +1,34 @@
-export interface Profile {
+export interface Account {
   id: string;
   name: string;
   hostnames: string[];
   isDefault: boolean;
 }
 
-export const profiles = storage.defineItem<Record<string, Profile>>('local:profiles', {
+// key value store of <account-id, account-object>
+export const accounts = storage.defineItem<Record<string, Account>>('local:accounts', {
   fallback: {},
 });
 
-export const hostnameProfiles = storage.defineItem<Record<string, string[]>>(
-  'local:hostnameProfiles',
+// lookup table for <hostname, array of account ids>
+export const hostnameAccounts = storage.defineItem<Record<string, string[]>>(
+  'local:hostnameAccounts',
   {
     fallback: {},
   }
 );
 
+// <host-name, account-id>
 export const lastSelected = storage.defineItem<Record<string, string>>('local:lastSelected', {
   fallback: {},
 });
 
 export const DEFAULT_CONTAINER_ID = 'firefox-default';
 
-export function getDefaultProfile(hostname: string): Profile {
+// When there's only one hostname or no registered container for this
+// hostname, we synthesize a virtual "Default (no container)" account
+// for the UI. This is not backed by a real contextualIdentity.
+export function synthesizeDefaultAccount(hostname: string): Account {
   return {
     id: DEFAULT_CONTAINER_ID,
     name: 'Default',
@@ -35,31 +41,31 @@ export function formatContainerName(name: string, hostname: string): string {
   return `${name} (${hostname})`;
 }
 
-export async function getProfilesForHostname(hostname: string): Promise<Profile[]> {
-  const [allProfiles, hostnameMap] = await Promise.all([
-    profiles.getValue(),
-    hostnameProfiles.getValue(),
+export async function getAccountsForHostname(hostname: string): Promise<Account[]> {
+  const [allAccounts, hostnameMap] = await Promise.all([
+    accounts.getValue(),
+    hostnameAccounts.getValue(),
   ]);
 
-  const profileIds = hostnameMap[hostname] ?? [];
+  const accountIds = hostnameMap[hostname] ?? [];
 
-  if (profileIds.length === 0) {
-    return [getDefaultProfile(hostname)];
+  if (accountIds.length === 0) {
+    return [synthesizeDefaultAccount(hostname)];
   }
 
-  const result: Profile[] = [];
+  const result: Account[] = [];
   let hasDefault = false;
 
-  for (const id of profileIds) {
-    const profile = allProfiles[id];
-    if (profile) {
-      result.push(profile);
-      if (profile.isDefault) hasDefault = true;
+  for (const id of accountIds) {
+    const account = allAccounts[id];
+    if (account) {
+      result.push(account);
+      if (account.isDefault) hasDefault = true;
     }
   }
 
   if (!hasDefault) {
-    result.unshift(getDefaultProfile(hostname));
+    result.unshift(synthesizeDefaultAccount(hostname));
   }
 
   return result;

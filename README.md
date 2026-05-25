@@ -15,7 +15,7 @@ MacMac is a Firefox extension that provides an intuitive, account-based interfac
 ## How It Works
 
 1. **Container Naming**: Each container is named `name (hostname)` (e.g., `Work (facebook.com)`). This binds the container to that hostname.
-2. **Storage**: The extension stores profile mappings in `browser.storage.local` using three keys: `profiles` (container metadata), `hostnameProfiles` (hostname → container IDs), and `lastSelected` (hostname → last used container ID).
+2. **Storage**: The extension stores account mappings in `browser.storage.local` using three keys: `accounts` (account metadata), `hostnameAccounts` (hostname → account IDs), and `lastSelected` (hostname → last used container ID).
 3. **Automatic Switching**: A background script listens for tab updates. When you navigate to a website, it checks the `lastSelected` mapping and switches the tab to that container automatically.
 4. **Manual Override**: If you manually open a site in a different container (via Firefox's built-in container menu), the extension respects your choice and does not override it.
 

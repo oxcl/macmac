@@ -885,6 +885,29 @@ a:focus-visible {
     background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
   }
 
+  .btn-secondary {
+    color: #e2e8f0;
+    border-color: #475569;
+  }
+
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    border-color: #818cf8;
+    color: #f1f5f9;
+    background: rgba(129, 140, 248, 0.1);
+  }
+
+  .btn-primary {
+    background: #4f46e5;
+    border-color: #4f46e5;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background: #6366f1;
+    border-color: #6366f1;
+  }
+
   .hero-text h1 {
     color: #f1f5f9;
   }
@@ -926,6 +949,12 @@ a:focus-visible {
     color: #94a3b8;
   }
 
+  .step-text {
+    background: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+  }
+
   .step-text h3 {
     color: #f1f5f9;
   }
@@ -936,6 +965,11 @@ a:focus-visible {
 
   .step-number {
     color: #818cf8;
+  }
+
+  .story-step svg,
+  .hero-screenshot {
+    filter: brightness(0.8) invert(1) hue-rotate(180deg);
   }
 
   #faq {
