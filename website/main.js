@@ -13,7 +13,7 @@
     } else {
       navbar.classList.remove('scrolled');
     }
-    lastScrollY = scrollY;
+
   };
 
   window.addEventListener('scroll', onScroll, { passive: true });

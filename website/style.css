@@ -748,8 +748,8 @@ a:focus-visible {
 }
 
 .qr-image {
-  width: 220px;
-  height: 220px;
+  width: 260px;
+  height: 260px;
   object-fit: contain;
   margin: 0 auto;
   border-radius: 12px;
