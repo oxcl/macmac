@@ -19,7 +19,7 @@ export async function handleRename(accountId: string, data: AppData): Promise<vo
   const trimmed = result.value.trim();
   if (trimmed === '' || trimmed === account.name) return;
 
-  if (trimmed === 'Default') {
+  if (trimmed === 'Default' && !account.isDefault) {
     await showConfirm(t('nameReserved'));
     return;
   }
