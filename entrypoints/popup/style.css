@@ -281,15 +281,19 @@ header h1 {
 }
 
 .action-btn.delete-btn {
-  background: rgba(255, 80, 80, 0.15);
+  background: rgba(255, 60, 60, 0.2);
+  border: 1px solid rgba(255, 60, 60, 0.25);
+  color: #ff6b6b;
 }
 
 .action-btn.delete-btn:hover {
-  background: rgba(255, 80, 80, 0.25);
+  background: rgba(255, 60, 60, 0.35);
+  border-color: rgba(255, 60, 60, 0.5);
+  color: #ff8a8a;
 }
 
 .action-btn.delete-btn .icon {
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 .action-btn.delete-btn:hover .icon {
