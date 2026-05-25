@@ -98,18 +98,15 @@ function renderContainerList(data: AppData): void {
     const profileDiv = document.createElement('div');
     profileDiv.className = `container-item${isActive ? ' active' : ''}${profile.isDefault ? ' default-item' : ''}`;
     profileDiv.dataset.profileId = profile.id;
-
-    const hostnameDisplay = data.hostname
-      ? `<div class="container-hostname">${escapeHtml(data.hostname)}</div>`
-      : '';
+    const idx = data.currentProfiles.indexOf(profile);
+    profileDiv.style.opacity = '0';
+    profileDiv.style.animation = `fadeSlideIn 0.3s ease forwards`;
+    profileDiv.style.animationDelay = `${0.15 + idx * 0.04}s`;
 
     profileDiv.innerHTML = `
       <div class="container-content">
         <div class="container-color" style="background: ${colorHex};"></div>
-        <div class="container-info">
-          <div class="container-name">${escapeHtml(profile.name)}</div>
-          ${hostnameDisplay}
-        </div>
+        <div class="container-name">${escapeHtml(profile.name)}</div>
         <div class="container-actions">
           <button class="action-btn rename-btn" data-profile-id="${profile.id}" title="Rename">
             <img src="/icon/rename.svg" alt="Rename">

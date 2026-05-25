@@ -1,6 +1,37 @@
-import { lastSelected } from '@/utils/storage';
+import { lastSelected, getProfilesForHostname } from '@/utils/storage';
 
 const manualTabIds = new Set<number>();
+
+async function updateBadge(tabId: number): Promise<void> {
+  try {
+    const tab = await browser.tabs.get(tabId);
+    if (!tab.url) {
+      browser.browserAction.setBadgeText({ tabId, text: '' });
+      return;
+    }
+    let hostname: string;
+    try {
+      hostname = new URL(tab.url).hostname;
+    } catch {
+      browser.browserAction.setBadgeText({ tabId, text: '' });
+      return;
+    }
+    const profiles = await getProfilesForHostname(hostname);
+    if (profiles.length > 1) {
+      browser.browserAction.setBadgeText({ tabId, text: String(profiles.length) });
+      browser.browserAction.setBadgeBackgroundColor({ tabId, color: '#0060df' });
+    } else {
+      browser.browserAction.setBadgeText({ tabId, text: '' });
+    }
+  } catch {
+    browser.browserAction.setBadgeText({ tabId, text: '' });
+  }
+}
+
+async function updateBadgeForActiveTab(): Promise<void> {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+  if (tabs[0]?.id) await updateBadge(tabs[0].id);
+}
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(
@@ -36,6 +67,22 @@ export default defineBackground(() => {
       }
     }
   );
+
+  browser.tabs.onActivated.addListener((activeInfo) => {
+    updateBadge(activeInfo.tabId);
+  });
+
+  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.active) {
+      updateBadge(tabId);
+    }
+  });
+
+  browser.storage.onChanged.addListener((changes) => {
+    if (changes['local:hostnameProfiles']) {
+      updateBadgeForActiveTab();
+    }
+  });
 
   browser.webNavigation.onBeforeNavigate.addListener(async (details) => {
     if (details.frameId !== 0) return;
@@ -81,4 +128,6 @@ export default defineBackground(() => {
       console.error('[background] Error switching tab:', err);
     }
   });
+
+  updateBadgeForActiveTab();
 });
