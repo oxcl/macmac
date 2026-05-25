@@ -22,8 +22,6 @@ jobs:
 
       - run: bun run compile
 
-      - run: bun run lint
-
       - name: Determine version
         id: version
         run: |

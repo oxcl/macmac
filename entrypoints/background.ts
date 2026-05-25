@@ -153,7 +153,7 @@ export default defineBackground(() => {
       const containerId = map[hostname];
       const isDefault =
         !tab.cookieStoreId || tab.cookieStoreId === StorageService.DEFAULT_CONTAINER_ID;
-      
+
       // if the current tab is inside a container but user has navigated to a page that
       // is using the default firefox container switch out of the container and open with default
 
