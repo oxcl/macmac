@@ -1,79 +1,55 @@
-# MacMac for Firefox
+# MacMac 🦊
 
-## Overview
+Account-based container management for Firefox.
 
-MacMac is a Firefox extension that provides an intuitive, account-based interface for managing Firefox containers. It allows you to create separate containers for different accounts on the same website (e.g., Work Email, Personal Email) and automatically switch to the appropriate container when visiting a site.
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Built with WXT](https://img.shields.io/badge/built%20with-WXT-0052cc)](https://wxt.dev)
 
-## Key Features
+## ✨ Features
 
-- **Account-Based Organization**: Create multiple containers per website, each representing an account (e.g., "Work", "Personal").
-- **Automatic Switching**: Firefox automatically opens websites in the last selected container for that site.
-- **Simple UI**: Popup interface to create, rename, switch, and delete accounts.
-- **Persistent Selection**: Your last used account for each website is remembered across sessions.
-- **No Complex Rules**: Uses a straightforward naming convention (`name (hostname)`) to bind containers to websites.
+- **Account-based isolation** — Each container represents one account on a website. Your sessions, cookies, and data stay completely separate between accounts on the same site.
+- **Automatic container switching** — Visit a site and MacMac routes you to the right container without any clicks.
+- **Per-site memory** — Your last used account for each site persists across sessions.
+- **Popup interface** — Manage all your accounts for the current site in one place.
+- **Open without switching** — Open another account in a new tab without changing your default. Useful for quickly checking a second account.
+- **Full lifecycle from the popup** — Create, rename, delete, and open accounts in new tabs.
 
-## How It Works
+## 🧠 How it works
 
-1. **Container Naming**: Each container is named `name (hostname)` (e.g., `Work (facebook.com)`). This binds the container to that hostname.
-2. **Storage**: The extension stores account mappings in `browser.storage.local` using three keys: `accounts` (account metadata), `hostnameAccounts` (hostname → account IDs), and `lastSelected` (hostname → last used container ID).
-3. **Automatic Switching**: A background script listens for tab updates. When you navigate to a website, it checks the `lastSelected` mapping and switches the tab to that container automatically.
-4. **Manual Override**: If you manually open a site in a different container (via Firefox's built-in container menu), the extension respects your choice and does not override it.
+Open the popup on any website and click **Create New Account**. MacMac creates an unnamed container (auto-named "Account 1", "Account 2", etc.), opens the site in it, and you log in. You can rename the account later from the popup.
 
-## Usage
+Each container is named `AccountName (hostname)` internally — e.g., `Account 1 (facebook.com)` — which binds it to that site.
 
-### Installation
+## 🛠️ Implementation 
+Under the hood, three storage keys handle everything:
+- `accounts` — account metadata (id, name, hostnames)
+- `hostnameAccounts` — hostname-to-account lookup
+- `lastSelected` — per-hostname preference for which account to use
 
-1. Clone the repository.
-2. Run `bun install` and `bun run build:firefox`.
-3. Open Firefox and navigate to `about:debugging`.
-4. Click "This Firefox" and then "Load Temporary Add-on".
-5. Select the `manifest.json` file from `.output/firefox-mv2/`.
-6. The extension icon will appear in the toolbar.
+When you navigate to a site, the background script checks `lastSelected`. If an account is mapped, the tab switches to it. If not, the default (no-container) identity is used.
 
-### Creating an Account
+## 📖 Usage
 
-1. Click the extension icon to open the popup.
-2. Click "Create New Account".
-3. Enter an account name (e.g., "Work").
-4. The extension creates a new container for the current website and selects it as the default.
+**Creating an account:** click the toolbar icon, click **+ Create New Account**. A new unnamed container is created and activated. Log into your account, then rename it from the popup if you want.
 
-### Switching Accounts
+**Switching accounts:** click any account card in the popup. Your choice is saved for future visits.
 
-- In the popup, click "Switch to this account" under any available container.
-- The extension remembers your choice and automatically opens that website in the selected container in the future.
+**Opening without switching:** click the new-tab icon on an account card to open the site in that container without changing your default mapping.
 
-### Renaming an Account
-
-- Click the "Rename" button next to a container and enter a new name.
-
-### Deleting an Account
-
-- Click the "Delete" button next to a container. This removes the container and clears any stored mapping for that hostname.
-
-## Benefits
-
-- **Privacy**: Keep different accounts separate with container isolation.
-- **Convenience**: No need to manually switch containers each time; the extension remembers your preferences.
-- **Simplicity**: Easy-to-use interface without complex rule configuration.
-- **Flexibility**: Create as many accounts as you need per website.
-
-## Technical Details
-
-- **Permissions**: `contextualIdentities`, `cookies`, `tabs`, `storage`
-- **Framework**: Built with WXT (Web Extension Toolkit) for hot reloading and TypeScript support.
-- **APIs Used**: `browser.contextualIdentities`, `browser.tabs`, `browser.storage.local`
-
-## Development
-
-To hack on this extension:
+## 🛠️ Development
 
 ```bash
-bun install
-bun run dev
+bun install           # install deps + WXT postinstall
+bun run dev           # dev server with hot reload
+bun run compile       # type-check
+bun run lint          # lint
+bun run build:firefox # production build
 ```
 
-This will start the development server with hot reloading. The extension will automatically reload when changes are made.
+## 🤝 Contributing
 
-## License
+PRs and issues welcome. Open a discussion for feature requests or bugs.
 
-This project is licensed under the MIT License.
+## ⭐ Support
+
+If MacMac is useful to you, consider giving the repo a star on [GitHub](https://github.com/oxcl/macmac) or making a [donation](https://oxcl.github.io/macmac/#donate).
