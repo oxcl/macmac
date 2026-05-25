@@ -20,7 +20,7 @@ export async function handleCreate(data: AppData): Promise<void> {
 
   try {
     const hostname = data.hostname;
-    const accountName = `${t('accountPrefix')}${data.currentAccounts.length}`;
+    const accountName = `${t('accountPrefix')}${data.currentAccounts.length + 1}`;
     const containerName = formatContainerName(accountName, hostname);
 
     const newContainer = await browser.contextualIdentities.create({
