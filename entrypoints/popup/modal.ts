@@ -60,7 +60,7 @@ export function showPrompt(defaultValue: string): Promise<ModalResult> {
     const confirmBtn = document.getElementById('modal-confirm')!;
 
     title.textContent = t('renameAccount');
-    body.innerHTML = '';
+    body.replaceChildren();
     const input = document.createElement('input');
     input.type = 'text';
     input.value = defaultValue;
