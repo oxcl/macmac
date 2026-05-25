@@ -1,8 +1,9 @@
 import {
-  accounts,
-  hostnameAccounts,
   DEFAULT_CONTAINER_ID,
   formatContainerName,
+  getAccountAndHostnameMaps,
+  upsertAccount,
+  addAccountToHostname,
   type Account,
 } from '@/utils/storage';
 import { t } from '@/utils/i18n';
@@ -42,11 +43,6 @@ export async function handleRename(accountId: string, data: AppData): Promise<vo
     return;
   }
 
-  const [currentAccounts, currentHostnameMap] = await Promise.all([
-    accounts.getValue(),
-    hostnameAccounts.getValue(),
-  ]);
-
   if (account.isDefault && accountId === DEFAULT_CONTAINER_ID) {
     const namedDefault: Account = {
       id: DEFAULT_CONTAINER_ID,
@@ -55,30 +51,18 @@ export async function handleRename(accountId: string, data: AppData): Promise<vo
       isDefault: true,
     };
 
-    const accountUpdates: Record<string, Account> = {
-      ...currentAccounts,
-      [DEFAULT_CONTAINER_ID]: namedDefault,
-    };
-
-    const newHostnameMap = { ...currentHostnameMap };
-    const oldIds = newHostnameMap[data.hostname!] ?? [];
-    if (!oldIds.includes(DEFAULT_CONTAINER_ID)) {
-      newHostnameMap[data.hostname!] = [DEFAULT_CONTAINER_ID, ...oldIds];
-    }
-
-    await Promise.all([
-      accounts.setValue(accountUpdates),
-      hostnameAccounts.setValue(newHostnameMap),
-    ]);
+    await upsertAccount(namedDefault);
+    await addAccountToHostname(data.hostname!, DEFAULT_CONTAINER_ID);
   } else {
+    const [currentAccounts] = await getAccountAndHostnameMaps();
     const existing = currentAccounts[accountId];
-    currentAccounts[accountId] = {
+    const updated: Account = {
       id: accountId,
       name: trimmed,
       hostnames: existing?.hostnames ?? [data.hostname],
       isDefault: existing?.isDefault ?? account.isDefault,
     };
-    await accounts.setValue(currentAccounts);
+    await upsertAccount(updated);
 
     const containerName = formatContainerName(trimmed, data.hostname);
     await browser.contextualIdentities.update(accountId, {

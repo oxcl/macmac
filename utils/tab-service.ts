@@ -13,8 +13,14 @@ export interface TabService {
     replaceCurrentTabId?: number
   ): Promise<void>;
   openInDefault(url: string, index: number, replaceCurrentTabId?: number): Promise<void>;
+  openInAccount(
+    url: string,
+    accountId: string,
+    index: number,
+    replaceCurrentTabId?: number
+  ): Promise<void>;
   cleanupBindingsForContainer(cookieStoreId: string): void;
-  getTabBinding(tabId: number): TabBinding | null;
+  getTabBinding(tabId: number): Promise<TabBinding | null>;
 }
 
 export const TAB_SERVICE_KEY = 'tab-service' as ProxyServiceKey<TabService>;

@@ -1,19 +1,17 @@
-import { createProxyService } from '@webext-core/proxy-service';
 import {
-  accounts,
-  hostnameAccounts,
   lastSelected,
   formatContainerName,
   synthesizeDefaultAccount,
+  getAccountAndHostnameMaps,
+  upsertAccount,
+  addAccountToHostname,
   type Account,
 } from '@/utils/storage';
-import { TAB_SERVICE_KEY } from '@/utils/tab-service';
-import { getCurrentTab } from '@/utils/tabs';
+import { tabService } from '@/utils/tab-service-client';
+import { getCurrentTab, toHttpsUrl } from '@/utils/tabs';
 import { t } from '@/utils/i18n';
 import { showError } from './error';
 import type { AppData } from './types';
-
-const tabService = createProxyService(TAB_SERVICE_KEY);
 
 export async function handleCreate(data: AppData): Promise<void> {
   if (!data.hostname) return;
@@ -36,39 +34,27 @@ export async function handleCreate(data: AppData): Promise<void> {
       isDefault: false,
     };
 
-    const [currentAccounts, currentHostnameMap] = await Promise.all([
-      accounts.getValue(),
-      hostnameAccounts.getValue(),
-    ]);
-
+    const [currentAccounts, currentHostnameMap] = await getAccountAndHostnameMaps();
     const accountIds = currentHostnameMap[hostname] ?? [];
     const hasStoredDefault = accountIds.some((id) => currentAccounts[id]?.isDefault);
 
-    const accountUpdates: Record<string, Account> = {
-      ...currentAccounts,
-      [newAccount.id]: newAccount,
-    };
-
-    const newHostnameMap = { ...currentHostnameMap };
-    newHostnameMap[hostname] = [...accountIds, newAccount.id];
+    await upsertAccount(newAccount);
+    await addAccountToHostname(hostname, newAccount.id);
 
     if (!hasStoredDefault) {
       const defaultAccount = synthesizeDefaultAccount(hostname);
-      accountUpdates[defaultAccount.id] = defaultAccount;
-      newHostnameMap[hostname] = [defaultAccount.id, ...newHostnameMap[hostname]];
+      await upsertAccount(defaultAccount);
+      await addAccountToHostname(hostname, defaultAccount.id);
     }
 
-    const lastMap = await lastSelected.getValue();
-    lastMap[hostname] = newAccount.id;
-    await Promise.all([
-      accounts.setValue(accountUpdates),
-      hostnameAccounts.setValue(newHostnameMap),
-      lastSelected.setValue(lastMap),
-    ]);
+    await lastSelected.setValue({
+      ...(await lastSelected.getValue()),
+      [hostname]: newAccount.id,
+    });
 
     const currentTab = await getCurrentTab();
-    await tabService.openInContainer(
-      `https://${hostname}`,
+    await tabService.openInAccount(
+      toHttpsUrl(hostname),
       newContainer.cookieStoreId,
       currentTab.index,
       currentTab.id

@@ -10,3 +10,7 @@ export function getHostname(url: string): string | null {
     return null;
   }
 }
+
+export function toHttpsUrl(hostname: string): string {
+  return `https://${hostname}`;
+}

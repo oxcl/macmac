@@ -1,12 +1,9 @@
-import { createProxyService } from '@webext-core/proxy-service';
 import { getAccountsForHostname, lastSelected, type Account } from '@/utils/storage';
-import { TAB_SERVICE_KEY } from '@/utils/tab-service';
+import { tabService } from '@/utils/tab-service-client';
 import { getCurrentTab, getHostname } from '@/utils/tabs';
 import { t } from '@/utils/i18n';
 import type { AppData } from './types';
 import { showError } from './error';
-
-const tabService = createProxyService(TAB_SERVICE_KEY);
 
 export async function loadAppData(): Promise<AppData> {
   const currentTab = await getCurrentTab();

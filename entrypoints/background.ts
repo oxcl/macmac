@@ -6,29 +6,47 @@ import {
   DEFAULT_CONTAINER_ID,
 } from '@/utils/storage';
 import { TAB_SERVICE_KEY, type TabService, type TabBinding } from '@/utils/tab-service';
+import { getHostname } from '@/utils/tabs';
 
+// Tracks which container each tab is currently bound to. When the popup opens
+// a tab in a specific container, it registers the binding here so the
+// auto-switch logic knows the tab is already in the right container and won't
+// try to switch it again on same-hostname navigations.
 const tabBindings = new Map<number, TabBinding>();
+
+// Tab IDs that were just created by the service (e.g. via openInContainer or
+// openInDefault). The next onBeforeNavigate event for these tabs is ignored to
+// prevent the auto-switch logic from firing on the very navigation that the
+// service itself initiated, which would cause an infinite loop of tab creation.
 const pendingSwitches = new Set<number>();
+
+function registerNewTab(tab: Browser.tabs.Tab, url: string, cookieStoreId: string): void {
+  if (!tab.id) return;
+  const hostname = getHostname(url);
+  if (!hostname) return;
+  tabBindings.set(tab.id, { hostname, cookieStoreId });
+  pendingSwitches.add(tab.id);
+}
 
 const tabServiceImpl: TabService = {
   async openInContainer(url, cookieStoreId, index, replaceCurrentTabId) {
     const newTab = await browser.tabs.create({ url, cookieStoreId, index });
-    if (newTab.id) {
-      const hostname = new URL(url).hostname;
-      tabBindings.set(newTab.id, { hostname, cookieStoreId });
-      pendingSwitches.add(newTab.id);
-    }
+    registerNewTab(newTab, url, cookieStoreId);
     if (replaceCurrentTabId) browser.tabs.remove(replaceCurrentTabId);
   },
 
   async openInDefault(url, index, replaceCurrentTabId) {
     const newTab = await browser.tabs.create({ url, index });
-    if (newTab.id) {
-      const hostname = new URL(url).hostname;
-      tabBindings.set(newTab.id, { hostname, cookieStoreId: DEFAULT_CONTAINER_ID });
-      pendingSwitches.add(newTab.id);
-    }
+    registerNewTab(newTab, url, DEFAULT_CONTAINER_ID);
     if (replaceCurrentTabId) browser.tabs.remove(replaceCurrentTabId);
+  },
+
+  async openInAccount(url, accountId, index, replaceCurrentTabId) {
+    if (accountId === DEFAULT_CONTAINER_ID) {
+      await this.openInDefault(url, index, replaceCurrentTabId);
+    } else {
+      await this.openInContainer(url, accountId, index, replaceCurrentTabId);
+    }
   },
 
   cleanupBindingsForContainer(cookieStoreId) {
@@ -40,7 +58,7 @@ const tabServiceImpl: TabService = {
   },
 
   getTabBinding(tabId) {
-    return tabBindings.get(tabId) ?? null;
+    return Promise.resolve(tabBindings.get(tabId) ?? null);
   },
 };
 
@@ -51,10 +69,8 @@ async function updateBadge(tabId: number): Promise<void> {
       browser.browserAction.setBadgeText({ tabId, text: '' });
       return;
     }
-    let hostname: string;
-    try {
-      hostname = new URL(tab.url).hostname;
-    } catch {
+    const hostname = getHostname(tab.url);
+    if (!hostname) {
       browser.browserAction.setBadgeText({ tabId, text: '' });
       return;
     }

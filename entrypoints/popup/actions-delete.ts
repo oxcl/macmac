@@ -1,12 +1,9 @@
-import { createProxyService } from '@webext-core/proxy-service';
 import { accounts, hostnameAccounts, lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
-import { TAB_SERVICE_KEY } from '@/utils/tab-service';
-import { getCurrentTab } from '@/utils/tabs';
+import { tabService } from '@/utils/tab-service-client';
+import { getCurrentTab, toHttpsUrl } from '@/utils/tabs';
 import { t } from '@/utils/i18n';
 import { showConfirm } from './modal';
 import type { AppData } from './types';
-
-const tabService = createProxyService(TAB_SERVICE_KEY);
 
 export async function handleDelete(accountId: string, data: AppData): Promise<boolean> {
   const result = await showConfirm(t('deleteConfirm'));
@@ -52,7 +49,7 @@ export async function handleDelete(accountId: string, data: AppData): Promise<bo
     if (wasActive) {
       const currentTab = await getCurrentTab();
       if (currentTab.id) {
-        await tabService.openInDefault(`https://${hostname}`, currentTab.index, currentTab.id);
+        await tabService.openInDefault(toHttpsUrl(hostname), currentTab.index, currentTab.id);
       }
       window.close();
       return true;

@@ -84,3 +84,48 @@ export async function getAccountsForHostname(hostname: string): Promise<Account[
 
   return result;
 }
+
+export async function getAccountAndHostnameMaps(): Promise<
+  [Record<string, Account>, Record<string, string[]>]
+> {
+  return Promise.all([accounts.getValue(), hostnameAccounts.getValue()]);
+}
+
+export async function setLastSelected(hostname: string, accountId: string): Promise<void> {
+  const lastMap = await lastSelected.getValue();
+  lastMap[hostname] = accountId;
+  await lastSelected.setValue(lastMap);
+}
+
+export async function upsertAccount(account: Account): Promise<void> {
+  const current = await accounts.getValue();
+  current[account.id] = account;
+  await accounts.setValue(current);
+}
+
+export async function addAccountToHostname(hostname: string, accountId: string): Promise<void> {
+  const map = await hostnameAccounts.getValue();
+  const ids = map[hostname] ?? [];
+  if (!ids.includes(accountId)) {
+    map[hostname] = [...ids, accountId];
+    await hostnameAccounts.setValue(map);
+  }
+}
+
+export async function removeAccountFromHostname(
+  hostname: string,
+  accountId: string
+): Promise<void> {
+  const map = await hostnameAccounts.getValue();
+  const ids = map[hostname] ?? [];
+  const newIds = ids.filter((id) => id !== accountId);
+
+  const newMap = { ...map };
+  if (newIds.length === 0) {
+    delete newMap[hostname];
+  } else {
+    newMap[hostname] = newIds;
+  }
+
+  await hostnameAccounts.setValue(newMap);
+}
