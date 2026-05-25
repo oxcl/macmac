@@ -6,8 +6,6 @@
 
   // --- Navbar scroll shadow ---
   const navbar = document.getElementById('navbar');
-  let lastScrollY = 0;
-
   const onScroll = () => {
     const scrollY = window.scrollY;
     if (scrollY > 16) {
@@ -169,9 +167,12 @@
       };
 
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(doCopy).catch(() => {
-          fallbackCopy(text, doCopy);
-        });
+        navigator.clipboard
+          .writeText(text)
+          .then(doCopy)
+          .catch(() => {
+            fallbackCopy(text, doCopy);
+          });
       } else {
         fallbackCopy(text, doCopy);
       }
@@ -185,7 +186,12 @@
       ta.style.pointerEvents = 'none';
       document.body.appendChild(ta);
       ta.select();
-      try { document.execCommand('copy'); cb(); } catch (e) { /* noop */ }
+      try {
+        document.execCommand('copy');
+        cb();
+      } catch {
+        /* noop */
+      }
       document.body.removeChild(ta);
     }
 

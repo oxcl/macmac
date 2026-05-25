@@ -1,7 +1,4 @@
-import {
-  lastSelected,
-  DEFAULT_CONTAINER_ID,
-} from '@/utils/storage';
+import { lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
 import type { AppData } from './types';
 import { checkSupportReminder } from './actions-support';
 
@@ -27,7 +24,10 @@ export async function handleOpenInNewTab(accountId: string, data: AppData): Prom
   window.close();
 }
 
-export async function handleOpenInTabWithoutSwitch(accountId: string, data: AppData): Promise<void> {
+export async function handleOpenInTabWithoutSwitch(
+  accountId: string,
+  data: AppData
+): Promise<void> {
   if (!data.hostname) return;
 
   const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];

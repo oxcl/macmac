@@ -1,7 +1,4 @@
-import {
-  DEFAULT_CONTAINER_ID,
-  type Account,
-} from '@/utils/storage';
+import { DEFAULT_CONTAINER_ID, type Account } from '@/utils/storage';
 import type { AppData } from './types';
 
 function escapeHtml(str: string): string {

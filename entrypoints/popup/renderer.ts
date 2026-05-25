@@ -1,6 +1,4 @@
-import {
-  DEFAULT_CONTAINER_ID,
-} from '@/utils/storage';
+import { DEFAULT_CONTAINER_ID } from '@/utils/storage';
 import type { AppData } from './types';
 import { clearError } from './error';
 import { loadAppData } from './renderer-data';
@@ -80,7 +78,9 @@ export async function init(): Promise<void> {
   }
 
   if (!listenersReady) {
-    document.getElementById('createContainerBtn')!.addEventListener('click', () => handleCreate(currentData));
+    document
+      .getElementById('createContainerBtn')!
+      .addEventListener('click', () => handleCreate(currentData));
     containersSection.addEventListener('click', onContainerClick);
     listenersReady = true;
   }

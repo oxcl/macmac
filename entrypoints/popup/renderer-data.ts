@@ -1,8 +1,4 @@
-import {
-  getAccountsForHostname,
-  lastSelected,
-  type Account,
-} from '@/utils/storage';
+import { getAccountsForHostname, lastSelected, type Account } from '@/utils/storage';
 import type { AppData } from './types';
 import { showError } from './error';
 

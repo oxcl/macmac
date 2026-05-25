@@ -1,9 +1,4 @@
-import {
-  accounts,
-  hostnameAccounts,
-  lastSelected,
-  DEFAULT_CONTAINER_ID,
-} from '@/utils/storage';
+import { accounts, hostnameAccounts, lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
 import { showConfirm } from './modal';
 import type { AppData } from './types';
 
