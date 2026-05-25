@@ -1,14 +1,19 @@
+import { createProxyService } from '@webext-core/proxy-service';
 import { accounts, hostnameAccounts, lastSelected, DEFAULT_CONTAINER_ID } from '@/utils/storage';
+import { TAB_SERVICE_KEY } from '@/utils/tab-service';
+import { getCurrentTab } from '@/utils/tabs';
 import { t } from '@/utils/i18n';
 import { showConfirm } from './modal';
 import type { AppData } from './types';
+
+const tabService = createProxyService(TAB_SERVICE_KEY);
 
 export async function handleDelete(accountId: string, data: AppData): Promise<void> {
   const result = await showConfirm(t('deleteConfirm'));
   if (!result.confirmed) return;
 
   await browser.contextualIdentities.remove(accountId);
-  await browser.runtime.sendMessage({ type: 'cleanupTabBindings', cookieStoreId: accountId });
+  tabService.cleanupBindingsForContainer(accountId);
 
   const [currentAccounts, currentHostnameMap, lastMap] = await Promise.all([
     accounts.getValue(),
@@ -45,13 +50,9 @@ export async function handleDelete(accountId: string, data: AppData): Promise<vo
 
     const wasActive = data.lastSelectedId === accountId;
     if (wasActive) {
-      const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
+      const currentTab = await getCurrentTab();
       if (currentTab.id) {
-        await browser.tabs.create({
-          url: `https://${hostname}`,
-          index: currentTab.index,
-        });
-        browser.tabs.remove(currentTab.id);
+        await tabService.openInDefault(`https://${hostname}`, currentTab.index, currentTab.id);
       }
     }
   }

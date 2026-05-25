@@ -1,17 +1,48 @@
+import { registerService } from '@webext-core/proxy-service';
 import {
   lastSelected,
   getAccountsForHostname,
   supportReminder,
   DEFAULT_CONTAINER_ID,
 } from '@/utils/storage';
-
-interface TabBinding {
-  hostname: string;
-  cookieStoreId: string;
-}
+import { TAB_SERVICE_KEY, type TabService, type TabBinding } from '@/utils/tab-service';
 
 const tabBindings = new Map<number, TabBinding>();
 const pendingSwitches = new Set<number>();
+
+const tabServiceImpl: TabService = {
+  async openInContainer(url, cookieStoreId, index, replaceCurrentTabId) {
+    const newTab = await browser.tabs.create({ url, cookieStoreId, index });
+    if (newTab.id) {
+      const hostname = new URL(url).hostname;
+      tabBindings.set(newTab.id, { hostname, cookieStoreId });
+      pendingSwitches.add(newTab.id);
+    }
+    if (replaceCurrentTabId) browser.tabs.remove(replaceCurrentTabId);
+  },
+
+  async openInDefault(url, index, replaceCurrentTabId) {
+    const newTab = await browser.tabs.create({ url, index });
+    if (newTab.id) {
+      const hostname = new URL(url).hostname;
+      tabBindings.set(newTab.id, { hostname, cookieStoreId: DEFAULT_CONTAINER_ID });
+      pendingSwitches.add(newTab.id);
+    }
+    if (replaceCurrentTabId) browser.tabs.remove(replaceCurrentTabId);
+  },
+
+  cleanupBindingsForContainer(cookieStoreId) {
+    for (const [tabId, binding] of tabBindings) {
+      if (binding.cookieStoreId === cookieStoreId) {
+        tabBindings.delete(tabId);
+      }
+    }
+  },
+
+  getTabBinding(tabId) {
+    return tabBindings.get(tabId) ?? null;
+  },
+};
 
 async function updateBadge(tabId: number): Promise<void> {
   try {
@@ -45,6 +76,8 @@ async function updateBadgeForActiveTab(): Promise<void> {
 }
 
 export default defineBackground(() => {
+  registerService(TAB_SERVICE_KEY, tabServiceImpl);
+
   browser.runtime.onInstalled.addListener(async () => {
     const existing = await supportReminder.getValue();
     if (!existing) {
@@ -55,55 +88,6 @@ export default defineBackground(() => {
       });
     }
   });
-
-  browser.runtime.onMessage.addListener(
-    (
-      message: {
-        type: string;
-        tabId?: number;
-        url?: string;
-        cookieStoreId?: string;
-        index?: number;
-        oldTabId?: number;
-      },
-      _sender,
-      sendResponse
-    ) => {
-      if (message.type === 'createTab' && message.url) {
-        (async () => {
-          try {
-            const newTab = await browser.tabs.create({
-              url: message.url,
-              cookieStoreId: message.cookieStoreId,
-              index: message.index,
-            });
-            if (newTab.id) {
-              const hostname = new URL(message.url!).hostname;
-              tabBindings.set(newTab.id, {
-                hostname,
-                cookieStoreId: message.cookieStoreId || DEFAULT_CONTAINER_ID,
-              });
-              pendingSwitches.add(newTab.id);
-            }
-            if (message.oldTabId) browser.tabs.remove(message.oldTabId);
-          } catch (err) {
-            console.error('[background] Error creating tab:', err);
-          }
-        })();
-        sendResponse();
-      } else if (message.type === 'getTabBinding' && message.tabId !== undefined) {
-        const binding = tabBindings.get(message.tabId) ?? null;
-        sendResponse(binding);
-      } else if (message.type === 'cleanupTabBindings' && message.cookieStoreId) {
-        for (const [tabId, binding] of tabBindings) {
-          if (binding.cookieStoreId === message.cookieStoreId) {
-            tabBindings.delete(tabId);
-          }
-        }
-        sendResponse();
-      }
-    }
-  );
 
   browser.tabs.onActivated.addListener((activeInfo) => {
     updateBadge(activeInfo.tabId);
@@ -142,10 +126,7 @@ export default defineBackground(() => {
       if (!hostname) return;
 
       const binding = tabBindings.get(details.tabId);
-
-      if (binding && binding.hostname === hostname) {
-        return;
-      }
+      if (binding && binding.hostname === hostname) return;
 
       if (binding && binding.hostname !== hostname) {
         tabBindings.delete(details.tabId);
@@ -158,15 +139,7 @@ export default defineBackground(() => {
 
       if (!containerId) {
         if (isDefault) return;
-        const newTab = await browser.tabs.create({
-          url: details.url,
-          index: tab.index,
-        });
-        if (newTab.id) {
-          tabBindings.set(newTab.id, { hostname, cookieStoreId: DEFAULT_CONTAINER_ID });
-          pendingSwitches.add(newTab.id);
-        }
-        browser.tabs.remove(details.tabId);
+        await tabServiceImpl.openInDefault(details.url, tab.index, details.tabId);
         return;
       }
 
@@ -175,16 +148,7 @@ export default defineBackground(() => {
         return;
       }
 
-      const newTab = await browser.tabs.create({
-        url: details.url,
-        cookieStoreId: containerId,
-        index: tab.index,
-      });
-      if (newTab.id) {
-        tabBindings.set(newTab.id, { hostname, cookieStoreId: containerId });
-        pendingSwitches.add(newTab.id);
-      }
-      browser.tabs.remove(details.tabId);
+      await tabServiceImpl.openInContainer(details.url, containerId, tab.index, details.tabId);
     } catch (err) {
       console.error('[background] Error switching tab:', err);
     }

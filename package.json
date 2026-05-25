@@ -82,5 +82,8 @@
     "printWidth": 100,
     "bracketSpacing": true,
     "arrowParens": "always"
+  },
+  "dependencies": {
+    "@webext-core/proxy-service": "^2.0.0"
   }
 }

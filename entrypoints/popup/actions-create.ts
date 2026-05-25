@@ -1,3 +1,4 @@
+import { createProxyService } from '@webext-core/proxy-service';
 import {
   accounts,
   hostnameAccounts,
@@ -6,9 +7,13 @@ import {
   synthesizeDefaultAccount,
   type Account,
 } from '@/utils/storage';
+import { TAB_SERVICE_KEY } from '@/utils/tab-service';
+import { getCurrentTab } from '@/utils/tabs';
 import { t } from '@/utils/i18n';
 import { showError } from './error';
 import type { AppData } from './types';
+
+const tabService = createProxyService(TAB_SERVICE_KEY);
 
 export async function handleCreate(data: AppData): Promise<void> {
   if (!data.hostname) return;
@@ -61,14 +66,14 @@ export async function handleCreate(data: AppData): Promise<void> {
       lastSelected.setValue(lastMap),
     ]);
 
-    const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0];
-    await browser.runtime.sendMessage({
-      type: 'createTab',
-      url: `https://${hostname}`,
-      cookieStoreId: newContainer.cookieStoreId,
-      index: currentTab.index,
-      oldTabId: currentTab.id,
-    });
+    const currentTab = await getCurrentTab();
+    await tabService.openInContainer(
+      `https://${hostname}`,
+      newContainer.cookieStoreId,
+      currentTab.index,
+      currentTab.id
+    );
+
     window.close();
   } catch (err) {
     console.error('Failed to create container:', err);
