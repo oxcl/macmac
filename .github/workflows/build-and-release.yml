@@ -63,6 +63,20 @@ jobs:
 
       - run: bun run zip:firefox
 
+      - name: Rename to .xpi
+        run: |
+          ZIP=".output/*-firefox.zip"
+          ZIP_FILE=$(ls -t $ZIP 2>/dev/null | head -1)
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: No firefox zip found matching $ZIP"
+            exit 1
+          fi
+          XPI_FILE="${ZIP_FILE%.zip}.xpi"
+          mv "$ZIP_FILE" "$XPI_FILE"
+          echo "xpi=$XPI_FILE" >> "$GITHUB_OUTPUT"
+          echo "Renamed $ZIP_FILE → $XPI_FILE"
+        id: rename
+
       - name: Publish nightly prerelease
         if: steps.version.outputs.is_nightly == 'true'
         env:
@@ -78,7 +92,7 @@ jobs:
             --title "Nightly $(date +%Y-%m-%d) (${{ steps.version.outputs.version }})" \
             --notes-file /tmp/changelog.md \
             --prerelease \
-            .output/*.zip
+            '${{ steps.rename.outputs.xpi }}'
 
       - name: Publish full release
         if: steps.version.outputs.is_nightly == 'false'
@@ -90,4 +104,4 @@ jobs:
             --repo '${{ github.repository }}' \
             --title "$TAG" \
             --notes-file /tmp/changelog.md \
-            .output/*.zip
+            '${{ steps.rename.outputs.xpi }}'
