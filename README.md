@@ -1,5 +1,7 @@
 # MacMac 🦊
 
+[中文](README.zh.md) · [Русский](README.ru.md) · [Español](README.es.md) · [العربية](README.ar.md) · [हिन्दी](README.hi.md)
+
 Account-based container management for Firefox.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
