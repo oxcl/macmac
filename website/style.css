@@ -1172,8 +1172,46 @@ a:focus-visible {
     color: #6b7280;
   }
 
-  .story-step svg {
-    filter: brightness(0.8) invert(1) hue-rotate(180deg);
+  .story-step svg > rect:first-child,
+  .story-step svg rect[fill="#f8fafc"] {
+    fill: #18181b !important;
+  }
+
+  .story-step svg rect[fill="#ffffff"] {
+    fill: #1c1c1f !important;
+  }
+
+  .story-step svg rect[fill="#fafafa"] {
+    fill: #222225 !important;
+  }
+
+  .story-step svg rect[fill="#f1f5f9"] {
+    fill: #27272a !important;
+  }
+
+  .story-step svg rect[fill="#e2e8f0"] {
+    fill: #3f3f46 !important;
+  }
+
+  .story-step svg rect[stroke="#e2e8f0"],
+  .story-step svg line[stroke="#e2e8f0"] {
+    stroke: #3f3f46 !important;
+  }
+
+  .story-step svg path[stroke="#cbd5e1"] {
+    stroke: #52525b !important;
+  }
+
+  .story-step svg text[fill="#1e293b"] {
+    fill: #e4e4e7 !important;
+  }
+
+  .story-step svg text[fill="#64748b"] {
+    fill: #a1a1aa !important;
+  }
+
+  .story-step svg text[fill="#94a3b8"] {
+    fill: #71717a !important;
   }
 
   #faq {
