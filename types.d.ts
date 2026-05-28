@@ -37,3 +37,59 @@ declare module '@wxt-dev/browser' {
     }
   }
 }
+
+declare global {
+  namespace chrome {
+    namespace cookies {
+      interface Cookie {
+        name: string;
+        value: string;
+        domain: string;
+        path: string;
+        secure: boolean;
+        httpOnly: boolean;
+        sameSite: 'no_restriction' | 'lax' | 'strict' | 'unspecified';
+        expirationDate?: number;
+      }
+
+      interface CookieChangeInfo {
+        removed: boolean;
+        cookie: Cookie;
+      }
+
+      function getAll(details: { domain: string }): Promise<Cookie[]>;
+      function set(details: {
+        url: string;
+        name: string;
+        value: string;
+        domain?: string;
+        path?: string;
+        secure?: boolean;
+        httpOnly?: boolean;
+        sameSite?: string;
+        expirationDate?: number;
+      }): Promise<Cookie | null>;
+      function remove(details: {
+        url: string;
+        name: string;
+      }): Promise<{ url: string; name: string } | null>;
+
+      const onChanged: {
+        addListener(callback: (changeInfo: CookieChangeInfo) => void): void;
+      };
+    }
+
+    namespace webRequest {
+      interface WebRequestEvent {
+        addListener(
+          callback: (...args: unknown[]) => void,
+          filter: { urls: string[] },
+          extra?: string[]
+        ): void;
+        removeListener(callback: (...args: unknown[]) => void): void;
+      }
+
+      const onBeforeRequest: WebRequestEvent;
+    }
+  }
+}

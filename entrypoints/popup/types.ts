@@ -1,8 +1,9 @@
 import type { Account } from '@/services/storage';
+import type { ContainerInfo } from '@/services/container-api';
 
 export interface AppData {
   hostname: string | null;
-  containers: Browser.contextualIdentities.ContextualIdentity[];
+  containers: ContainerInfo[];
   currentAccounts: Account[];
   lastSelectedId: string | null;
 }

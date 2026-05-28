@@ -1,3 +1,6 @@
+import type { CookieJars } from './cookie-store';
+import type { ContainerMetaMap } from './container-api';
+
 export interface Account {
   id: string;
   name: string;
@@ -38,6 +41,17 @@ export class StorageService {
 
   static readonly language = storage.defineItem<string>('local:language', {
     fallback: '',
+  });
+
+  static readonly chromeContainerMeta = storage.defineItem<ContainerMetaMap>(
+    'local:chromeContainerMeta',
+    {
+      fallback: {},
+    }
+  );
+
+  static readonly cookieJars = storage.defineItem<CookieJars>('local:cookieJars', {
+    fallback: {},
   });
 
   static synthesizeDefaultAccount(hostname: string): Account {

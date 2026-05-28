@@ -1,5 +1,6 @@
 import { StorageService, type Account } from '@/services/storage';
 import { tabService, getCurrentTab, getHostname } from '@/services/tabs';
+import { containerService, type ContainerInfo } from '@/services/container-api';
 import { t } from '@/services/i18n';
 import type { AppData } from './types';
 import { showError } from './error';
@@ -8,9 +9,9 @@ export async function loadAppData(): Promise<AppData> {
   const currentTab = await getCurrentTab();
   const hostname = currentTab.url ? getHostname(currentTab.url) : null;
 
-  let containers: Browser.contextualIdentities.ContextualIdentity[] = [];
+  let containers: ContainerInfo[] = [];
   try {
-    containers = await browser.contextualIdentities.query({});
+    containers = await containerService.query();
   } catch (err) {
     console.error('Failed to query containers:', err);
     showError(t('failedContainers'));

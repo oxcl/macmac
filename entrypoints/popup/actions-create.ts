@@ -1,5 +1,6 @@
 import { StorageService, type Account } from '@/services/storage';
 import { tabService, getCurrentTab, toHttpsUrl } from '@/services/tabs';
+import { containerService } from '@/services/container-api';
 import { t } from '@/services/i18n';
 import { showError } from './error';
 import type { AppData } from './types';
@@ -12,11 +13,7 @@ export async function handleCreate(data: AppData): Promise<void> {
     const accountName = `${t('accountPrefix')}${data.currentAccounts.length + 1}`;
     const containerName = StorageService.formatContainerName(accountName, hostname);
 
-    const newContainer = await browser.contextualIdentities.create({
-      name: containerName,
-      color: 'toolbar',
-      icon: 'circle',
-    });
+    const newContainer = await containerService.create(containerName, 'toolbar', 'circle');
 
     const newAccount: Account = {
       id: newContainer.cookieStoreId,

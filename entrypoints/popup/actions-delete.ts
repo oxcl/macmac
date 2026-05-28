@@ -1,5 +1,6 @@
 import { StorageService } from '@/services/storage';
 import { tabService, getCurrentTab, toHttpsUrl } from '@/services/tabs';
+import { containerService } from '@/services/container-api';
 import { t } from '@/services/i18n';
 import { showConfirm } from './modal';
 import type { AppData } from './types';
@@ -8,7 +9,7 @@ export async function handleDelete(accountId: string, data: AppData): Promise<bo
   const result = await showConfirm(t('deleteConfirm'));
   if (!result.confirmed) return false;
 
-  await browser.contextualIdentities.remove(accountId);
+  await containerService.remove(accountId);
   tabService.cleanupBindingsForContainer(accountId);
 
   const [currentAccounts, currentHostnameMap, lastMap] = await Promise.all([

@@ -1,18 +1,40 @@
-import { registerService } from '@webext-core/proxy-service';
+import { registerService, type ProxyServiceKey } from '@webext-core/proxy-service';
 import { StorageService } from '@/services/storage';
-import { TAB_SERVICE_KEY, type TabService, type TabBinding, getHostname } from '@/services/tabs';
+import {
+  TAB_SERVICE_KEY,
+  type TabService,
+  type TabBinding,
+  getHostname,
+  isFirefox,
+} from '@/services/tabs';
+import {
+  FirefoxContainerApi,
+  ChromeContainerApi,
+  hasBlockingWebRequest,
+  type ContainerApi,
+  type ContainerService,
+} from '@/services/container-api';
+const CONTAINER_SERVICE_KEY = 'container-service' as ProxyServiceKey<ContainerService>;
+import { CookieStore } from '@/services/cookie-store';
 
-// Tracks which container each tab is currently bound to. When the popup opens
-// a tab in a specific container, it registers the binding here so the
-// auto-switch logic knows the tab is already in the right container and won't
-// try to switch it again on same-hostname navigations.
 const tabBindings = new Map<number, TabBinding>();
-
-// Tab IDs that were just created by the service (e.g. via openInContainer or
-// openInDefault). The next onBeforeNavigate event for these tabs is ignored to
-// prevent the auto-switch logic from firing on the very navigation that the
-// service itself initiated, which would cause an infinite loop of tab creation.
 const pendingSwitches = new Set<number>();
+
+let containerApi: ContainerApi;
+let cookieStore: CookieStore | null = null;
+
+function initContainerApi(): void {
+  if (isFirefox()) {
+    containerApi = new FirefoxContainerApi(tabBindings, pendingSwitches);
+  } else {
+    cookieStore = new CookieStore(StorageService.cookieJars);
+    containerApi = new ChromeContainerApi(
+      tabBindings,
+      cookieStore,
+      StorageService.chromeContainerMeta
+    );
+  }
+}
 
 function registerNewTab(tab: Browser.tabs.Tab, url: string, cookieStoreId: string): void {
   if (!tab.id) return;
@@ -24,7 +46,11 @@ function registerNewTab(tab: Browser.tabs.Tab, url: string, cookieStoreId: strin
 
 const tabServiceImpl: TabService = {
   async openInContainer(url, cookieStoreId, index, replaceCurrentTabId) {
-    const newTab = await browser.tabs.create({ url, cookieStoreId, index });
+    const createProps: Record<string, unknown> = { url, index };
+    if (isFirefox()) {
+      createProps.cookieStoreId = cookieStoreId;
+    }
+    const newTab = await browser.tabs.create(createProps as Browser.tabs.CreateProperties);
     registerNewTab(newTab, url, cookieStoreId);
     if (replaceCurrentTabId) browser.tabs.remove(replaceCurrentTabId);
   },
@@ -85,8 +111,30 @@ async function updateBadgeForActiveTab(): Promise<void> {
   if (tabs[0]?.id) await updateBadge(tabs[0].id);
 }
 
+function protocolCheck(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'about:') return true;
+    if (isFirefox() && parsed.protocol === 'moz-extension:') return true;
+    if (!isFirefox() && (parsed.protocol === 'chrome-extension:' || parsed.protocol === 'chrome:'))
+      return true;
+    return false;
+  } catch {
+    return true;
+  }
+}
+
 export default defineBackground(() => {
+  initContainerApi();
   registerService(TAB_SERVICE_KEY, tabServiceImpl);
+
+  const containerServiceImpl: ContainerService = {
+    query: () => containerApi.query(),
+    create: (name, color, icon) => containerApi.create(name, color, icon),
+    update: (id, details) => containerApi.update(id, details),
+    remove: (id) => containerApi.remove(id),
+  };
+  registerService(CONTAINER_SERVICE_KEY, containerServiceImpl);
 
   browser.runtime.onInstalled.addListener(async () => {
     const existing = await StorageService.supportReminder.getValue();
@@ -120,59 +168,84 @@ export default defineBackground(() => {
     }
   });
 
-  // the moat of the extension. the auto switching logic is here.
   browser.webNavigation.onBeforeNavigate.addListener(async (details) => {
     if (details.frameId !== 0) return;
 
     if (pendingSwitches.has(details.tabId)) {
-      // this means the background script is handling some internal tab manipulation. this is a signal
-      // that the event must skip handling this tab as it's being handled already.
       pendingSwitches.delete(details.tabId);
+      // For Chrome MV3: swap cookies for the pending tab navigation
+      if (!isFirefox() && !hasBlockingWebRequest() && cookieStore) {
+        const binding = tabBindings.get(details.tabId);
+        const hostname = getHostname(details.url);
+        if (
+          binding &&
+          hostname &&
+          binding.hostname === hostname &&
+          binding.cookieStoreId !== StorageService.DEFAULT_CONTAINER_ID
+        ) {
+          await cookieStore.restoreForHostname(binding.cookieStoreId, hostname);
+        }
+      }
       return;
     }
 
     try {
-      const url = new URL(details.url);
-      if (url.protocol === 'about:' || url.protocol === 'moz-extension:') return;
+      if (protocolCheck(details.url)) return;
 
+      const url = new URL(details.url);
       const hostname = url.hostname;
       if (!hostname) return;
 
-      // don't handle navigation in tabs when navigating within the same host
-      // this makes the tabs sticky meaning that they won't suddenly switch context
-      // when user switches the account on another tab.
       const binding = tabBindings.get(details.tabId);
+
+      // Sticky tab — same hostname navigation, skip
       if (binding && binding.hostname === hostname) return;
 
+      // Navigating away from previous hostname — cleanup
       if (binding && binding.hostname !== hostname) {
+        await containerApi.onNavigateAway(details.tabId, binding.hostname, binding.cookieStoreId);
         tabBindings.delete(details.tabId);
       }
 
       const tab = await browser.tabs.get(details.tabId);
       const map = await StorageService.lastSelected.getValue();
-      const containerId = map[hostname];
-      const isDefault =
-        !tab.cookieStoreId || tab.cookieStoreId === StorageService.DEFAULT_CONTAINER_ID;
+      const accountId = map[hostname];
 
-      // if the current tab is inside a container but user has navigated to a page that
-      // is using the default firefox container switch out of the container and open with default
-
-      if (!containerId) {
-        if (isDefault) return;
-        await tabServiceImpl.openInDefault(details.url, tab.index, details.tabId);
+      if (!accountId) {
+        await containerApi.applyDefault(tab, details.url, hostname);
         return;
       }
 
-      if (tab.cookieStoreId === containerId) {
-        tabBindings.set(details.tabId, { hostname, cookieStoreId: containerId });
-        return;
-      }
-
-      await tabServiceImpl.openInContainer(details.url, containerId, tab.index, details.tabId);
+      await containerApi.applyAccount(tab, details.url, hostname, accountId);
     } catch (err) {
       console.error('[background] Error switching tab:', err);
     }
   });
+
+  // Chrome-specific: cookie change sync for MV3
+  if (!isFirefox() && !hasBlockingWebRequest() && cookieStore) {
+    chrome.cookies.onChanged.addListener((changeInfo) => {
+      const hostname = getHostname(
+        `${changeInfo.cookie.secure ? 'https' : 'http'}://${changeInfo.cookie.domain.replace(/^\./, '')}${changeInfo.cookie.path}`
+      );
+      if (!hostname) return;
+
+      // Find which tab is associated with this change by checking the active tab
+      browser.tabs
+        .query({ active: true, currentWindow: true })
+        .then((tabs) => {
+          if (!tabs[0]?.id) return;
+          const binding = tabBindings.get(tabs[0].id);
+          if (binding && binding.hostname === hostname) {
+            cookieStore!.onCookieChanged(changeInfo, {
+              accountId: binding.cookieStoreId,
+              hostname,
+            });
+          }
+        })
+        .catch(() => {});
+    });
+  }
 
   updateBadgeForActiveTab();
 });

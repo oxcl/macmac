@@ -1,4 +1,5 @@
 import { StorageService, type Account } from '@/services/storage';
+import { containerService } from '@/services/container-api';
 import { t } from '@/services/i18n';
 import { showConfirm, showPrompt } from './modal';
 import type { AppData } from './types';
@@ -58,7 +59,7 @@ export async function handleRename(accountId: string, data: AppData): Promise<vo
     await StorageService.upsertAccount(updated);
 
     const containerName = StorageService.formatContainerName(trimmed, data.hostname);
-    await browser.contextualIdentities.update(accountId, {
+    await containerService.update(accountId, {
       name: containerName,
     });
   }

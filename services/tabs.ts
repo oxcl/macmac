@@ -33,6 +33,10 @@ export async function getCurrentTab(): Promise<Browser.tabs.Tab> {
   return tabs[0];
 }
 
+export function isFirefox(): boolean {
+  return typeof browser.contextualIdentities !== 'undefined';
+}
+
 export function getHostname(url: string): string | null {
   try {
     return new URL(url).hostname || null;

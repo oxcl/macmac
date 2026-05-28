@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "crx-mcp": {
+      "type": "local",
+      "command": ["npx", "-y", "crx-mcp", "--chrome-path", "/nix/store/2lp4b51hq88m0h8m11gh4yb3y4lshy00-ungoogled-chromium-148.0.7778.178/bin/chromium", "--no-sandbox"],
+      "enabled": true
+    }
+  }
+}
