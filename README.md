@@ -1,4 +1,4 @@
-# MacMac 🦊
+# BoxBox 🦊
 
 [中文](translations/README.zh.md) · [Русский](translations/README.ru.md) · [Español](translations/README.es.md) · [العربية](translations/README.ar.md) · [हिन्दी](translations/README.hi.md)
 
@@ -10,7 +10,7 @@ Account-based container management for Firefox.
 ## ✨ Features
 
 - **Account-based isolation** — Each container represents one account on a website. Your sessions, cookies, and data stay completely separate between accounts on the same site.
-- **Automatic container switching** — Visit a site and MacMac routes you to the right container without any clicks.
+- **Automatic container switching** — Visit a site and BoxBox routes you to the right container without any clicks.
 - **Per-site memory** — Your last used account for each site persists across sessions.
 - **Popup interface** — Manage all your accounts for the current site in one place.
 - **Open without switching** — Open another account in a new tab without changing your default. Useful for quickly checking a second account.
@@ -18,7 +18,7 @@ Account-based container management for Firefox.
 
 ## 🧠 How it works
 
-Open the popup on any website and click **Create New Account**. MacMac creates an unnamed container (auto-named "Account 1", "Account 2", etc.), opens the site in it, and you log in. You can rename the account later from the popup.
+Open the popup on any website and click **Create New Account**. BoxBox creates an unnamed container (auto-named "Account 1", "Account 2", etc.), opens the site in it, and you log in. You can rename the account later from the popup.
 
 Each container is named `AccountName (hostname)` internally — e.g., `Account 1 (facebook.com)` — which binds it to that site.
 
@@ -56,4 +56,4 @@ PRs and issues welcome. Open a discussion for feature requests or bugs.
 
 ## ⭐ Support
 
-If MacMac is useful to you, consider giving the repo a star on [GitHub](https://github.com/oxcl/macmac) or making a [donation](https://oxcl.github.io/macmac/#donate).
+If BoxBox is useful to you, consider giving the repo a star on [GitHub](https://github.com/oxcl/boxbox) or making a [donation](https://oxcl.github.io/boxbox/#donate).

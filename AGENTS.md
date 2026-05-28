@@ -1,31 +1,12 @@
 # AGENTS.md
 
-Compact instructions for agents working on the MacMac Firefox extension.
+Compact instructions for agents working on the BoxBox extension.
 
 ## Project Overview
 
-- **Goal**: Firefox extension that provides an account-based interface for container management.
+- **Goal**: Browser extension providing account-based container management with cross-browser support (Firefox + Chrome).
 - **Tech Stack**: WXT (Web Extension Toolkit) with TypeScript, vanilla DOM popup.
 - **Key Features**: Automatic container switching based on hostname, container creation/renaming/deletion, persistent last-selected mapping.
-
-## File Structure
-
-```
-/project-root
-  /entrypoints
-    /background.ts      # Background script (auto-switch logic)
-    /popup
-      index.html        # Popup HTML shell
-      main.ts           # Popup logic (UI + container management)
-      style.css         # Popup styles
-  /utils
-    storage.ts          # Storage definitions, Account types, helper functions
-  /types
-    global.d.ts         # Browser API type augmentations
-  wxt.config.ts         # WXT configuration (permissions, warnings)
-  package.json          # Scripts and dependencies
-  README.md             # Project overview
-```
 
 ## Developer Commands
 
@@ -35,45 +16,16 @@ Compact instructions for agents working on the MacMac Firefox extension.
 bun install
 ```
 
-Installs dependencies. WXT will run `postinstall` script to prepare types.
-
-### Development Server
+### Dev Server
 
 ```bash
-bun run dev
+bun run dev              # Firefox (default)
+bun run dev:firefox      # Firefox
+bun run dev:chrome       # Chrome
 ```
 
-Starts WXT dev server with hot reloading. Opens Firefox with extension installed (if Firefox is available). Use `bun run dev:firefox` to target Firefox explicitly (default is Chrome).
+**Never start, stop, or kill the dev server.** WXT hot-reloads automatically when source files change. always assume the dev server is running.
 
-### Build
-
-```bash
-bun run build
-```
-
-Builds extension for production. Output to `.output/` directory.
-
-### Build for Firefox
-
-```bash
-bun run build:firefox
-```
-
-### Zip for Distribution
-
-```bash
-bun run zip
-```
-
-Creates a store-ready zip in `.output/`.
-
-### Test
-
-No formal test suite. Verify functionality by:
-
-1. Load extension in Firefox via `about:debugging`.
-2. Use popup to create containers.
-3. Navigate to websites to test auto-switch.
 
 ### Lint & Typecheck
 
@@ -82,81 +34,99 @@ bun run compile
 bun run lint
 ```
 
-Checks TypeScript types and runs ESLint.
+## Browser-Specific Architecture
+
+| Layer | Firefox | Chrome MV2 (blocking) | Chrome MV3 (global swap) |
+|---|---|---|---|
+| **Containers** | `contextualIdentities` (native) | Storage-backed UUIDs | Storage-backed UUIDs |
+| **Cookie isolation** | Native containers | `webRequest` blocking (per-tab) | `cookies` API swap (per-hostname) |
+| **Tab binding** | `cookieStoreId` in `tabs.create()` | In-memory `tabBindings` Map | In-memory `tabBindings` Map |
+| **Storage** | `local:accounts`, `local:hostnameAccounts`, `local:lastSelected` | Same + `local:chromeContainerMeta` + `local:cookieJars` | Same |
+
+## Key Abstractions
+
+### Container API (`services/container-api.ts`)
+
+All platform-specific logic is behind the `ContainerApi` interface:
+
+- `create/query/update/remove` — CRUD for containers
+- `applyAccount` — activate an account for a tab's navigation (Firefox: opens new tab in container; Chrome MV2: just binds; Chrome MV3: swaps cookies)
+- `applyDefault` — deactivate (Firefox: opens default tab; Chrome: clears cookies)
+- `onNavigateAway` — tab leaves a bound hostname (Chrome MV3: saves cookies back to jar)
+
+### Cookie Store (`services/cookie-store.ts`) — Chrome only
+
+Per-account cookie jars stored in `local:cookieJars`:
+
+- `saveForHostname` — reads current cookies from `chrome.cookies`, stores in account's jar
+- `restoreForHostname` — clears hostname cookies, restores from account's jar
+- `clearForHostname` — removes all cookies for a hostname
+- `onCookieChanged` — syncs cookie changes back to the active account's jar
 
 ## Code Conventions
 
 ### Browser API Usage
 
-- Use `browser` global (WebExtensions API). Types are augmented in `types/global.d.ts` extending `@wxt-dev/browser` for `tabs`, `contextualIdentities`, and related APIs.
-- For container operations: `browser.contextualIdentities.create/query/update/remove`.
-- For tab operations: `browser.tabs.query/update/get`.
-- For storage: WXT's `storage.defineItem` API (see `utils/storage.ts`).
+- Use `browser` global (WebExtensions API) for cross-browser code.
+- Use `chrome.*` only in Chrome-specific code paths, guarded by `!isFirefox()`.
+- Use `isFirefox()` from `services/tabs.ts` for runtime browser detection.
+- Use `hasBlockingWebRequest()` from `services/container-api.ts` to detect MV2 blocking capability.
+- For container operations in popup: use `containerService` proxy (auto-routes to background).
+- For storage: WXT's `storage.defineItem` API (see `services/storage.ts`).
 
 ### Container Naming
 
-Containers must follow the format `name (hostname)` (e.g., `Work (facebook.com)`). This binds the container to the hostname. The extension uses `formatContainerName()` in `utils/storage.ts` to produce this format.
+Containers must follow the format `name (hostname)` (e.g., `Work (facebook.com)`). The extension uses `formatContainerName()` in `services/storage.ts` to produce this format.
 
 ### Storage Schema
 
 All storage uses WXT's `storage.defineItem` API with `local:` prefix:
 
-- `local:accounts`: `Record<string, Account>` — maps account ID to `Account` object (`id`, `name`, `hostnames`, `isDefault`).
-- `local:hostnameAccounts`: `Record<string, string[]>` — maps hostname to array of account IDs.
-- `local:lastSelected`: `Record<string, string>` — maps hostname to the cookieStoreId of the last selected container. If absent or `null`, default container is used.
+- `local:accounts`: `Record<string, Account>` — maps account ID to `Account` object
+- `local:hostnameAccounts`: `Record<string, string[]>` — maps hostname to account IDs
+- `local:lastSelected`: `Record<string, string>` — maps hostname to active account ID
+- `local:chromeContainerMeta`: `Record<string, ContainerInfo>` — Chrome-only container metadata (name, color, icon)
+- `local:cookieJars`: `Record<accountId, Record<hostname, StoredCookie[]>>` — Chrome-only per-account cookie jars
 
-### Background Script Logic
+## Testing with crx-mcp (Chrome)
 
-- Listens to `tabs.onUpdated` with `status === 'complete'`.
-- When navigating to a new hostname, checks `lastSelected` mapping.
-- If a container is mapped, updates the tab's `cookieStoreId` to that container, **unless** the tab is in the `manualTabIds` Set (populated by `skipAutoSwitch` messages from the popup).
-- Does not interfere with manual container switches via Firefox's UI.
+The project is configured with `crx-mcp` (Chrome Extension MCP server). Use these tools to test the Chrome build.
 
-### Popup Logic
+### Workflow
 
-- Displays containers for the current hostname (loaded from `hostnameAccounts` storage).
-- Allows creating new containers (unnamed if no name provided).
-- Allows renaming (preserving hostname prefix).
-- Allows deleting containers (cleans up `lastSelected` if needed).
-- Switching a container updates `lastSelected` and applies it immediately.
+1. **Dev server outputs** to `.output/chrome-mv3-dev` (NOT `.output/chrome-mv3`). the dev server is always running. no need to start it.
+2. **Load the extension** with `crx-mcp_extension_load` using path `.output/chrome-mv3-dev` to launch Chrome.
+3. **Navigate** to a website (e.g., `https://example.com`) with `crx-mcp_navigate` to test auto-switching.
+4. **Open popup** with `crx-mcp_open_popup` to inspect the UI.
+5. **Inspect storage** with `crx-mcp_storage_get` to verify `local:accounts`, `local:hostnameAccounts`, `local:cookieJars`.
+6. **Check console logs** with `crx-mcp_console_logs` for background script output.
+7. **Evaluate in Service Worker** with `crx-mcp_eval_service_worker` to inspect runtime state (e.g., `tabBindings`).
+8. **After editing source**, WXT hot-reloads automatically. you would rarely need to reload the extension or close chrome instance. If the extension doesn't reflect changes, call `crx-mcp_reload_extension`.
+9. **Test popup** with `crx-mcp_open_popup`, then `crx-mcp_snapshot` to see the rendered UI.
+10. write helper functions and code for debugging since you don't have access to the popup directly and you can't switch accounts from the popup. you are free to write your own code to test the extension.
 
-## Important Notes
+### Storage Inspection
 
-- **TypeScript**: The project uses TypeScript with proper type augmentations for browser APIs in `types/global.d.ts`.
-- **WXT**: Uses WXT framework; hot reloading is available during development.
-- **Permissions**: Manifest includes `contextualIdentities`, `cookies`, `tabs`, and `storage`.
-- **No Content Script**: The extension does not use a content script; all logic is in background and popup.
-- **Automatic Switching**: Implemented via background script; no external extension is required.
+```typescript
+// Read accounts
+crx-mcp_storage_get local:accounts
 
-## Testing Manually
+// Read last selected mappings
+crx-mcp_storage_get local:lastSelected
 
-1. Load the extension in Firefox via `about:debugging` > "Load Temporary Add-on".
-2. Click the extension icon to open popup.
-3. Create a container for the current website.
-4. Navigate to that website in a new tab; it should open in the created container.
-5. Switch to another container in the popup; subsequent navigations should use the new container.
-6. Delete a container; ensure it's removed and mapping cleared.
+// Read cookie jars (Chrome)
+crx-mcp_storage_get local:cookieJars
 
-## Debugging
+// Read container metadata (Chrome)
+crx-mcp_storage_get local:chromeContainerMeta
+```
 
-- Check background script console: `about:debugging` > "Inspect" for the background page.
-- Check popup console: right-click popup and select "Inspect".
-- View `browser.storage.local` at `about:debugging` > "Inspect" > Storage tab.
+### Service Worker Inspection
 
-## Common Pitfalls
+```typescript
+// List tab bindings
+crx-mcp_eval_service_worker JSON.stringify([...globalThis.__tabBindings || []])
 
-- **Container Naming**: Always include hostname in parentheses; otherwise, the container won't be associated with any website.
-- **Manual Container Switch**: If you manually switch a tab to a different container via Firefox's UI, the extension will not override it. This is intended behavior.
-- **TypeScript Errors**: Type augmentations for browser APIs are in `types/global.d.ts`. If you encounter type errors, extend the module there.
-- **WXT Build**: Ensure you run `bun run dev` from the project root, not subdirectories.
-
-## References
-
-- README.md for project overview.
-- wxt.config.ts for configuration.
-- package.json for scripts and dependencies.
-- Entrypoints for code structure.
-
-## Questions?
-
-If you need further clarification, ask the user before proceeding.
+// Global variables are not persisted across SW restarts —
+// use crx-mcp_eval_service_worker for real-time inspection
+```

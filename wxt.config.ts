@@ -1,21 +1,26 @@
 import { defineConfig } from 'wxt';
 
 export default defineConfig({
-  manifest: {
-    homepage_url: 'https://oxcl.github.io/macmac',
-    permissions: [
-      'contextualIdentities',
-      'tabs',
-      'storage',
-      'webNavigation',
-    ],
-    browser_specific_settings: {
-      gecko: {
-        id: "@oxcl.macmac",
-        data_collection_permissions: {
-          required: ["none"]
-        }
-      }
-    },
+  manifest: ({ browser }) => {
+    if (browser === 'firefox') {
+      return {
+        homepage_url: 'https://oxcl.github.io/boxbox',
+        permissions: ['contextualIdentities', 'tabs', 'storage', 'webNavigation'],
+        browser_specific_settings: {
+          gecko: {
+            id: '@oxcl.boxbox',
+            data_collection_permissions: {
+              required: ['none'],
+            },
+          },
+        },
+      };
+    }
+
+    return {
+      homepage_url: 'https://oxcl.github.io/boxbox',
+      permissions: ['cookies', 'tabs', 'storage', 'webNavigation', 'webRequest'],
+      host_permissions: ['*://*/*'],
+    };
   },
 });

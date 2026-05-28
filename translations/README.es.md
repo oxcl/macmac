@@ -1,4 +1,4 @@
-# MacMac 🦊
+# BoxBox 🦊
 
 Extensión de Firefox para gestión de contenedores basada en cuentas.
 
@@ -8,7 +8,7 @@ Extensión de Firefox para gestión de contenedores basada en cuentas.
 ## Características
 
 - **Aislamiento por cuenta** — cada contenedor representa una cuenta en un sitio web. Las sesiones, cookies y datos se mantienen completamente separados entre cuentas del mismo sitio.
-- **Cambio automático de contenedor** — al visitar un sitio, MacMac te redirige al contenedor correcto sin que tengas que hacer nada.
+- **Cambio automático de contenedor** — al visitar un sitio, BoxBox te redirige al contenedor correcto sin que tengas que hacer nada.
 - **Memoria por sitio** — la última cuenta usada en cada sitio se guarda entre sesiones.
 - **Ventana emergente** — gestiona todas tus cuentas del sitio actual en un solo lugar.
 - **Abrir sin cambiar** — abre otra cuenta en una nueva pestaña sin cambiar tu selección por defecto. Útil para revisar rápidamente una segunda cuenta.
@@ -16,7 +16,7 @@ Extensión de Firefox para gestión de contenedores basada en cuentas.
 
 ## Cómo funciona
 
-Abre el popup en cualquier sitio web y haz clic en **Crear nueva cuenta**. MacMac crea un contenedor sin nombre (se nombra automáticamente "Cuenta 1", "Cuenta 2", etc.), abre el sitio en él, y tú inicias sesión. Puedes renombrar la cuenta después desde el popup.
+Abre el popup en cualquier sitio web y haz clic en **Crear nueva cuenta**. BoxBox crea un contenedor sin nombre (se nombra automáticamente "Cuenta 1", "Cuenta 2", etc.), abre el sitio en él, y tú inicias sesión. Puedes renombrar la cuenta después desde el popup.
 
 Cada contenedor se nombra internamente como `NombreCuenta (host)` — por ejemplo, `Cuenta 1 (facebook.com)` — lo que lo vincula a ese sitio.
 
@@ -54,4 +54,4 @@ Los PRs y issues son bienvenidos. Para solicitudes de funciones o errores, abre 
 
 ## Apoyo
 
-Si MacMac te resulta útil, considera darle una estrella al repositorio en [GitHub](https://github.com/oxcl/macmac) o hacer una [donación](https://oxcl.github.io/macmac/#donate).
+Si BoxBox te resulta útil, considera darle una estrella al repositorio en [GitHub](https://github.com/oxcl/boxbox) o hacer una [donación](https://oxcl.github.io/boxbox/#donate).
